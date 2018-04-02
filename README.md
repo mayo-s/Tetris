@@ -1,11 +1,12 @@
 # Tetris
-# Author Mario Schuetz
+Author Mario Schuetz
 
 Creating a Tetris game using Java.
 
 Basic Rules
 - 7 Tetrominos O, I, J, L, S, Z, T
-- Tetrominos can rotate on Z-Axes 90°
+- Tetromino consist of 4 blocks
+- Tetrominos can rotate clockwise on Z-Axes 90°
 - Tetrominos spawn top, mid column
 - Playfield dimension 10x22(top 2 hidden)
 - Game Over when new Tetromino is blocked
