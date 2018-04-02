@@ -1,5 +1,18 @@
 package actions;
 
-public class BlockAction {
+import beans.Block;
 
+public class BlockAction {
+	
+	public Block createBlock(int[] position) {
+		
+		Block block = new Block();
+		
+		return block;
+	}
+	
+	public Block removeBlock() {
+		
+		return null;
+	}
 }
