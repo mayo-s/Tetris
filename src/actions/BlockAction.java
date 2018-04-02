@@ -4,15 +4,18 @@ import beans.Block;
 
 public class BlockAction {
 	
-	public Block createBlock(int[] position) {
-		
-		Block block = new Block();
-		
-		return block;
-	}
+	private Block block;
 	
 	public Block removeBlock() {
 		
 		return null;
+	}
+
+	public Block getBlock() {
+		return block;
+	}
+
+	public void setBlock(Block block) {
+		this.block = block;
 	}
 }
