@@ -1,20 +1,20 @@
 package beans;
 
-public class Tetramino {
+public class Tetromino {
 	
-//	public enum Tetramino {
+//	public enum Tetromino {
 //		O("o"), I("i"), J("j"), L("l"), S("s"), Z("z"), T("t");
 //
 //		private String type;
 //
-//		private Tetramino(String type) {
+//		private Tetromino(String type) {
 //			this.type = type;
 //		}
 //
-//		public static Tetramino getTetramino(String type) {
-//			for (Tetramino tetramino : values()) {
-//				if (type.equalsIgnoreCase(tetramino.type)) {
-//					return tetramino;
+//		public static Tetromino getTetromino(String type) {
+//			for (Tetromino tetromino : values()) {
+//				if (type.equalsIgnoreCase(tetromino.type)) {
+//					return tetromino;
 //				}
 //			}
 //			return null;
@@ -23,7 +23,7 @@ public class Tetramino {
 	
 	private Block[] blocks;
 	
-	public Tetramino(Block b1, Block b2, Block b3, Block b4) {
+	public Tetromino(Block b1, Block b2, Block b3, Block b4) {
 		blocks = new Block[]{b1, b2, b3, b4};			
 	}
 
