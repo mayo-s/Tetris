@@ -14,8 +14,8 @@ public class Tetris {
 		// Swing thread
 		SwingUtilities.invokeLater(new Runnable() {
 			public void run() {
-				JFrame gui = new JFrame("Tetris by Mario Schuetz");
-				gui.setSize(400, 640);
+				JFrame gui = new Gui("Tetris by Mario Schuetz");
+				gui.setSize(600, 960);
 				gui.setVisible(true);
 				gui.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
 			}
