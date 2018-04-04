@@ -12,7 +12,7 @@ public class InformationPanel extends JPanel {
 
 	public InformationPanel() {
 		Dimension size = getPreferredSize();
-		size.width = 200;
+		size.width = 198;
 		setPreferredSize(size);
 		setBorder(BorderFactory.createTitledBorder("Tetris"));
 //		
