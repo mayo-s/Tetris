@@ -15,7 +15,7 @@ public class Tetris {
 		SwingUtilities.invokeLater(new Runnable() {
 			public void run() {
 				JFrame gui = new Gui("Tetris by Mario Schuetz");
-				gui.setSize(600, 960);
+				gui.setSize(600, 600);
 				gui.setVisible(true);
 				gui.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
 			}
