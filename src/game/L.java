@@ -1,38 +1,24 @@
 package game;
 
-import java.util.List;
-
 public class L implements Tetromino {
 
-	List<int[][]> tetromino;
+	private int[][] tetromino;
 	
 	public L(){
-		tetromino.add(new int[][]{
+		tetromino = new int[][]{
             {0, 0, 0, 0},
             {0, 1, 0, 0},
             {0, 1, 0, 0},
-            {0, 1, 1, 0}});
-		tetromino.add(new int[][]{
-            {0, 0, 0, 0},
-            {0, 1, 1, 1},
-            {0, 1, 0, 0},
-            {0, 0, 0, 0}});
-		tetromino.add(new int[][]{
-            {0, 0, 0, 0},
-            {0, 1, 1, 0},
-            {0, 0, 1, 0},
-            {0, 0, 1, 0}});
-		tetromino.add(new int[][]{
-            {0, 0, 0, 0},
-            {0, 0, 0, 1},
-            {0, 1, 1, 1},
-            {0, 0, 0, 0}});
+            {0, 1, 1, 0}};
 	}	
 	
 	@Override
-	public List<int[][]> getTetromino() {
-		// TODO Auto-generated method stub
-		return null;
+	public int[][] getMatrix() {
+		return tetromino;
 	}
 
+	@Override
+	public void setMatrix(int[][] matrix) {
+		tetromino = matrix;		
+	}
 }

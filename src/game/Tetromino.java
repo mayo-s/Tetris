@@ -1,7 +1,8 @@
 package game;
 
-import java.util.List;
+//import java.util.List;
 
 public interface Tetromino {
-	List<int[][]> getTetromino();
+	int[][] getMatrix();
+	void setMatrix(int[][] matrix);
 }
