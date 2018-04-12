@@ -5,29 +5,29 @@ import java.util.List;
 import java.util.Queue;
 import java.util.concurrent.ArrayBlockingQueue;
 
+import test.Test;
+
 public class Game {
 
+	private Test testing = new Test();
+
 	private List<Tetromino> tetrominos;
-	private final int LIMIT = 2;
 	private Queue<Tetromino> nextTetrominos;
+	private final int LIMIT = 2; // current + next
+	private Playfield field;
 	private String player;
 	private int score;
 	private int lvl;
 
 	public Game() {
 		init();
-
-		// testing rotation
-		Tetromino testTetro = nextTetrominos.element();
-		for (int i = 0; i < 4; i++) {
-			printMatrix(testTetro);
-			testTetro.setMatrix(rotateTetromino(testTetro).getMatrix());
-		}
+		test();
 	}
 
 	private void init() {
 		tetrominos = new ArrayList<>();
 		nextTetrominos = new ArrayBlockingQueue<Tetromino>(LIMIT);
+		field = new Playfield();
 
 		tetrominos.add(new I());
 		tetrominos.add(new O());
@@ -40,7 +40,6 @@ public class Game {
 		for (int i = 0; i < LIMIT; i++) {
 			nextTetrominos.add(randomTetromino());
 		}
-
 	}
 
 	private Tetromino randomTetromino() {
@@ -49,8 +48,21 @@ public class Game {
 		return tetrominos.get(tetro);
 	}
 
+	private void tetrominoToField() {
+
+		int[][] currTetromino = nextTetrominos.element().getMatrix();
+
+		for (int row = 0; row < currTetromino.length; row++) {
+			for (int column = 0; column < currTetromino.length; column++) {
+
+				field.getMatrix()[row][column + 3] = currTetromino[row][column];				
+			}
+		}
+		field.setCurrTetrominoCoords(new int[]{0, 3});
+	}
+
 	private Tetromino rotateTetromino(Tetromino tetromino) {
-		int size = 4;
+		int size = tetromino.getMatrix().length;
 		int[][] rotated = new int[size][size];
 
 		for (int i = 0; i < size; ++i) {
@@ -63,16 +75,16 @@ public class Game {
 		return tetromino;
 	}
 
-	private void printMatrix(Tetromino tetromino) {
+	private void test() {
 
-		int[][] matrix = tetromino.getMatrix();
-
-		for (int[] i : matrix) {
-			for (int j : i) {
-				System.out.print(" " + j + " ");
-			}
-			System.out.println();
-		}
-		System.out.println();
+//		testing.printMatrix(field.getMatrix());
+//		Tetromino testTetro = nextTetrominos.element();
+//		for (int i = 0; i < 4; i++) {
+//			testing.printMatrix(testTetro.getMatrix());
+//			testTetro.setMatrix(rotateTetromino(testTetro).getMatrix());
+//		}
+		tetrominoToField();
+		testing.printMatrix(field.getMatrix());
 	}
+
 }
