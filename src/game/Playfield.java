@@ -3,14 +3,12 @@ package game;
 public class Playfield {
 
 	private int[][] matrix;
-	private int[] currTetrominoCoords;
 	private final int WIDTH = 10;
 	private final int HEIGHT = 22;
 	
 	public Playfield() {
 		matrix = new int[HEIGHT][WIDTH];
 		fill();
-		currTetrominoCoords = new int[2];
 	}
 	
 	private void fill() {
@@ -25,13 +23,5 @@ public class Playfield {
 
 	public void setMatrix(int[][] matrix) {
 		this.matrix = matrix;		
-	}
-
-	public int[] getCurrTetrominoCoords() {
-		return currTetrominoCoords;
-	}
-
-	public void setCurrTetrominoCoords(int[] currTetrominoCoords) {
-		this.currTetrominoCoords = currTetrominoCoords;
 	}	
 }

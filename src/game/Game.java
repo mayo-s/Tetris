@@ -13,6 +13,7 @@ public class Game {
 
 	private List<Tetromino> tetrominos;
 	private Queue<Tetromino> nextTetrominos;
+	private int[] currTetrominoCoords;
 	private final int LIMIT = 2; // current + next
 	private Playfield field;
 	private String player;
@@ -28,6 +29,9 @@ public class Game {
 		tetrominos = new ArrayList<>();
 		nextTetrominos = new ArrayBlockingQueue<Tetromino>(LIMIT);
 		field = new Playfield();
+		currTetrominoCoords = new int[2];
+		setScore(0);
+		setLvl(1);
 
 		tetrominos.add(new I());
 		tetrominos.add(new O());
@@ -48,17 +52,15 @@ public class Game {
 		return tetrominos.get(tetro);
 	}
 
-	private void tetrominoToField() {
-
-		int[][] currTetromino = nextTetrominos.element().getMatrix();
+	private void tetrominoToField(int[][] currTetromino) {
 
 		for (int row = 0; row < currTetromino.length; row++) {
 			for (int column = 0; column < currTetromino.length; column++) {
 
-				field.getMatrix()[row][column + 3] = currTetromino[row][column];				
+				field.getMatrix()[row][column + 3] = currTetromino[row][column];
 			}
 		}
-		field.setCurrTetrominoCoords(new int[]{0, 3});
+		setCurrTetrominoCoords(new int[] { 0, 3 });
 	}
 
 	private Tetromino rotateTetromino(Tetromino tetromino) {
@@ -72,19 +74,58 @@ public class Game {
 		}
 
 		tetromino.setMatrix(rotated);
+
 		return tetromino;
 	}
 
 	private void test() {
 
+//		print and rotate tetromino matrix
 //		testing.printMatrix(field.getMatrix());
 //		Tetromino testTetro = nextTetrominos.element();
 //		for (int i = 0; i < 4; i++) {
-//			testing.printMatrix(testTetro.getMatrix());
-//			testTetro.setMatrix(rotateTetromino(testTetro).getMatrix());
+//			 testing.printMatrix(testTetro.getMatrix());
+//			 testTetro.setMatrix(rotateTetromino(testTetro).getMatrix());
 //		}
-		tetrominoToField();
-		testing.printMatrix(field.getMatrix());
+		
+//		print field matrix
+		for (int i = 0; i < 4; i++) {
+			tetrominoToField(nextTetrominos.element().getMatrix());
+			testing.printMatrix(field.getMatrix());
+			nextTetrominos.element().setMatrix(rotateTetromino(nextTetrominos.element()).getMatrix());
+		}
+	}
+
+	public String getPlayer() {
+		return player;
+	}
+
+	public void setPlayer(String player) {
+		this.player = player;
+	}
+
+	public int getScore() {
+		return score;
+	}
+
+	public void setScore(int score) {
+		this.score = score;
+	}
+
+	public int getLvl() {
+		return lvl;
+	}
+
+	public void setLvl(int lvl) {
+		this.lvl = lvl;
+	}
+	
+	public int[] getCurrTetrominoCoords() {
+		return currTetrominoCoords;
+	}
+
+	public void setCurrTetrominoCoords(int[] currTetrominoCoords) {
+		this.currTetrominoCoords = currTetrominoCoords;
 	}
 
 }
