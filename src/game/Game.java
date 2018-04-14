@@ -5,12 +5,8 @@ import java.util.List;
 import java.util.Queue;
 import java.util.concurrent.ArrayBlockingQueue;
 
-import sun.lwawt.macosx.CCustomCursor;
-import test.Test;
-
 public class Game {
 
-	private Test testing = new Test();
 
 	private List<Tetromino> tetrominos;
 	private Queue<Tetromino> nextTetrominos;
@@ -23,7 +19,6 @@ public class Game {
 
 	public Game() {
 		init();
-		test();
 	}
 
 	private void init() {
@@ -92,7 +87,7 @@ public class Game {
 				for (int c = 0; c < 4; c++) {
 					newMatrix[row + r + 1][column + c] = newMatrix[row + r][column + c];
 					newMatrix[row + r][column + c] = 0;
-				}
+				}					
 			}
 		}
 
@@ -111,7 +106,7 @@ public class Game {
 				for (int r = 0; r < 4; r++) {
 					newMatrix[row + r][column + c - 1] = newMatrix[row + r][column + c];
 					newMatrix[row + r][column + c] = 0;
-				}
+				}					
 			}
 		}
 
@@ -130,7 +125,7 @@ public class Game {
 				for (int r = 0; r < 4; r++) {
 					newMatrix[row + r][column + c + 1] = newMatrix[row + r][column + c];
 					newMatrix[row + r][column + c] = 0;
-				}
+				}					
 			}
 		}
 
@@ -142,7 +137,7 @@ public class Game {
 
 		return false;
 	}
-
+	
 	public String getPlayer() {
 		return player;
 	}
