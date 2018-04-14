@@ -5,6 +5,7 @@ import java.util.List;
 import java.util.Queue;
 import java.util.concurrent.ArrayBlockingQueue;
 
+import sun.lwawt.macosx.CCustomCursor;
 import test.Test;
 
 public class Game {
@@ -78,22 +79,68 @@ public class Game {
 		return tetromino;
 	}
 
-	private void test() {
+	public void moveDown() {
+		int[][] newMatrix = this.field.getMatrix();
+		int row = currTetrominoCoords[0];
+		int column = currTetrominoCoords[1];
 
-//		print and rotate tetromino matrix
-//		testing.printMatrix(field.getMatrix());
-//		Tetromino testTetro = nextTetrominos.element();
-//		for (int i = 0; i < 4; i++) {
-//			 testing.printMatrix(testTetro.getMatrix());
-//			 testTetro.setMatrix(rotateTetromino(testTetro).getMatrix());
-//		}
-		
-//		print field matrix
-		for (int i = 0; i < 4; i++) {
-			tetrominoToField(nextTetrominos.element().getMatrix());
-			testing.printMatrix(field.getMatrix());
-			nextTetrominos.element().setMatrix(rotateTetromino(nextTetrominos.element()).getMatrix());
+		System.out.println("Row: " + row + " Column: " + column);
+
+		if (!collision()) {
+
+			for (int r = 3; r >= 0; r--) {
+				for (int c = 0; c < 4; c++) {
+					newMatrix[row + r + 1][column + c] = newMatrix[row + r][column + c];
+					newMatrix[row + r][column + c] = 0;
+				}
+			}
 		}
+
+		currTetrominoCoords[0] = row + 1;
+		this.field.setMatrix(newMatrix);
+	}
+
+	private void moveLeft() {
+		int[][] newMatrix = this.field.getMatrix();
+		int row = currTetrominoCoords[0];
+		int column = currTetrominoCoords[1];
+
+		if (!collision()) {
+
+			for (int c = 0; c < 4; c++) {
+				for (int r = 0; r < 4; r++) {
+					newMatrix[row + r][column + c - 1] = newMatrix[row + r][column + c];
+					newMatrix[row + r][column + c] = 0;
+				}
+			}
+		}
+
+		currTetrominoCoords[1] = column - 1;
+		this.field.setMatrix(newMatrix);
+	}
+
+	private void moveRight() {
+		int[][] newMatrix = this.field.getMatrix();
+		int row = currTetrominoCoords[0];
+		int column = currTetrominoCoords[1];
+
+		if (!collision()) {
+
+			for (int c = 3; c >= 0; c--) {
+				for (int r = 0; r < 4; r++) {
+					newMatrix[row + r][column + c + 1] = newMatrix[row + r][column + c];
+					newMatrix[row + r][column + c] = 0;
+				}
+			}
+		}
+
+		currTetrominoCoords[1] = column + 1;
+		this.field.setMatrix(newMatrix);
+	}
+
+	private boolean collision() {
+
+		return false;
 	}
 
 	public String getPlayer() {
@@ -119,7 +166,7 @@ public class Game {
 	public void setLvl(int lvl) {
 		this.lvl = lvl;
 	}
-	
+
 	public int[] getCurrTetrominoCoords() {
 		return currTetrominoCoords;
 	}
