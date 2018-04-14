@@ -6,8 +6,7 @@ import java.util.Queue;
 import java.util.concurrent.ArrayBlockingQueue;
 
 public class Game {
-
-
+	
 	private List<Tetromino> tetrominos;
 	private Queue<Tetromino> nextTetrominos;
 	private int[] currTetrominoCoords;
@@ -19,6 +18,7 @@ public class Game {
 
 	public Game() {
 		init();
+		tetrominoToField(nextTetrominos.element().getMatrix());
 	}
 
 	private void init() {
@@ -79,19 +79,17 @@ public class Game {
 		int row = currTetrominoCoords[0];
 		int column = currTetrominoCoords[1];
 
-		System.out.println("Row: " + row + " Column: " + column);
-
-		if (!collision()) {
+		if (!collisionDown()) {
 
 			for (int r = 3; r >= 0; r--) {
 				for (int c = 0; c < 4; c++) {
 					newMatrix[row + r + 1][column + c] = newMatrix[row + r][column + c];
 					newMatrix[row + r][column + c] = 0;
-				}					
+				}
 			}
+			currTetrominoCoords[0] = row + 1;
 		}
 
-		currTetrominoCoords[0] = row + 1;
 		this.field.setMatrix(newMatrix);
 	}
 
@@ -100,17 +98,17 @@ public class Game {
 		int row = currTetrominoCoords[0];
 		int column = currTetrominoCoords[1];
 
-		if (!collision()) {
+		if (!collisionLeft()) {
 
 			for (int c = 0; c < 4; c++) {
 				for (int r = 0; r < 4; r++) {
 					newMatrix[row + r][column + c - 1] = newMatrix[row + r][column + c];
 					newMatrix[row + r][column + c] = 0;
-				}					
+				}
 			}
+			currTetrominoCoords[1] = column - 1;
 		}
 
-		currTetrominoCoords[1] = column - 1;
 		this.field.setMatrix(newMatrix);
 	}
 
@@ -119,25 +117,49 @@ public class Game {
 		int row = currTetrominoCoords[0];
 		int column = currTetrominoCoords[1];
 
-		if (!collision()) {
+		if (!collisionRight()) {
 
 			for (int c = 3; c >= 0; c--) {
 				for (int r = 0; r < 4; r++) {
 					newMatrix[row + r][column + c + 1] = newMatrix[row + r][column + c];
 					newMatrix[row + r][column + c] = 0;
-				}					
+				}
 			}
+			currTetrominoCoords[1] = column + 1;
 		}
 
-		currTetrominoCoords[1] = column + 1;
 		this.field.setMatrix(newMatrix);
 	}
 
-	private boolean collision() {
-
-		return false;
+	private boolean collisionDown() {
+		boolean collision = false;
+		int row = currTetrominoCoords[0] + 3;
+		System.out.println("height: " + field.getHEIGHT() + " bottom row: " + row);
+		
+		if(row >= field.getHEIGHT() - 1) return true;
+		
+		return collision;
 	}
-	
+
+	private boolean collisionLeft() {
+		boolean collision = false;
+		int column = currTetrominoCoords[1];
+		System.out.println("width: " + field.getWIDTH() + " curr right column: " + column);
+		
+		if(column <= 0  ) return true;
+
+		return collision;
+	}
+
+	private boolean collisionRight() {
+		boolean collision = false;
+		int column = currTetrominoCoords[1] + 3;
+		System.out.println("width: " + field.getWIDTH() + " curr right column: " + column);
+		if(column >= field.getWIDTH() - 1) return true;
+
+		return collision;
+	}
+
 	public String getPlayer() {
 		return player;
 	}

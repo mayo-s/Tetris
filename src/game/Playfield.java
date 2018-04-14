@@ -3,8 +3,8 @@ package game;
 public class Playfield {
 
 	private int[][] matrix;
-	private final int WIDTH = 10;
 	private final int HEIGHT = 22;
+	private final int WIDTH = 10;
 	
 	public Playfield() {
 		matrix = new int[HEIGHT][WIDTH];
@@ -23,5 +23,13 @@ public class Playfield {
 
 	public void setMatrix(int[][] matrix) {
 		this.matrix = matrix;		
+	}
+
+	public int getWIDTH() {
+		return WIDTH;
+	}
+
+	public int getHEIGHT() {
+		return HEIGHT;
 	}	
 }
