@@ -51,12 +51,17 @@ public class Game {
 
 	private Tetromino randomTetromino() {
 		int tetro = (int) (Math.random() * tetrominos.size());
-		return tetrominos.get(tetro);
+		int randomRotation = (int) (Math.random() * 4);
+		Tetromino newTetromino = tetrominos.get(tetro);
+		for (int i = 0; i < randomRotation; i++) {
+			newTetromino.setMatrix(rotateTetromino(newTetromino.getMatrix()));
+		}
+		return newTetromino;
 	}
 
 	private void tetrominoToField(boolean next) {
-		if (next) {
-			gameOver = gameOver();
+		gameOver = gameOver();
+		if (next && !gameOver) {
 			System.out.println("next tetromino");
 			nextTetrominos.remove();
 			nextTetrominos.add(randomTetromino());
@@ -68,24 +73,24 @@ public class Game {
 			int[][] field = this.field.getMatrix();
 			for (int row = 0; row < currTetromino.length; row++) {
 				for (int column = 0; column < currTetromino.length; column++) {
-						if (field[0][column + 3] == 0 && currTetromino[row][column] == 1)
-							field[row][column + 3] = currTetromino[row][column];
+					if (field[0][column + 3] == 0 && currTetromino[row][column] == 1)
+						field[row][column + 3] = currTetromino[row][column];
 				}
 			}
 
 		} else
 			System.out.println("GAME OVER");
 	}
-	
+
 	private boolean gameOver() {
-		if(currTetrominoCoords[0] == 0 && currTetrominoCoords[1] == 3)
+		if (currTetrominoCoords[0] == 0 && currTetrominoCoords[1] == 3)
 			return true;
-		
+
 		return false;
 	}
 
-	private int[][] rotateTetromino() {
-		int[][] tetromino = nextTetrominos.element().getMatrix();
+	private int[][] rotateTetromino(int[][] tetromino) {
+		// int[][] tetromino = nextTetrominos.element().getMatrix();
 		int size = tetromino.length;
 		int[][] rotated = new int[size][size];
 
@@ -195,7 +200,7 @@ public class Game {
 
 		return collision;
 	}
-	
+
 	private void resetCoords() {
 		currTetrominoCoords[0] = 0;
 		currTetrominoCoords[1] = 3;
