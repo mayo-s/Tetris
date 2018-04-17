@@ -133,42 +133,56 @@ public class Game {
 	}
 
 	private void moveLeft() {
-		int[][] newMatrix = this.field.getMatrix();
+		int[][] newMatrix = field.getMatrix();
+		int[][] currTetromino = nextTetrominos.element().getMatrix();
 		int row = currTetrominoCoords[0];
 		int column = currTetrominoCoords[1];
+		boolean failed = false;
 
 		if (!collisionLeft()) {
-
 			for (int c = 0; c < 4; c++) {
 				for (int r = 0; r < 4; r++) {
-					newMatrix[row + r][column + c - 1] = newMatrix[row + r][column + c];
-					newMatrix[row + r][column + c] = 0;
+					if (newMatrix[row + r][column + c - 1] == 0) {
+						newMatrix[row + r][column + c - 1] = currTetromino[row + r][column + c];
+						newMatrix[row + r][column + c] = 0;
+					} else
+						failed = true;
 				}
 			}
-			currTetrominoCoords[1] = column - 1;
-		}
+		} else
+			failed = true;
 
-		this.field.setMatrix(newMatrix);
+		if (!failed) {
+			currTetrominoCoords[1] = column - 1;
+			field.setMatrix(newMatrix);
+		}
 	}
 
 	private void moveRight() {
-		int[][] newMatrix = this.field.getMatrix();
+		int[][] newMatrix = field.getMatrix();
+		int[][] currTetromino = nextTetrominos.element().getMatrix();
 		int row = currTetrominoCoords[0];
 		int column = currTetrominoCoords[1];
+		boolean failed = false;
 
 		if (!collisionRight()) {
 
 			for (int c = 3; c >= 0; c--) {
 				for (int r = 0; r < 4; r++) {
-
-					newMatrix[row + r][column + c + 1] = newMatrix[row + r][column + c];
-					newMatrix[row + r][column + c] = 0;
+					if (newMatrix[row + r][column + c + 1] == 0) {
+						newMatrix[row + r][column + c + 1] = currTetromino[row + r][column + c];
+						newMatrix[row + r][column + c] = 0;
+					} else
+						failed = true;
 				}
 			}
-			currTetrominoCoords[1] = column + 1;
-		}
+		} else
+			failed = true;
 
-		this.field.setMatrix(newMatrix);
+		if (!failed) {
+			currTetrominoCoords[1] = column + 1;
+			field.setMatrix(newMatrix);
+		}
 	}
 
 	private boolean collisionDown() {
