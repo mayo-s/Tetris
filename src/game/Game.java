@@ -47,6 +47,8 @@ public class Game {
 		for (int i = 0; i < LIMIT; i++) {
 			nextTetrominos.add(randomTetromino());
 		}
+		System.out.println("START");
+		test.printMatrix(nextTetrominos.element().getMatrix());
 	}
 
 	private Tetromino randomTetromino() {
@@ -68,9 +70,10 @@ public class Game {
 			test.printMatrix(nextTetrominos.element().getMatrix());
 			resetCoords();
 		}
+		test.printMatrix(field.getMatrix());
 		if (!gameOver) {
 			int[][] currTetromino = nextTetrominos.element().getMatrix();
-			int[][] field = this.field.getMatrix();
+			int[][] field = this.field.getMatrix().clone();
 			for (int row = 0; row < currTetromino.length; row++) {
 				for (int column = 0; column < currTetromino.length; column++) {
 					if (field[0][column + 3] == 0 && currTetromino[row][column] == 1)
@@ -111,11 +114,12 @@ public class Game {
 
 		if (!collisionDown()) {
 			int lineOffset = emptyLineBottom(currTetromino);
+			System.out.println("line offset down " + lineOffset);
 			for (int r = (3 - lineOffset); r >= 0; r--) {
 				for (int c = 0; c < 4; c++) {
-					if (newMatrix[row + r + lineOffset + 1][column + c] == 0) {
-						newMatrix[row + r + lineOffset + 1][column + c] = currTetromino[r][c];
-						newMatrix[row + r + lineOffset][column + c] = 0;
+					if (newMatrix[row + r + 1][column + c] == 0) {
+						newMatrix[row + r + 1][column + c] = currTetromino[r][c];
+						newMatrix[row + r][column + c] = 0;
 					} else
 						failed = true;
 				}
@@ -127,7 +131,7 @@ public class Game {
 			System.out.println("collision down");
 			tetrominoToField(true);
 		} else {
-			currTetrominoCoords[0] = row + 1;
+			currTetrominoCoords[0]++;
 			field.setMatrix(newMatrix);
 		}
 	}
@@ -143,9 +147,9 @@ public class Game {
 			int lineOffset = emptyLineLeft(currTetromino);
 			for (int c = (0 + lineOffset); c < 4; c++) {
 				for (int r = 0; r < 4; r++) {
-					if (newMatrix[row + r][column + c - lineOffset - 1] == 0) {
-						newMatrix[row + r][column + c - lineOffset - 1] = currTetromino[row + r][column + c];
-						newMatrix[row + r][column + c - lineOffset] = 0;
+					if (newMatrix[row + r][column + c - 1] == 0) {
+						newMatrix[row + r][column + c - 1] = currTetromino[r][c];
+						newMatrix[row + r][column + c] = 0;
 					} else
 						failed = true;
 				}
@@ -154,7 +158,7 @@ public class Game {
 			failed = true;
 
 		if (!failed) {
-			currTetrominoCoords[1] = column - 1;
+			currTetrominoCoords[1]--;
 			field.setMatrix(newMatrix);
 		}
 	}
@@ -171,9 +175,9 @@ public class Game {
 			int lineOffset = emptyLineRight(currTetromino);
 			for (int c = (3 - lineOffset); c >= 0; c--) {
 				for (int r = 0; r < 4; r++) {
-					if (newMatrix[row + r][column + c + lineOffset + 1] == 0) {
-						newMatrix[row + r][column + c + lineOffset + 1] = currTetromino[row + r][column + c];
-						newMatrix[row + r][column + c + lineOffset] = 0;
+					if (newMatrix[row + r][column + c + 1] == 0) {
+						newMatrix[row + r][column + c + 1] = currTetromino[r][c];
+						newMatrix[row + r][column + c] = 0;
 					} else
 						failed = true;
 				}
@@ -182,19 +186,16 @@ public class Game {
 			failed = true;
 
 		if (!failed) {
-			currTetrominoCoords[1] = column + 1;
+			currTetrominoCoords[1]++;
 			field.setMatrix(newMatrix);
 		}
 	}
 
 	private boolean collisionDown() {
 		boolean collision = false;
-		int row = currTetrominoCoords[0] + 3;
+		int row = currTetrominoCoords[0] + 3 - emptyLineBottom(nextTetrominos.element().getMatrix());
 		if (row >= field.getHEIGHT() - 1)
 			return true;
-
-		// if (newMatrix[row + r + 1][column + c] == 0 && newMatrix[row + r][column + c]
-		// == 1) {
 
 		return collision;
 	}
@@ -238,7 +239,6 @@ public class Game {
 				break;
 		}
 
-		System.out.println("line offset " + lines);
 		return lines;
 	}
 
@@ -257,6 +257,7 @@ public class Game {
 			} else
 				break;
 		}
+		System.out.println("line offset right " + lines);
 		return lines;
 	}
 
@@ -274,6 +275,7 @@ public class Game {
 			} else
 				break;
 		}
+		System.out.println("line offset left " + lines);
 		return lines;
 	}
 
@@ -294,9 +296,12 @@ public class Game {
 	private void pseudoGame() {
 
 		while (!gameOver) {
-			// for(int i = 0; i < 40; i++) {
+			int move = (int) (Math.random() * 2);
+			if (move <= 1)
+				moveLeft();
+			else
+				moveRight();
 			moveDown();
-			test.printMatrix(field.getMatrix());
 		}
 
 	}
