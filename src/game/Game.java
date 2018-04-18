@@ -110,12 +110,12 @@ public class Game {
 		boolean failed = false;
 
 		if (!collisionDown()) {
-
-			for (int r = 3; r >= 0; r--) {
+			int lineOffset = emptyLineBottom(currTetromino);
+			for (int r = (3 - lineOffset); r >= 0; r--) {
 				for (int c = 0; c < 4; c++) {
-					if (newMatrix[row + r + 1][column + c] == 0) {
-						newMatrix[row + r + 1][column + c] = currTetromino[r][c];
-						newMatrix[row + r][column + c] = 0;
+					if (newMatrix[row + r + lineOffset + 1][column + c] == 0) {
+						newMatrix[row + r + lineOffset + 1][column + c] = currTetromino[r][c];
+						newMatrix[row + r + lineOffset][column + c] = 0;
 					} else
 						failed = true;
 				}
@@ -140,11 +140,12 @@ public class Game {
 		boolean failed = false;
 
 		if (!collisionLeft()) {
-			for (int c = 0; c < 4; c++) {
+			int lineOffset = emptyLineLeft(currTetromino);
+			for (int c = (0 + lineOffset); c < 4; c++) {
 				for (int r = 0; r < 4; r++) {
-					if (newMatrix[row + r][column + c - 1] == 0) {
-						newMatrix[row + r][column + c - 1] = currTetromino[row + r][column + c];
-						newMatrix[row + r][column + c] = 0;
+					if (newMatrix[row + r][column + c - lineOffset - 1] == 0) {
+						newMatrix[row + r][column + c - lineOffset - 1] = currTetromino[row + r][column + c];
+						newMatrix[row + r][column + c - lineOffset] = 0;
 					} else
 						failed = true;
 				}
@@ -167,11 +168,12 @@ public class Game {
 
 		if (!collisionRight()) {
 
-			for (int c = 3; c >= 0; c--) {
+			int lineOffset = emptyLineRight(currTetromino);
+			for (int c = (3 - lineOffset); c >= 0; c--) {
 				for (int r = 0; r < 4; r++) {
-					if (newMatrix[row + r][column + c + 1] == 0) {
-						newMatrix[row + r][column + c + 1] = currTetromino[row + r][column + c];
-						newMatrix[row + r][column + c] = 0;
+					if (newMatrix[row + r][column + c + lineOffset + 1] == 0) {
+						newMatrix[row + r][column + c + lineOffset + 1] = currTetromino[row + r][column + c];
+						newMatrix[row + r][column + c + lineOffset] = 0;
 					} else
 						failed = true;
 				}
@@ -218,6 +220,61 @@ public class Game {
 	private void resetCoords() {
 		currTetrominoCoords[0] = 0;
 		currTetrominoCoords[1] = 3;
+	}
+
+	// horizontal
+	private int emptyLineBottom(int[][] matrix) {
+		int lines = 0;
+		boolean empty = true;
+		for (int r = 3; r >= 0; r--) {
+			for (int c = 0; c < 4; c++) {
+				if (matrix[r][c] == 1) {
+					empty = false;
+				}
+			}
+			if (empty) {
+				lines++;
+			} else
+				break;
+		}
+
+		System.out.println("line offset " + lines);
+		return lines;
+	}
+
+	// vertical
+	private int emptyLineRight(int[][] matrix) {
+		int lines = 0;
+		boolean empty = true;
+		for (int c = 3; c >= 0; c--) {
+			for (int r = 0; r < 4; r++) {
+				if (matrix[r][c] == 1) {
+					empty = false;
+				}
+			}
+			if (empty) {
+				lines++;
+			} else
+				break;
+		}
+		return lines;
+	}
+
+	private int emptyLineLeft(int[][] matrix) {
+		int lines = 0;
+		boolean empty = true;
+		for (int c = 0; c > 3; c++) {
+			for (int r = 0; r < 4; r++) {
+				if (matrix[r][c] == 1) {
+					empty = false;
+				}
+			}
+			if (empty) {
+				lines++;
+			} else
+				break;
+		}
+		return lines;
 	}
 
 	// private int[][] getCurrentTetromino() {
