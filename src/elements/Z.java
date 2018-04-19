@@ -1,15 +1,15 @@
-package game;
+package elements;
 
-public class L implements Tetromino {
+public class Z implements Tetromino {
 
-	private int[][] tetromino;
+	int[][] tetromino;
 	
-	public L(){
+	public Z(){
 		tetromino = new int[][]{
             {0, 0, 0, 0},
-            {0, 1, 0, 0},
-            {0, 1, 0, 0},
-            {0, 1, 1, 0}};
+            {0, 1, 1, 0},
+            {0, 0, 1, 1},
+            {0, 0, 0, 0}};
 	}	
 	
 	@Override

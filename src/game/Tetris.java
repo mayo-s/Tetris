@@ -1,17 +1,14 @@
-package gui;
+package game;
 
-import game.Game;
 import javafx.application.Application;
 import javafx.stage.Stage;
 
 public class Tetris extends Application{
-
-	public static Game game;
-	public static Gui gui;
+	
+	Game game;
 	
 	public static void main(String[] args) {
-		
-		game = new Game();
+
 		launch(args);
 		
 	}
@@ -19,8 +16,7 @@ public class Tetris extends Application{
 	@Override
 	public void start(Stage stage) throws Exception {
 		
-		gui = new Gui(stage, game);		
+		game = new Game(stage);		
 		
 	}
-
 }

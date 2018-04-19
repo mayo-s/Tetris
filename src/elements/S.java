@@ -1,14 +1,14 @@
-package game;
+package elements;
 
-public class Z implements Tetromino {
+public class S implements Tetromino {
 
 	int[][] tetromino;
 	
-	public Z(){
+	public S(){
 		tetromino = new int[][]{
             {0, 0, 0, 0},
-            {0, 1, 1, 0},
             {0, 0, 1, 1},
+            {0, 1, 1, 0},
             {0, 0, 0, 0}};
 	}	
 	

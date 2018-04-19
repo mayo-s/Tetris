@@ -1,4 +1,4 @@
-package game;
+package elements;
 
 public interface Tetromino {
 	int[][] getMatrix();

@@ -1,17 +1,17 @@
-package game;
+package elements;
 
-public class I implements Tetromino{
-	
+public class J implements Tetromino{
+
 	int[][] tetromino;
 	
-	public I(){
+	public J(){
 		tetromino = new int[][]{
             {0, 0, 0, 0},
-            {1, 1, 1, 1},
-            {0, 0, 0, 0},
-            {0, 0, 0, 0}};
-	}
-
+            {0, 0, 1, 0},
+            {0, 0, 1, 0},
+            {0, 1, 1, 0}};
+	}	
+	
 	@Override
 	public int[][] getMatrix() {
 		return tetromino;
@@ -20,5 +20,5 @@ public class I implements Tetromino{
 	@Override
 	public void setMatrix(int[][] matrix) {
 		tetromino = matrix;		
-	}	
+	}
 }
