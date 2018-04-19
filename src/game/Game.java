@@ -32,6 +32,7 @@ public class Game {
 		nextTetrominos = new ArrayBlockingQueue<Tetromino>(LIMIT);
 		field = new Playfield();
 		currTetrominoCoords = new int[2];
+		player = "Mario";
 		resetCoords();
 		setScore(0);
 		setLvl(1);
@@ -336,6 +337,22 @@ public class Game {
 
 	public void setCurrTetrominoCoords(int[] currTetrominoCoords) {
 		this.currTetrominoCoords = currTetrominoCoords;
+	}
+
+	public Queue<Tetromino> getNextTetrominos() {
+		return nextTetrominos;
+	}
+
+	public void setNextTetrominos(Queue<Tetromino> nextTetrominos) {
+		this.nextTetrominos = nextTetrominos;
+	}
+
+	public Playfield getField() {
+		return field;
+	}
+
+	public void setField(Playfield field) {
+		this.field = field;
 	}
 
 }
