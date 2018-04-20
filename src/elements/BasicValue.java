@@ -16,6 +16,7 @@ public class BasicValue {
 		fieldHeight = 22;
 		tetrominoWidth = 4;
 		tetrominoHeight = 4;
+		player = "DummyName";
 		controls = "P - Play/Pause\n^ - Rotate\n< - move left\n> - move right\nv - drop";
 		score = 0;
 		lvl = 1;
