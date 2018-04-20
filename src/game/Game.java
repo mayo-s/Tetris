@@ -16,6 +16,8 @@ public class Game {
 		
 		logic = new Logic();
 		gui = new Gui(stage);
+		
+		gui.updateGrid(logic.getNextTetrominos().element().getMatrix(), gui.getPreviewGrid(), logic.getNextTetrominos().element().getColor());
 	}
 
 	public String getPlayer() {
