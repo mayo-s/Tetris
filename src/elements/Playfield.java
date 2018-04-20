@@ -1,14 +1,12 @@
 package elements;
 
 public class Playfield {
-	
-	private BasicValue bv;
+
 	private int[][] matrix;
-	private final int HEIGHT = bv.fieldHeight;
-	private final int WIDTH = bv.fieldWidth;
+	private final int HEIGHT = 22;
+	private final int WIDTH = 10;
 	
 	public Playfield() {
-		bv = new BasicValue();
 		matrix = new int[HEIGHT][WIDTH];
 		fill();
 	}
