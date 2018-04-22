@@ -1,22 +1,29 @@
 package game;
 
+import gui.Gui;
 import javafx.application.Application;
 import javafx.stage.Stage;
 
-public class Tetris extends Application{
-	
-	Game game;
-	
-	public static void main(String[] args) {
+public class Tetris extends Application {
 
+	public Game game;
+	public Gui gui;
+
+	public static void main(String[] args) {
 		launch(args);
-		
 	}
 
 	@Override
 	public void start(Stage stage) throws Exception {
-		
-		game = new Game(stage);		
-		
+		stage.setTitle("Tetris by Mario Schuetz");
+		game = new Game();
+
+		gui = new Gui();
+		stage.setScene(gui.getScene());
+		stage.show();
+		gui.updatePreviewGrid(game.getNextTetrominos().element());
+		gui.updateGameGrid(game.getField(), game.getNextTetrominos().element());
+
 	}
+
 }

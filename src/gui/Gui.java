@@ -1,28 +1,27 @@
 package gui;
 
 import elements.BasicValue;
-import javafx.collections.ObservableList;
+import elements.Playfield;
+import elements.Tetromino;
 import javafx.geometry.Insets;
-import javafx.scene.Node;
 import javafx.scene.Scene;
 import javafx.scene.control.Label;
 import javafx.scene.layout.GridPane;
 import javafx.scene.layout.HBox;
 import javafx.scene.layout.Pane;
 import javafx.scene.layout.VBox;
-import javafx.stage.Stage;
 
 public class Gui {
 
 	BasicValue bv;
+	Scene scene;
 	Label playerLabel;
 	Label scoreLabel;
 	Label lvllabel;
 	GridPane gameGrid;
 	GridPane previewGrid;
 
-	public Gui(Stage stage) {
-		stage.setTitle("Tetris by Mario Schuetz");
+	public Gui() {
 		bv = new BasicValue();
 		playerLabel = new Label("Player: " + bv.getPlayer());
 		scoreLabel = new Label("Score: " + Integer.toString(bv.getScore()));
@@ -45,10 +44,8 @@ public class Gui {
 		info.getChildren().addAll(previewGrid, playerLabel, lvllabel, scoreLabel, controlsLabel);
 
 		main.getChildren().addAll(gameGrid, info);
-		Scene scene = new Scene(main);
+		scene = new Scene(main);
 		// scene.getStylesheets().add("style.css");
-		stage.setScene(scene);
-		stage.show();
 	}
 
 	private GridPane setupGridPane(int rows, int columns) {
@@ -63,26 +60,30 @@ public class Gui {
 		return newGridPane;
 	}
 
-	public void updateGrid(int[][] matrix, GridPane gridPane, String color) {
+	public void updatePreviewGrid(Tetromino tetromino) {
+		int[][] matrix = tetromino.getMatrix();
 		int rows = matrix.length;
 		int columns = matrix[0].length;
 		for (int r = 0; r < rows; r++) {
 			for (int c = 0; c < columns; c++) {
 				if (matrix[r][c] == 1)
-					gridPane.getChildren().get(r * rows + c).setStyle("-fx-background-color: " + color);
+					previewGrid.getChildren().get(r * columns + c)
+							.setStyle("-fx-background-color: " + tetromino.getColor());
 			}
 		}
+	}
 
-	// ObservableList<Node> nodes = gridPane.getChildren();
-	//
-	// for (Node node : nodes) {
-	// if (matrix[gridPane.getRowIndex(node)][gridPane.getColumnIndex(node)] == 1) {
-	//
-	// node.setStyle("-fx-background-color: #f4f4f4");
-	//// Pane pane = (Pane) node;
-	//// pane.backgroundProperty("");
-	// }
-	// }
+	public void updateGameGrid(Playfield field, Tetromino tetromino) {
+		int[][] matrix = field.getMatrix();
+		int rows = matrix.length;
+		int columns = matrix[0].length;
+		for (int r = 0; r < rows; r++) {
+			for (int c = 0; c < columns; c++) {
+				if (matrix[r][c] == 1)
+					gameGrid.getChildren().get(r * columns + c)
+							.setStyle("-fx-background-color: " + tetromino.getColor());
+			}
+		}
 	}
 
 	public GridPane getGameGrid() {
@@ -99,6 +100,14 @@ public class Gui {
 
 	public void setPreviewGrid(GridPane previewGrid) {
 		this.previewGrid = previewGrid;
+	}
+
+	public Scene getScene() {
+		return scene;
+	}
+
+	public void setScene(Scene scene) {
+		this.scene = scene;
 	}
 
 }
