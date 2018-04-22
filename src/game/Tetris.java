@@ -3,9 +3,12 @@ package game;
 import gui.Gui;
 import javafx.application.Application;
 import javafx.stage.Stage;
+import test.Test;
 
 public class Tetris extends Application {
 
+	Test test = new Test();
+	
 	public Game game;
 	public Gui gui;
 
@@ -22,8 +25,7 @@ public class Tetris extends Application {
 		stage.setScene(gui.getScene());
 		stage.show();
 		gui.updatePreviewGrid(game.getNextTetrominos().element());
-		gui.updateGameGrid(game.getField(), game.getNextTetrominos().element());
-
+		gui.updateGameGrid(game.getField(), game.getNextTetrominos().element());	
 	}
 
 }

@@ -37,7 +37,6 @@ public class Game {
 		nextTetrominos = new ArrayBlockingQueue<Tetromino>(LIMIT);
 		field = new Playfield();
 		currTetrominoCoords = new int[2];
-		resetCoords();
 
 		tetrominos.add(new I());
 		tetrominos.add(new O());
@@ -51,6 +50,7 @@ public class Game {
 			nextTetrominos.add(randomTetromino());
 		}
 		System.out.println("START");
+		tetrominoToField(false);
 	}
 
 	private Tetromino randomTetromino() {
@@ -69,6 +69,7 @@ public class Game {
 			System.out.println("next tetromino");
 			nextTetrominos.remove();
 			nextTetrominos.add(randomTetromino());
+			
 			test.printMatrix(nextTetrominos.element().getMatrix());
 			resetCoords();
 		}
