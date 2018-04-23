@@ -92,7 +92,7 @@ public class Game {
 		currTetrominoCoords[1] = 3;
 	}
 
-	private boolean gameOver() {
+	boolean gameOver() {
 		if (currTetrominoCoords[0] == 0 && currTetrominoCoords[1] == 3)
 			return true;
 		return false;
@@ -141,7 +141,7 @@ public class Game {
 		}
 	}
 
-	private void moveLeft() {
+	void moveLeft() {
 		int[][] newMatrix = field.getMatrix();
 		int[][] currTetromino = nextTetrominos.get(0).getMatrix();
 		int row = currTetrominoCoords[0];
@@ -168,7 +168,7 @@ public class Game {
 		}
 	}
 
-	private void moveRight() {
+	void moveRight() {
 		int[][] newMatrix = field.getMatrix();
 		int[][] currTetromino = nextTetrominos.get(0).getMatrix();
 		int row = currTetrominoCoords[0];
