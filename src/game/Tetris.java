@@ -59,6 +59,9 @@ public class Tetris extends Application {
 				if (event.getCode() == KeyCode.RIGHT) {
 					game.moveRight();
 				}
+				if (event.getCode() == KeyCode.DOWN) {
+					game.moveDown();
+				}
 				if (event.getCode() == KeyCode.UP) {
 					game.getNextTetrominos().get(0).setMatrix(game.rotateTetromino(game.getNextTetrominos().get(0).getMatrix()));
 				}
