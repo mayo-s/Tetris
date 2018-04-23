@@ -36,19 +36,21 @@ public class Tetris extends Application {
 	
 	public void playGame() {
 		
+        gui.updatePreviewGrid(game.getNextTetrominos().get(1));
+		gui.updateGameGrid(game.getField(), game.getNextTetrominos().get(0));
+		
 		Timeline interval = new Timeline(new KeyFrame(Duration.seconds(1), new EventHandler<ActionEvent>() {
 
 		    @Override
 		    public void handle(ActionEvent event) {
-		        System.out.println("this is called every second on UI thread");
 		        game.moveDown();
-		        gui.updatePreviewGrid(game.getNextTetrominos().element());
-				gui.updateGameGrid(game.getField(), game.getNextTetrominos().element());
-		        test.printMatrix(game.getField().getMatrix());
+		        gui.updatePreviewGrid(game.getNextTetrominos().get(1));
+				gui.updateGameGrid(game.getField(), game.getNextTetrominos().get(0));
 		    }
 		}));
 		interval.setCycleCount(Timeline.INDEFINITE);
-		interval.play();
+		if(!game.isGameOver()) interval.play();
+		else interval.stop();
 
 	}
 

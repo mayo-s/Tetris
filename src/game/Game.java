@@ -2,8 +2,6 @@ package game;
 
 import java.util.ArrayList;
 import java.util.List;
-import java.util.Queue;
-import java.util.concurrent.ArrayBlockingQueue;
 
 import elements.I;
 import elements.J;
@@ -21,7 +19,7 @@ public class Game {
 	Test test = new Test();
 
 	private List<Tetromino> tetrominos;
-	private Queue<Tetromino> nextTetrominos;
+	private List<Tetromino> nextTetrominos;
 	private int[] currTetrominoCoords; // row + column
 	private final int LIMIT = 2; // current + next
 	private Playfield field;
@@ -34,7 +32,7 @@ public class Game {
 	private void init() {
 		gameOver = false;
 		tetrominos = new ArrayList<>();
-		nextTetrominos = new ArrayBlockingQueue<Tetromino>(LIMIT);
+		nextTetrominos = new ArrayList<>(LIMIT);
 		field = new Playfield();
 		currTetrominoCoords = new int[2];
 
@@ -68,14 +66,14 @@ public class Game {
 		gameOver = gameOver();
 		if (next && !gameOver) {
 			System.out.println("next tetromino");
-			nextTetrominos.remove();
+			nextTetrominos.remove(0);
 			nextTetrominos.add(randomTetromino());
 			
-			test.printMatrix(nextTetrominos.element().getMatrix());
+			test.printMatrix(nextTetrominos.get(1).getMatrix());
 			resetCoords();
 		}
 		if (!gameOver) {
-			int[][] currTetromino = nextTetrominos.element().getMatrix();
+			int[][] currTetromino = nextTetrominos.get(0).getMatrix();
 			int[][] field = this.field.getMatrix().clone();
 			for (int row = 0; row < currTetromino.length; row++) {
 				for (int column = 0; column < currTetromino.length; column++) {
@@ -94,7 +92,7 @@ public class Game {
 		currTetrominoCoords[1] = 3;
 	}
 
-	boolean gameOver() {
+	private boolean gameOver() {
 		if (currTetrominoCoords[0] == 0 && currTetrominoCoords[1] == 3)
 			return true;
 		return false;
@@ -114,7 +112,7 @@ public class Game {
 
 	public void moveDown() {
 		int[][] newMatrix = field.getMatrix().clone();
-		int[][] currTetromino = nextTetrominos.element().getMatrix();
+		int[][] currTetromino = nextTetrominos.get(0).getMatrix();
 		int row = currTetrominoCoords[0];
 		int column = currTetrominoCoords[1];
 		boolean failed = false;
@@ -145,7 +143,7 @@ public class Game {
 
 	private void moveLeft() {
 		int[][] newMatrix = field.getMatrix();
-		int[][] currTetromino = nextTetrominos.element().getMatrix();
+		int[][] currTetromino = nextTetrominos.get(0).getMatrix();
 		int row = currTetrominoCoords[0];
 		int column = currTetrominoCoords[1];
 		boolean failed = false;
@@ -172,7 +170,7 @@ public class Game {
 
 	private void moveRight() {
 		int[][] newMatrix = field.getMatrix();
-		int[][] currTetromino = nextTetrominos.element().getMatrix();
+		int[][] currTetromino = nextTetrominos.get(0).getMatrix();
 		int row = currTetrominoCoords[0];
 		int column = currTetrominoCoords[1];
 		boolean failed = false;
@@ -201,9 +199,9 @@ public class Game {
 		}
 	}
 
-	private boolean collisionDown() {
+	boolean collisionDown() {
 		boolean collision = false;
-		int row = currTetrominoCoords[0] + 3 - emptyLineBottom(nextTetrominos.element().getMatrix());
+		int row = currTetrominoCoords[0] + 3 - emptyLineBottom(nextTetrominos.get(0).getMatrix());
 		if (row >= field.getHEIGHT() - 1)
 			return true;
 
@@ -292,11 +290,11 @@ public class Game {
 		this.currTetrominoCoords = currTetrominoCoords;
 	}
 
-	public Queue<Tetromino> getNextTetrominos() {
+	public List<Tetromino> getNextTetrominos() {
 		return nextTetrominos;
 	}
-
-	public void setNextTetrominos(Queue<Tetromino> nextTetrominos) {
+	
+	public void setNextTetrominos(List<Tetromino> nextTetrominos) {
 		this.nextTetrominos = nextTetrominos;
 	}
 
@@ -308,4 +306,7 @@ public class Game {
 		this.field = field;
 	}
 
+	public boolean isGameOver() {
+		return gameOver;
+	}
 }
