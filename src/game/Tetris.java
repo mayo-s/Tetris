@@ -16,6 +16,7 @@ public class Tetris extends Application {
 
 	public Game game;
 	public Gui gui;
+	private Timeline interval;
 
 	public static void main(String[] args) {
 		launch(args);
@@ -34,13 +35,16 @@ public class Tetris extends Application {
 	}
 
 	private void intervalEvent() {
-		Timeline interval = new Timeline(new KeyFrame(Duration.millis(500), new EventHandler<ActionEvent>() {
+		interval = new Timeline(new KeyFrame(Duration.millis(500), new EventHandler<ActionEvent>() {
 
 			@Override
 			public void handle(ActionEvent event) {
-				game.moveDown();
-				gui.updatePreviewGrid(game.getNextTetrominos().get(1));
-				gui.updateGameGrid(game.getField(), game.getNextTetrominos().get(0));
+				if(game.isGameOver()) interval.stop();
+				else {
+					game.moveDown();
+					gui.updatePreviewGrid(game.getNextTetrominos().get(1));
+					gui.updateGameGrid(game.getField(), game.getNextTetrominos().get(0));
+				}
 			}
 		}));
 		interval.setCycleCount(Timeline.INDEFINITE);
