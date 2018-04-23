@@ -1,6 +1,5 @@
 package gui;
 
-import elements.BasicValue;
 import elements.Playfield;
 import elements.Tetromino;
 import javafx.geometry.Insets;
@@ -13,7 +12,6 @@ import javafx.scene.layout.VBox;
 
 public class Gui {
 
-	BasicValue bv;
 	Scene scene;
 	Label playerLabel;
 	Label scoreLabel;
@@ -22,15 +20,14 @@ public class Gui {
 	GridPane previewGrid;
 
 	public Gui() {
-		bv = new BasicValue();
-		playerLabel = new Label("Player: " + bv.getPlayer());
-		scoreLabel = new Label("Score: " + Integer.toString(bv.getScore()));
-		lvllabel = new Label("Level: " + Integer.toString(bv.getLvl()));
-		Label controlsLabel = new Label(bv.getControls());
+		playerLabel = new Label("Player: " + "DummyName");
+		scoreLabel = new Label("Score: " + Integer.toString(0));
+		lvllabel = new Label("Level: " + Integer.toString(1));
+		Label controlsLabel = new Label("P - Play/Pause\n^ - Rotate\n< - move left\n> - move right\nv - drop");
 
 		HBox main = new HBox();
 		main.setPadding(new Insets(10, 10, 10, 10));
-		gameGrid = setupGridPane(bv.getFieldHeight(), bv.getFieldWidth());
+		gameGrid = setupGridPane(22, 10);
 		VBox info = new VBox(10);
 
 		// left side game grid
@@ -38,14 +35,12 @@ public class Gui {
 
 		// right side info box
 		info.setPadding(new Insets(10, 10, 10, 10));
-		previewGrid = setupGridPane(bv.getTetrominoHeight(), bv.getTetrominoWidth());
+		previewGrid = setupGridPane(4, 4);
 		previewGrid.setGridLinesVisible(true);
 
 		info.getChildren().addAll(previewGrid, playerLabel, lvllabel, scoreLabel, controlsLabel);
 
 		main.getChildren().addAll(gameGrid, info);
-		scene = new Scene(main);
-		// scene.getStylesheets().add("style.css");
 	}
 
 	private GridPane setupGridPane(int rows, int columns) {

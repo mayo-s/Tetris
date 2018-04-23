@@ -49,8 +49,9 @@ public class Game {
 		for (int i = 0; i < LIMIT; i++) {
 			nextTetrominos.add(randomTetromino());
 		}
-		System.out.println("START");
+		System.out.println("START\n");
 		tetrominoToField(false);
+		resetCoords();
 	}
 
 	private Tetromino randomTetromino() {
