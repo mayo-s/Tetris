@@ -77,6 +77,9 @@ public class Gui extends HBox {
 				if (matrix[r][c] == 1)
 					gameGrid.getChildren().get(r * columns + c)
 							.setStyle("-fx-background-color: " + tetromino.getColor());
+				else if (matrix[r][c] == 0)
+					gameGrid.getChildren().get(r * columns + c)
+							.setStyle("-fx-background-color: " + "#ffffff");
 			}
 		}
 	}
