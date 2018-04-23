@@ -55,12 +55,14 @@ public class Tetris extends Application {
 			public void handle(KeyEvent event) {
 				if (event.getCode() == KeyCode.LEFT) {
 					game.moveLeft();
-					gui.updateGameGrid(game.getField(), game.getNextTetrominos().get(0));
 				}
 				if (event.getCode() == KeyCode.RIGHT) {
 					game.moveRight();
-					gui.updateGameGrid(game.getField(), game.getNextTetrominos().get(0));
 				}
+				if (event.getCode() == KeyCode.UP) {
+					game.getNextTetrominos().get(0).setMatrix(game.rotateTetromino(game.getNextTetrominos().get(0).getMatrix()));
+				}
+				gui.updateGameGrid(game.getField(), game.getNextTetrominos().get(0));
 			}
 		});
 	}

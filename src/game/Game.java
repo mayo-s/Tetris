@@ -98,7 +98,7 @@ public class Game {
 		return false;
 	}
 
-	private int[][] rotateTetromino(int[][] tetromino) {
+	int[][] rotateTetromino(int[][] tetromino) {
 		int size = tetromino.length;
 		int[][] rotated = new int[size][size];
 
