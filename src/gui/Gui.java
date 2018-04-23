@@ -3,16 +3,15 @@ package gui;
 import elements.Playfield;
 import elements.Tetromino;
 import javafx.geometry.Insets;
-import javafx.scene.Scene;
 import javafx.scene.control.Label;
 import javafx.scene.layout.GridPane;
 import javafx.scene.layout.HBox;
 import javafx.scene.layout.Pane;
 import javafx.scene.layout.VBox;
 
-public class Gui {
+public class Gui extends HBox {
 
-	Scene scene;
+	HBox main;
 	Label playerLabel;
 	Label scoreLabel;
 	Label lvllabel;
@@ -25,7 +24,7 @@ public class Gui {
 		lvllabel = new Label("Level: " + Integer.toString(1));
 		Label controlsLabel = new Label("P - Play/Pause\n^ - Rotate\n< - move left\n> - move right\nv - drop");
 
-		HBox main = new HBox();
+		main = new HBox();
 		main.setPadding(new Insets(10, 10, 10, 10));
 		gameGrid = setupGridPane(22, 10);
 		VBox info = new VBox(10);
@@ -62,8 +61,9 @@ public class Gui {
 		for (int r = 0; r < rows; r++) {
 			for (int c = 0; c < columns; c++) {
 				if (matrix[r][c] == 1)
-					previewGrid.getChildren().get(r * columns + c)
-							.setStyle("-fx-background-color: " + tetromino.getColor());
+					previewGrid.getChildren().get(r * columns + c).setStyle("-fx-background-color: " + tetromino.getColor());
+				else
+					previewGrid.getChildren().get(r * columns + c).setStyle("-fx-background-color: " + "#ffffff");
 			}
 		}
 	}
@@ -97,12 +97,11 @@ public class Gui {
 		this.previewGrid = previewGrid;
 	}
 
-	public Scene getScene() {
-		return scene;
+	public HBox getMain() {
+		return main;
 	}
 
-	public void setScene(Scene scene) {
-		this.scene = scene;
+	public void setMain(HBox main) {
+		this.main = main;
 	}
-
 }
