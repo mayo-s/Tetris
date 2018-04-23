@@ -39,7 +39,7 @@ public class Tetris extends Application {
         gui.updatePreviewGrid(game.getNextTetrominos().get(1));
 		gui.updateGameGrid(game.getField(), game.getNextTetrominos().get(0));
 		
-		Timeline interval = new Timeline(new KeyFrame(Duration.seconds(1), new EventHandler<ActionEvent>() {
+		Timeline interval = new Timeline(new KeyFrame(Duration.millis(500), new EventHandler<ActionEvent>() {
 
 		    @Override
 		    public void handle(ActionEvent event) {
