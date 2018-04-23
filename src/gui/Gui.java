@@ -19,24 +19,23 @@ public class Gui extends HBox {
 	GridPane previewGrid;
 
 	public Gui() {
+
+		main = new HBox();
+		main.setPadding(new Insets(10, 10, 10, 10));
+
+		// left side game grid
+		gameGrid = setupGridPane(22, 10);
+		gameGrid.setGridLinesVisible(true);
+
+		// right side info box
+		VBox info = new VBox(10);
+		info.setPadding(new Insets(10, 10, 10, 10));
+		previewGrid = setupGridPane(4, 4);
+		previewGrid.setGridLinesVisible(true);
 		playerLabel = new Label("Player: " + "DummyName");
 		scoreLabel = new Label("Score: " + Integer.toString(0));
 		lvllabel = new Label("Level: " + Integer.toString(1));
 		Label controlsLabel = new Label("P - Play/Pause\n^ - Rotate\n< - move left\n> - move right\nv - drop");
-
-		main = new HBox();
-		main.setPadding(new Insets(10, 10, 10, 10));
-		gameGrid = setupGridPane(22, 10);
-		VBox info = new VBox(10);
-
-		// left side game grid
-		gameGrid.setGridLinesVisible(true);
-
-		// right side info box
-		info.setPadding(new Insets(10, 10, 10, 10));
-		previewGrid = setupGridPane(4, 4);
-		previewGrid.setGridLinesVisible(true);
-
 		info.getChildren().addAll(previewGrid, playerLabel, lvllabel, scoreLabel, controlsLabel);
 
 		main.getChildren().addAll(gameGrid, info);
