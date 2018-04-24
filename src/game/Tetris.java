@@ -14,8 +14,8 @@ import javafx.util.Duration;
 
 public class Tetris extends Application {
 
-	public Game game;
-	public Gui gui;
+	private Game game;
+	private Gui gui;
 	private Timeline interval;
 
 	public static void main(String[] args) {
@@ -39,7 +39,8 @@ public class Tetris extends Application {
 
 			@Override
 			public void handle(ActionEvent event) {
-				if(game.isGameOver()) interval.stop();
+				if (game.isGameOver())
+					interval.stop();
 				else {
 					game.moveDown();
 					gui.updatePreviewGrid(game.getNextTetrominos().get(1));
@@ -53,23 +54,26 @@ public class Tetris extends Application {
 
 	private void userEvent(Scene scene) {
 
-		scene.addEventFilter(KeyEvent.KEY_PRESSED, new EventHandler<KeyEvent>() {
+		scene.addEventHandler(KeyEvent.KEY_PRESSED, new EventHandler<KeyEvent>() {
 
 			@Override
 			public void handle(KeyEvent event) {
-				if (event.getCode() == KeyCode.LEFT) {
-					game.moveLeft();
+				if (!game.isGameOver()) {
+					if (event.getCode() == KeyCode.LEFT) {
+						game.moveLeft();
+					}
+					if (event.getCode() == KeyCode.RIGHT) {
+						game.moveRight();
+					}
+					if (event.getCode() == KeyCode.DOWN) {
+						game.moveDown();
+					}
+					if (event.getCode() == KeyCode.UP) {
+						game.getNextTetrominos().get(0)
+								.setMatrix(game.rotateTetromino(game.getNextTetrominos().get(0).getMatrix()));
+					}
+					gui.updateGameGrid(game.getField(), game.getNextTetrominos().get(0));
 				}
-				if (event.getCode() == KeyCode.RIGHT) {
-					game.moveRight();
-				}
-				if (event.getCode() == KeyCode.DOWN) {
-					game.moveDown();
-				}
-				if (event.getCode() == KeyCode.UP) {
-					game.getNextTetrominos().get(0).setMatrix(game.rotateTetromino(game.getNextTetrominos().get(0).getMatrix()));
-				}
-				gui.updateGameGrid(game.getField(), game.getNextTetrominos().get(0));
 			}
 		});
 	}
