@@ -68,7 +68,7 @@ public class Game {
 			System.out.println("next tetromino");
 			nextTetrominos.remove(0);
 			nextTetrominos.add(randomTetromino());
-			
+
 			test.printMatrix(nextTetrominos.get(1).getMatrix());
 			resetCoords();
 		}
@@ -111,60 +111,78 @@ public class Game {
 	}
 
 	public void moveDown() {
-		int[][] newMatrix = field.getMatrix().clone();
-		int[][] currTetromino = nextTetrominos.get(0).getMatrix();
-		int row = currTetrominoCoords[0];
-		int column = currTetrominoCoords[1];
-		boolean failed = false;
-
-		if (!collisionDown()) {
-			int lineOffset = emptyLineBottom(currTetromino);
-			System.out.println("line offset down " + lineOffset);
-			for (int r = (3 - lineOffset); r >= 0; r--) {
-				for (int c = 0; c < 4; c++) {
-					if (newMatrix[row + r + 1][column + c] == 0) {
-						newMatrix[row + r + 1][column + c] = currTetromino[r][c];
-						newMatrix[row + r][column + c] = 0;
-					} else
+		if (!collisionBottom()) {
+			int[][] newMatrix = field.getMatrix().clone();
+			int[][] currTetromino = nextTetrominos.get(0).getMatrix();
+			int row = currTetrominoCoords[0];
+			int column = currTetrominoCoords[1];
+			boolean failed = false;
+			int bottom = emptyLineBottom(currTetromino);
+			int left = emptyLineLeft(currTetromino);
+			int right = emptyLineRight(currTetromino);
+			for (int r = (3 - bottom); r >= 0; r--) {
+				for (int c = (0 + left); c <= (3 - right); c++) {
+					if (newMatrix[row + r + 1][column + c] == 1 && currTetromino[r][c] == 1) {
 						failed = true;
-				}
-			}
-		} else
-			failed = true;
+						tetrominoToField(true);
+						break;
+					} else if (newMatrix[row + r + 1][column + c] == 1 && currTetromino[r][c] == 0) {
+						// newMatrix[row + r + 1][column + c] = 1;
+					} else if (newMatrix[row + r + 1][column + c] == 0 && currTetromino[r][c] == 1) {
+						newMatrix[row + r + 1][column + c] = 1;
+						newMatrix[row + r][column + c] = 0;
+					}
+					// else {
+					// newMatrix[row + r + 1][column + c] = 0;
+					// newMatrix[row + r][column + c] = 0;
+					// }
 
-		if (failed) {
-			System.out.println("collision down");
+				}
+				if (failed)
+					break;
+			}
+
+			if (!failed) {
+				field.setMatrix(newMatrix);
+				currTetrominoCoords[0]++;
+			}
+			// else
+			// tetrominoToField(true);
+		} else
 			tetrominoToField(true);
-		} else {
-			currTetrominoCoords[0]++;
-			field.setMatrix(newMatrix);
-		}
+
 	}
 
 	void moveLeft() {
-		int[][] newMatrix = field.getMatrix();
-		int[][] currTetromino = nextTetrominos.get(0).getMatrix();
-		int row = currTetrominoCoords[0];
-		int column = currTetrominoCoords[1];
-		boolean failed = false;
-
 		if (!collisionLeft()) {
-			int lineOffset = emptyLineLeft(currTetromino);
-			for (int c = (0 + lineOffset); c < 4; c++) {
-				for (int r = 0; r < 4; r++) {
-					if (newMatrix[row + r][column + c - 1] == 0) {
-						newMatrix[row + r][column + c - 1] = currTetromino[r][c];
-						newMatrix[row + r][column + c] = 0;
-					} else
-						failed = true;
-				}
-			}
-		} else
-			failed = true;
+			int[][] newMatrix = field.getMatrix();
+			int[][] currTetromino = nextTetrominos.get(0).getMatrix();
+			int row = currTetrominoCoords[0];
+			int column = currTetrominoCoords[1];
+			boolean failed = false;
+			int bottom = emptyLineBottom(currTetromino);
+			int left = emptyLineLeft(currTetromino);
+			int right = emptyLineRight(currTetromino);
 
-		if (!failed) {
-			currTetrominoCoords[1]--;
-			field.setMatrix(newMatrix);
+			for (int c = (0 + left); c <= (3 - right); c++) {
+				for (int r = 0; r <= (3 - bottom); r++) {
+					if (newMatrix[row + r][column + c - 1] == 1 && currTetromino[r][c] == 1) {
+						failed = true;
+						break;
+					} else if (newMatrix[row + r][column + c - 1] == 1 && currTetromino[r][c] == 0) {
+						// ignore
+					} else if (newMatrix[row + r][column + c - 1] == 0 && currTetromino[r][c] == 1) {
+						newMatrix[row + r][column + c - 1] = 1;
+						newMatrix[row + r][column + c] = 0;
+					}
+				}
+				if (failed)
+					break;
+			}
+			if (!failed) {
+				currTetrominoCoords[1]--;
+				field.setMatrix(newMatrix);
+			}
 		}
 	}
 
@@ -183,9 +201,10 @@ public class Game {
 					if (newMatrix[row + r][column + c + 1] == 0) {
 						newMatrix[row + r][column + c + 1] = currTetromino[r][c];
 						newMatrix[row + r][column + c] = 0;
-					} else
+					} else {
 						failed = true;
-					break;
+						break;
+					}
 				}
 				if (failed)
 					break;
@@ -199,7 +218,7 @@ public class Game {
 		}
 	}
 
-	boolean collisionDown() {
+	boolean collisionBottom() {
 		boolean collision = false;
 		int row = currTetrominoCoords[0] + 3 - emptyLineBottom(nextTetrominos.get(0).getMatrix());
 		if (row >= field.getHEIGHT() - 1)
@@ -210,7 +229,7 @@ public class Game {
 
 	private boolean collisionLeft() {
 		boolean collision = false;
-		int column = currTetrominoCoords[1];
+		int column = currTetrominoCoords[1] + emptyLineLeft(nextTetrominos.get(0).getMatrix());
 		if (column <= 0)
 			return true;
 
@@ -219,14 +238,20 @@ public class Game {
 
 	private boolean collisionRight() {
 		boolean collision = false;
-		int column = currTetrominoCoords[1] + 3;
-		if (column >= field.getWIDTH() - 1)
+		int column = currTetrominoCoords[1] + 3 - emptyLineRight(nextTetrominos.get(0).getMatrix());
+		if (column >= field.getWIDTH())
 			return true;
 
 		return collision;
 	}
 
 	// horizontal
+	//
+	// 0000
+	// 1111
+	// 0000
+	// 0000
+	//
 	private int emptyLineBottom(int[][] matrix) {
 		int lines = 0;
 		boolean empty = true;
@@ -241,11 +266,17 @@ public class Game {
 			} else
 				break;
 		}
-
+		System.out.println("empty rows from bottom up " + lines);
 		return lines;
 	}
 
 	// vertical
+	//
+	// 0010
+	// 0010
+	// 0010
+	// 0010
+	//
 	private int emptyLineRight(int[][] matrix) {
 		int lines = 0;
 		boolean empty = true;
@@ -260,7 +291,7 @@ public class Game {
 			} else
 				break;
 		}
-		System.out.println("line offset right " + lines);
+		System.out.println("empft column on the right " + lines);
 		return lines;
 	}
 
@@ -278,22 +309,14 @@ public class Game {
 			} else
 				break;
 		}
-		System.out.println("line offset left " + lines);
+		System.out.println("empty columns on the left " + lines);
 		return lines;
-	}
-
-	public int[] getCurrTetrominoCoords() {
-		return currTetrominoCoords;
-	}
-
-	public void setCurrTetrominoCoords(int[] currTetrominoCoords) {
-		this.currTetrominoCoords = currTetrominoCoords;
 	}
 
 	public List<Tetromino> getNextTetrominos() {
 		return nextTetrominos;
 	}
-	
+
 	public void setNextTetrominos(List<Tetromino> nextTetrominos) {
 		this.nextTetrominos = nextTetrominos;
 	}
