@@ -98,7 +98,7 @@ public class Game {
 		return false;
 	}
 
-	int[][] rotateTetromino(int[][] tetromino) {
+	private int[][] rotateTetromino(int[][] tetromino) {
 		int size = tetromino.length;
 		int[][] rotated = new int[size][size];
 
@@ -107,6 +107,9 @@ public class Game {
 				rotated[i][j] = tetromino[size - j - 1][i];
 			}
 		}
+		System.out.println("Rotate: ");
+		test.printMatrix(rotated);
+		System.out.println("");
 		return rotated;
 	}
 
@@ -197,7 +200,7 @@ public class Game {
 
 			int lineOffset = emptyLineRight(currTetromino);
 			for (int c = (3 - lineOffset); c >= 0; c--) {
-				for (int r = 0; r < 4; r++) {
+				for (int r = 0; r <=  3; r++) {
 					if (newMatrix[row + r][column + c + 1] == 0) {
 						newMatrix[row + r][column + c + 1] = currTetromino[r][c];
 						newMatrix[row + r][column + c] = 0;
@@ -215,6 +218,40 @@ public class Game {
 		if (!failed) {
 			currTetrominoCoords[1]++;
 			field.setMatrix(newMatrix);
+		}
+	}
+
+	void moveRotate() {
+		int[][] newMatrix = this.field.getMatrix();
+		int[][] currTetromino = nextTetrominos.get(0).getMatrix();
+		int[][] rotatedTetromino = rotateTetromino(currTetromino);
+		int row = currTetrominoCoords[0];
+		int column = currTetrominoCoords[1];
+		boolean failed = false;
+
+		for (int r = 0; r <= 3; r++) {
+			for (int c = 0; c <= 3; c++) {
+				// clear currTetromino
+				if (newMatrix[row + r][column + c] == 1 && currTetromino[r][c] == 1) {
+					newMatrix[row + r][column + c] = 0;
+				}
+				if (newMatrix[row + r][column + c] == 1 && rotatedTetromino[r][c] == 1) {
+					System.out.println("Rotation failed");
+					failed = true;
+					break;
+				} else if ((newMatrix[row + r][column + c] == 1 && rotatedTetromino[r][c] == 0)
+						|| (newMatrix[row + r][column + c] == 0 && rotatedTetromino[r][c] == 1)) {
+					newMatrix[row + r][column + c] = 1;
+				} else
+					newMatrix[row + r][column + c] = 0;
+			}
+			if (failed)
+				break;
+		}
+		
+		if(!failed) { 
+			field.setMatrix(newMatrix);
+			nextTetrominos.get(0).setMatrix(rotatedTetromino);		
 		}
 	}
 
@@ -266,7 +303,7 @@ public class Game {
 			} else
 				break;
 		}
-		System.out.println("empty rows from bottom up " + lines);
+//		System.out.println("empty rows from bottom up " + lines);
 		return lines;
 	}
 
@@ -291,7 +328,7 @@ public class Game {
 			} else
 				break;
 		}
-		System.out.println("empft column on the right " + lines);
+//		System.out.println("empft column on the right " + lines);
 		return lines;
 	}
 
@@ -309,7 +346,7 @@ public class Game {
 			} else
 				break;
 		}
-		System.out.println("empty columns on the left " + lines);
+//		System.out.println("empty columns on the left " + lines);
 		return lines;
 	}
 

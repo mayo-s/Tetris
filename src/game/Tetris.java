@@ -69,8 +69,7 @@ public class Tetris extends Application {
 						game.moveDown();
 					}
 					if (event.getCode() == KeyCode.UP) {
-						game.getNextTetrominos().get(0)
-								.setMatrix(game.rotateTetromino(game.getNextTetrominos().get(0).getMatrix()));
+						game.moveRotate();
 					}
 					gui.updateGameGrid(game.getField(), game.getNextTetrominos().get(0));
 				}
