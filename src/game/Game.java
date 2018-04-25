@@ -104,7 +104,7 @@ public class Game {
 		return rotated;
 	}
 
-	public void moveDown() {
+	void moveDown() {
 		if (!collisionBottom()) {
 			int[][] newMatrix = field.getMatrix().clone();
 			int[][] currTetromino = nextTetrominos.get(0).getMatrix();
@@ -254,7 +254,7 @@ public class Game {
 		}
 	}
 
-	boolean collisionBottom() {
+	private boolean collisionBottom() {
 		int row = currTetrominoCoords[0] + 3 - emptyLineBottom(nextTetrominos.get(0).getMatrix());
 		if (row >= field.getHEIGHT() - 1) {
 			return true;
