@@ -169,6 +169,10 @@ public class Game {
 
 			for (int c = (0 + left); c <= (3 - right); c++) {
 				for (int r = 0; r <= (3 - bottom); r++) {
+					// clear old Tetromino
+					if (newMatrix[row + r][column + c] == 1 && currTetromino[r][c] == 1) {
+						newMatrix[row + r][column + c] = 0;
+					}
 					if (newMatrix[row + r][column + c - 1] == 1 && currTetromino[r][c] == 1) {
 						failed = true;
 						break;
@@ -190,34 +194,38 @@ public class Game {
 	}
 
 	void moveRight() {
-		int[][] newMatrix = field.getMatrix();
-		int[][] currTetromino = nextTetrominos.get(0).getMatrix();
-		int row = currTetrominoCoords[0];
-		int column = currTetrominoCoords[1];
-		boolean failed = false;
-
 		if (!collisionRight()) {
+			int[][] newMatrix = field.getMatrix();
+			int[][] currTetromino = nextTetrominos.get(0).getMatrix();
+			int row = currTetrominoCoords[0];
+			int column = currTetrominoCoords[1];
+			boolean failed = false;
+			int bottom = emptyLineBottom(currTetromino);
+			int left = emptyLineLeft(currTetromino);
+			int right = emptyLineRight(currTetromino);
 
-			int lineOffset = emptyLineRight(currTetromino);
-			for (int c = (3 - lineOffset); c >= 0; c--) {
-				for (int r = 0; r <=  3; r++) {
-					if (newMatrix[row + r][column + c + 1] == 0) {
-						newMatrix[row + r][column + c + 1] = currTetromino[r][c];
-						newMatrix[row + r][column + c] = 0;
-					} else {
+			for (int c = (3 - right); c >= (0 + left); c--) {
+				for (int r = 0; r <= (3 - bottom); r++) {
+					// clear old Tetromino
+//					if (newMatrix[row + r][column + c] == 1 && currTetromino[r][c] == 1) {
+//						newMatrix[row + r][column + c] = 0;
+//					}
+					if (newMatrix[row + r][column + c + 1] == 1 && currTetromino[r][c] == 1) {
 						failed = true;
 						break;
+					} else if(newMatrix[row + r][column + c + 1] == 1 && currTetromino[r][c] == 0) {
+						// ignore
+					} else if(newMatrix[row + r][column + c + 1] == 0 && currTetromino[r][c] == 1) {
+						newMatrix[row + r][column + c + 1] = 1;
+						newMatrix[row + r][column + c] = 0;
 					}
 				}
-				if (failed)
-					break;
+				if(failed) break;
 			}
-		} else
-			failed = true;
-
-		if (!failed) {
-			currTetrominoCoords[1]++;
-			field.setMatrix(newMatrix);
+			if (!failed) {
+				currTetrominoCoords[1]++;
+				field.setMatrix(newMatrix);
+			}
 		}
 	}
 
@@ -248,10 +256,10 @@ public class Game {
 			if (failed)
 				break;
 		}
-		
-		if(!failed) { 
+
+		if (!failed) {
 			field.setMatrix(newMatrix);
-			nextTetrominos.get(0).setMatrix(rotatedTetromino);		
+			nextTetrominos.get(0).setMatrix(rotatedTetromino);
 		}
 	}
 
@@ -303,7 +311,7 @@ public class Game {
 			} else
 				break;
 		}
-//		System.out.println("empty rows from bottom up " + lines);
+		// System.out.println("empty rows from bottom up " + lines);
 		return lines;
 	}
 
@@ -328,7 +336,7 @@ public class Game {
 			} else
 				break;
 		}
-//		System.out.println("empft column on the right " + lines);
+		// System.out.println("empft column on the right " + lines);
 		return lines;
 	}
 
@@ -346,7 +354,7 @@ public class Game {
 			} else
 				break;
 		}
-//		System.out.println("empty columns on the left " + lines);
+		// System.out.println("empty columns on the left " + lines);
 		return lines;
 	}
 
