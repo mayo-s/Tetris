@@ -13,7 +13,6 @@ import elements.S;
 import elements.T;
 import elements.Tetromino;
 import elements.Z;
-import test.Test;
 
 public class Game {
 
@@ -79,11 +78,11 @@ public class Game {
 		}
 		if (!gameOver) {
 			int[][] currTetromino = nextTetrominos.get(0).getMatrix();
-			int[][] field = this.field.getMatrix().clone();
+			ArrayList<ArrayList<Boolean>> currfield = field.getMatrix();
 			for (int row = 0; row < currTetromino.length; row++) {
 				for (int column = 0; column < currTetromino.length; column++) {
-					if (field[0][column + 3] == 0 && currTetromino[row][column] == 1)
-						field[row][column + 3] = currTetromino[row][column];
+					if (currfield.get(0).get(column + 3) == false && currTetromino[row][column] == 1)
+						currfield.get(row).set((column + 3), true);
 				}
 			}
 
@@ -145,7 +144,7 @@ public class Game {
 	}
 
 	private ArrayList<Boolean> completeRows() {
-		int[][] matrix = field.getMatrix();
+		 matrix = field.getMatrix();
 		int row = currTetrominoCoords[0];
 		ArrayList<Boolean> complete = new ArrayList<>(Arrays.asList(false, false, false, false));
 

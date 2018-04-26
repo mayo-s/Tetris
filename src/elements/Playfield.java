@@ -1,28 +1,26 @@
 package elements;
 
+import java.util.ArrayList;
+
 public class Playfield {
 
-	private int[][] matrix;
+	private ArrayList<ArrayList<Boolean>> matrix;
 	private final int HEIGHT = 22;
 	private final int WIDTH = 10;
 	
 	public Playfield() {
-		matrix = new int[HEIGHT][WIDTH];
+		matrix = new ArrayList<>();
 		fill();
 	}
 	
 	private void fill() {
-		for(int[] array : matrix) {
-			java.util.Arrays.fill(array, 0);
+		for(int r = 0; r < HEIGHT; r++) {
+			ArrayList<Boolean> row = new ArrayList<>();
+			for(int c = 0; c < WIDTH; c++) {
+				row.add(false);
+			}		
+			matrix.add(row);
 		}
-	}
-	
-	public int[][] getMatrix() {
-		return matrix;
-	}
-
-	public void setMatrix(int[][] matrix) {
-		this.matrix = matrix;		
 	}
 
 	public int getWIDTH() {
@@ -31,5 +29,13 @@ public class Playfield {
 
 	public int getHEIGHT() {
 		return HEIGHT;
+	}
+
+	public ArrayList<ArrayList<Boolean>> getMatrix() {
+		return matrix;
+	}
+
+	public void setMatrix(ArrayList<ArrayList<Boolean>> matrix) {
+		this.matrix = matrix;
 	}	
 }
