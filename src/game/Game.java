@@ -1,6 +1,7 @@
 package game;
 
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.List;
 
 import elements.I;
@@ -67,7 +68,11 @@ public class Game {
 	private void tetrominoToField(boolean next) {
 		gameOver = gameOver();
 		if (next && !gameOver) {
-			updateScore();
+			ArrayList<Boolean> cr = completeRows();
+			if (cr.contains(true)) {
+				removeCompleteRows(cr);
+				updateScore(cr);
+			}
 			nextTetrominos.remove(0);
 			nextTetrominos.add(randomTetromino());
 			resetCoords();
@@ -119,10 +124,9 @@ public class Game {
 		return false;
 	}
 
-	private void updateScore() {
-		boolean[] completeRows = completeRows();
+	private void updateScore(ArrayList<Boolean> completeRows) {
 		int count = 0;
-		for (boolean complete : completeRows) {
+		for (Boolean complete : completeRows) {
 			if (complete)
 				count++;
 		}
@@ -140,10 +144,10 @@ public class Game {
 		score = newScore;
 	}
 
-	private boolean[] completeRows() {
+	private ArrayList<Boolean> completeRows() {
 		int[][] matrix = field.getMatrix();
 		int row = currTetrominoCoords[0];
-		boolean[] complete = { false, false, false, false };
+		ArrayList<Boolean> complete = new ArrayList<>(Arrays.asList(false, false, false, false));
 
 		for (int r = row; r <= (row + 3); r++) {
 			boolean gap = false;
@@ -155,12 +159,15 @@ public class Game {
 					}
 				}
 				if (!gap) {
-					complete[r - row] = true;
+					complete.set((r - row), true);
 				}
 			}
 		}
-
 		return complete;
+	}
+
+	private void removeCompleteRows(ArrayList<Boolean> completeRows) {
+
 	}
 
 	void moveDown() {
