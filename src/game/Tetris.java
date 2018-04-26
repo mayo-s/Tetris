@@ -42,6 +42,7 @@ public class Tetris extends Application {
 				if (game.isGameOver())
 					interval.stop();
 				else {
+					if(game.newScore()) gui.updateScore(game.getScore());
 					game.moveDown();
 					gui.updatePreviewGrid(game.getNextTetrominos().get(1));
 					gui.updateGameGrid(game.getField(), game.getNextTetrominos().get(0));

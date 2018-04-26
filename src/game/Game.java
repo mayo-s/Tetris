@@ -12,6 +12,7 @@ import elements.S;
 import elements.T;
 import elements.Tetromino;
 import elements.Z;
+import test.Test;
 
 public class Game {
 
@@ -21,6 +22,8 @@ public class Game {
 	private final int LIMIT = 2; // current + next
 	private Playfield field;
 	private boolean gameOver;
+	private int score;
+	private int oldScore;
 
 	public Game() {
 		init();
@@ -32,6 +35,8 @@ public class Game {
 		nextTetrominos = new ArrayList<>(LIMIT);
 		field = new Playfield();
 		currTetrominoCoords = new int[2];
+		score = 0;
+		oldScore = score;
 
 		tetrominos.add(new I());
 		tetrominos.add(new O());
@@ -62,6 +67,7 @@ public class Game {
 	private void tetrominoToField(boolean next) {
 		gameOver = gameOver();
 		if (next && !gameOver) {
+			updateScore();
 			nextTetrominos.remove(0);
 			nextTetrominos.add(randomTetromino());
 			resetCoords();
@@ -104,6 +110,59 @@ public class Game {
 		return rotated;
 	}
 
+	boolean newScore() {
+		if (score != oldScore) {
+			System.out.println("Send new Score " + score + " ( " + oldScore + " )");
+			oldScore = score;
+			return true;
+		}
+		return false;
+	}
+
+	private void updateScore() {
+		boolean[] completeRows = completeRows();
+		int count = 0;
+		for (boolean complete : completeRows) {
+			if (complete)
+				count++;
+		}
+
+		int newScore = score;
+		if (count == 1)
+			newScore = score + 1;
+		else if (count == 2)
+			newScore = score + 3;
+		else if (count == 3)
+			newScore = score + 5;
+		else if (count == 4)
+			newScore = score + 8;
+
+		score = newScore;
+	}
+
+	private boolean[] completeRows() {
+		int[][] matrix = field.getMatrix();
+		int row = currTetrominoCoords[0];
+		boolean[] complete = { false, false, false, false };
+
+		for (int r = row; r <= (row + 3); r++) {
+			boolean gap = false;
+			if (r < matrix.length) {
+				for (int c : matrix[r]) {
+					if (c == 0) {
+						gap = true;
+						break;
+					}
+				}
+				if (!gap) {
+					complete[r - row] = true;
+				}
+			}
+		}
+
+		return complete;
+	}
+
 	void moveDown() {
 		if (!collisionBottom()) {
 			int[][] newMatrix = field.getMatrix().clone();
@@ -137,7 +196,6 @@ public class Game {
 			}
 		} else
 			tetrominoToField(true);
-
 	}
 
 	void moveLeft() {
@@ -364,5 +422,9 @@ public class Game {
 
 	public boolean isGameOver() {
 		return gameOver;
+	}
+
+	public int getScore() {
+		return score;
 	}
 }
