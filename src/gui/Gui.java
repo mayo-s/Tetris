@@ -11,12 +11,12 @@ import javafx.scene.layout.VBox;
 
 public class Gui extends HBox {
 
-	HBox main;
-	Label playerLabel;
-	Label scoreLabel;
-	Label lvllabel;
-	GridPane gameGrid;
-	GridPane previewGrid;
+	private HBox main;
+	private Label playerLabel;
+	private Label lvllabel;
+	private GridPane gameGrid;
+	private GridPane previewGrid;
+	private HBox scoreBox;
 
 	public Gui() {
 
@@ -33,10 +33,17 @@ public class Gui extends HBox {
 		previewGrid = setupGridPane(4, 4);
 		previewGrid.setGridLinesVisible(true);
 		playerLabel = new Label("Player: " + "DummyName");
-		scoreLabel = new Label("Score: " + Integer.toString(0));
+		
+		scoreBox = new HBox();
+		Label scoreLabelText = new Label("Score: ");
+		Label scoreLabel = new Label("0");
+		scoreBox.getChildren().addAll(scoreLabelText, scoreLabel);
+		
+		
+		
 		lvllabel = new Label("Level: " + Integer.toString(1));
 		Label controlsLabel = new Label("P - Play/Pause\n^ - Rotate\n< - move left\n> - move right\nv - drop");
-		info.getChildren().addAll(previewGrid, playerLabel, lvllabel, scoreLabel, controlsLabel);
+		info.getChildren().addAll(previewGrid, playerLabel, lvllabel, scoreBox, controlsLabel);
 
 		main.getChildren().addAll(gameGrid, info);
 	}
@@ -65,6 +72,13 @@ public class Gui extends HBox {
 					previewGrid.getChildren().get(r * columns + c).setStyle("-fx-background-color: " + "#ffffff");
 			}
 		}
+	}
+	
+	public void updateScore(int score) {
+		Label label = new Label(Integer.toString(score));	
+		scoreBox.getChildren().remove(1);	
+		scoreBox.getChildren().add(label);
+		
 	}
 
 	public void updateGameGrid(Playfield field, Tetromino tetromino) {
