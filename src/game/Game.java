@@ -18,8 +18,9 @@ public class Game {
 
 	private List<Tetromino> tetrominos;
 	private List<Tetromino> nextTetrominos;
-	private int[] currTetrominoCoords; // row + column
 	private final int LIMIT = 2; // current + next
+	private final int STARTROW = 0;
+	private final int STARTCOLUMN = 3;
 	private Playfield field;
 	private boolean gameOver;
 	private int score;
@@ -34,24 +35,22 @@ public class Game {
 		tetrominos = new ArrayList<>();
 		nextTetrominos = new ArrayList<>(LIMIT);
 		field = new Playfield();
-		currTetrominoCoords = new int[2];
 		score = 0;
 		oldScore = score;
 
-		tetrominos.add(new I());
-		tetrominos.add(new O());
-		tetrominos.add(new J());
-		tetrominos.add(new L());
-		tetrominos.add(new S());
-		tetrominos.add(new Z());
-		tetrominos.add(new T());
+		tetrominos.add(new I(STARTROW, STARTCOLUMN));
+		tetrominos.add(new O(STARTROW, STARTCOLUMN));
+		tetrominos.add(new J(STARTROW, STARTCOLUMN));
+		tetrominos.add(new L(STARTROW, STARTCOLUMN));
+		tetrominos.add(new S(STARTROW, STARTCOLUMN));
+		tetrominos.add(new Z(STARTROW, STARTCOLUMN));
+		tetrominos.add(new T(STARTROW, STARTCOLUMN));
 
 		for (int i = 0; i < LIMIT; i++) {
 			nextTetrominos.add(randomTetromino());
 		}
 		System.out.println("START\n");
-		tetrominoToField(false);
-		resetCoords();
+		tetrominoToField();
 	}
 
 	private Tetromino randomTetromino() {
@@ -64,40 +63,43 @@ public class Game {
 		return newTetromino;
 	}
 
-	private void tetrominoToField(boolean next) {
+	private void next() {
+
 		gameOver = gameOver();
-		if (next && !gameOver) {
+		if (!gameOver) {
 			ArrayList<Boolean> cr = completeRows();
 			if (cr.contains(true)) {
 				removeCompleteRows(cr);
 				updateScore(cr);
 			}
+			nextTetrominos.get(0).setRow(STARTROW);
+			nextTetrominos.get(0).setColumn(STARTCOLUMN);
 			nextTetrominos.remove(0);
 			nextTetrominos.add(randomTetromino());
-			resetCoords();
-		}
-		if (!gameOver) {
-			int[][] currTetromino = nextTetrominos.get(0).getMatrix();
-			ArrayList<ArrayList<Boolean>> currfield = field.getMatrix();
-			for (int row = 0; row < currTetromino.length; row++) {
-				for (int column = 0; column < currTetromino.length; column++) {
-					if (currfield.get(0).get(column + 3) == false && currTetromino[row][column] == 1)
-						currfield.get(row).set((column + 3), true);
-				}
-			}
-
-		} else {
+			tetrominoToField();
+		} else
 			System.out.println("GAME OVER");
-		}
+
 	}
 
-	private void resetCoords() {
-		currTetrominoCoords[0] = 0;
-		currTetrominoCoords[1] = 3;
+	private void tetrominoToField() {
+
+		int[][] currTetromino = nextTetrominos.get(0).getMatrix();
+		int row = nextTetrominos.get(0).getRow();
+		int rows = currTetromino.length;
+		int column = nextTetrominos.get(0).getColumn();
+		int columns = currTetromino[0].length;
+
+		for (int r = 0; r < rows; r++) {
+			for (int c = 0; c < columns; c++) {
+				if (!field.getMatrix().get(row + r).get(column + c) && currTetromino[r][c] == 1)
+					field.getMatrix().get(row + r).set((column + c), true);
+			}
+		}
 	}
 
 	boolean gameOver() {
-		if (currTetrominoCoords[0] == 0 && currTetrominoCoords[1] == 3)
+		if (nextTetrominos.get(0).getRow() == STARTROW && nextTetrominos.get(0).getColumn() == STARTCOLUMN)
 			return true;
 		return false;
 	}
@@ -144,7 +146,7 @@ public class Game {
 
 	private ArrayList<Boolean> completeRows() {
 		ArrayList<ArrayList<Boolean>> matrix = field.getMatrix();
-		int row = currTetrominoCoords[0];
+		int row = nextTetrominos.get(0).getRow();
 		ArrayList<Boolean> complete = new ArrayList<>(Arrays.asList(false, false, false, false));
 
 		for (int r = row; r <= (row + 3); r++) {
@@ -165,10 +167,10 @@ public class Game {
 	}
 
 	private void removeCompleteRows(ArrayList<Boolean> completeRows) {
-		int row = currTetrominoCoords[0];
+		int row = nextTetrominos.get(0).getRow();
 
-		for(int r = 0; r < completeRows.size(); r++) {
-			if(completeRows.get(r)) {
+		for (int r = 0; r < completeRows.size(); r++) {
+			if (completeRows.get(r)) {
 				field.getMatrix().remove(row + r);
 				field.getMatrix().add(0, field.addRow());
 			}
@@ -179,8 +181,8 @@ public class Game {
 		if (!collisionBottom()) {
 			ArrayList<ArrayList<Boolean>> newMatrix = field.getMatrix();
 			int[][] currTetromino = nextTetrominos.get(0).getMatrix();
-			int row = currTetrominoCoords[0];
-			int column = currTetrominoCoords[1];
+			int row = nextTetrominos.get(0).getRow();
+			int column = nextTetrominos.get(0).getColumn();
 			boolean failed = false;
 			int bottom = emptyLineBottom(currTetromino);
 			int left = emptyLineLeft(currTetromino);
@@ -189,7 +191,7 @@ public class Game {
 				for (int c = (0 + left); c <= (3 - right); c++) {
 					if (newMatrix.get(row + r + 1).get(column + c) == true && currTetromino[r][c] == 1) {
 						failed = true;
-						tetrominoToField(true);
+						next();
 						break;
 					} else if (newMatrix.get(row + r + 1).get(column + c) == true && currTetromino[r][c] == 0) {
 						// newMatrix[row + r + 1][column + c] = 1;
@@ -204,18 +206,18 @@ public class Game {
 
 			if (!failed) {
 				field.setMatrix(newMatrix);
-				currTetrominoCoords[0]++;
+				nextTetrominos.get(0).setRow(row + 1);
 			}
 		} else
-			tetrominoToField(true);
+			next();
 	}
 
 	void moveLeft() {
 		if (!collisionLeft()) {
 			ArrayList<ArrayList<Boolean>> newMatrix = field.getMatrix();
 			int[][] currTetromino = nextTetrominos.get(0).getMatrix();
-			int row = currTetrominoCoords[0];
-			int column = currTetrominoCoords[1];
+			int row = nextTetrominos.get(0).getRow();
+			int column = nextTetrominos.get(0).getColumn();
 			boolean failed = false;
 			int bottom = emptyLineBottom(currTetromino);
 			int left = emptyLineLeft(currTetromino);
@@ -223,10 +225,6 @@ public class Game {
 
 			for (int c = (0 + left); c <= (3 - right); c++) {
 				for (int r = 0; r <= (3 - bottom); r++) {
-					// clear old Tetromino
-					// if (newMatrix.get(row + r).get(column + c) && currTetromino[r][c] == 1) {
-					// newMatrix.get(row + r).set(column + c, false);
-					// }
 					if (newMatrix.get(row + r).get(column + c - 1) && currTetromino[r][c] == 1) {
 						failed = true;
 						break;
@@ -241,7 +239,7 @@ public class Game {
 					break;
 			}
 			if (!failed) {
-				currTetrominoCoords[1]--;
+				nextTetrominos.get(0).setColumn(nextTetrominos.get(0).getColumn() - 1);
 				field.setMatrix(newMatrix);
 			}
 		}
@@ -251,8 +249,8 @@ public class Game {
 		if (!collisionRight()) {
 			ArrayList<ArrayList<Boolean>> newMatrix = field.getMatrix();
 			int[][] currTetromino = nextTetrominos.get(0).getMatrix();
-			int row = currTetrominoCoords[0];
-			int column = currTetrominoCoords[1];
+			int row = nextTetrominos.get(0).getRow();
+			int column = nextTetrominos.get(0).getColumn();
 			boolean failed = false;
 			int bottom = emptyLineBottom(currTetromino);
 			int left = emptyLineLeft(currTetromino);
@@ -260,10 +258,6 @@ public class Game {
 
 			for (int c = (3 - right); c >= (0 + left); c--) {
 				for (int r = 0; r <= (3 - bottom); r++) {
-					// clear old Tetromino
-					// if (newMatrix[row + r][column + c] == 1 && currTetromino[r][c] == 1) {
-					// newMatrix[row + r][column + c] = 0;
-					// }
 					if (newMatrix.get(row + r).get(column + c + 1) && currTetromino[r][c] == 1) {
 						failed = true;
 						break;
@@ -278,7 +272,7 @@ public class Game {
 					break;
 			}
 			if (!failed) {
-				currTetrominoCoords[1]++;
+				nextTetrominos.get(0).setColumn((nextTetrominos.get(0).getColumn()) + 1);
 				field.setMatrix(newMatrix);
 			}
 		}
@@ -288,8 +282,8 @@ public class Game {
 		ArrayList<ArrayList<Boolean>> newMatrix = field.getMatrix();
 		int[][] currTetromino = nextTetrominos.get(0).getMatrix();
 		int[][] rotatedTetromino = rotateTetromino(currTetromino);
-		int row = currTetrominoCoords[0];
-		int column = currTetrominoCoords[1];
+		int row = nextTetrominos.get(0).getRow();
+		int column = nextTetrominos.get(0).getColumn();
 		boolean failed = false;
 		int bottom = emptyLineBottom(currTetromino);
 		int left = emptyLineLeft(currTetromino);
@@ -325,7 +319,7 @@ public class Game {
 	}
 
 	private boolean collisionBottom() {
-		int row = currTetrominoCoords[0] + 3 - emptyLineBottom(nextTetrominos.get(0).getMatrix());
+		int row = nextTetrominos.get(0).getRow() + 3 - emptyLineBottom(nextTetrominos.get(0).getMatrix());
 		if (row >= field.getHEIGHT() - 1) {
 			return true;
 		}
@@ -334,7 +328,7 @@ public class Game {
 	}
 
 	private boolean collisionLeft() {
-		int column = currTetrominoCoords[1] + emptyLineLeft(nextTetrominos.get(0).getMatrix());
+		int column = nextTetrominos.get(0).getColumn() + emptyLineLeft(nextTetrominos.get(0).getMatrix());
 		if (column <= 0) {
 			return true;
 		}
@@ -343,7 +337,7 @@ public class Game {
 	}
 
 	private boolean collisionRight() {
-		int column = currTetrominoCoords[1] + 3 - emptyLineRight(nextTetrominos.get(0).getMatrix());
+		int column = nextTetrominos.get(0).getColumn() + 3 - emptyLineRight(nextTetrominos.get(0).getMatrix());
 		if (column >= field.getWIDTH() - 1) {
 			return true;
 		}
