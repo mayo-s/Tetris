@@ -1,5 +1,7 @@
 package gui;
 
+import java.util.ArrayList;
+
 import elements.Playfield;
 import elements.Tetromino;
 import javafx.geometry.Insets;
@@ -82,17 +84,16 @@ public class Gui extends HBox {
 	}
 
 	public void updateGameGrid(Playfield field, Tetromino tetromino) {
-		int[][] matrix = field.getMatrix();
-		int rows = matrix.length;
-		int columns = matrix[0].length;
+
+		ArrayList<ArrayList<Boolean>> matrix = field.getMatrix();
+		int rows = matrix.size();
+		int columns = matrix.get(0).size();
 		for (int r = 0; r < rows; r++) {
 			for (int c = 0; c < columns; c++) {
-				if (matrix[r][c] == 1)
+				if (matrix.get(r).get(c))
 					gameGrid.getChildren().get(r * columns + c)
 							.setStyle("-fx-background-color: " + tetromino.getColor());
-				else if (matrix[r][c] == 0)
-					gameGrid.getChildren().get(r * columns + c)
-							.setStyle("-fx-background-color: " + "#ffffff");
+				else gameGrid.getChildren().get(r * columns + c).setStyle("-fx-background-color: " + "#ffffff");
 			}
 		}
 	}
