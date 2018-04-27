@@ -15,12 +15,16 @@ public class Playfield {
 	
 	private void fill() {
 		for(int r = 0; r < HEIGHT; r++) {
-			ArrayList<Boolean> row = new ArrayList<>();
-			for(int c = 0; c < WIDTH; c++) {
-				row.add(false);
-			}		
-			matrix.add(row);
+			matrix.add(addRow());
 		}
+	}
+	
+	public ArrayList<Boolean> addRow() {	
+		ArrayList<Boolean> row = new ArrayList<>();
+		for(int c = 0; c < WIDTH; c++) {
+			row.add(false);
+		}	
+		return row;
 	}
 
 	public int getWIDTH() {
