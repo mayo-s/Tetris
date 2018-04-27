@@ -39,10 +39,12 @@ public class Tetris extends Application {
 
 			@Override
 			public void handle(ActionEvent event) {
-				if (game.isGameOver())
+				if (game.isGameOver()) {
+					gui.getGameOverLabel().setVisible(true);
 					interval.stop();
-				else {
-					if(game.newScore()) gui.updateScore(game.getScore());
+				} else {
+					if (game.newScore())
+						gui.updateScore(game.getScore());
 					game.moveDown();
 					gui.updatePreviewGrid(game.getNextTetrominos().get(1));
 					gui.updateGameGrid(game.getField(), game.getNextTetrominos().get(0));

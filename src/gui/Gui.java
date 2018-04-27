@@ -9,13 +9,17 @@ import javafx.scene.control.Label;
 import javafx.scene.layout.GridPane;
 import javafx.scene.layout.HBox;
 import javafx.scene.layout.Pane;
+import javafx.scene.layout.StackPane;
 import javafx.scene.layout.VBox;
+import javafx.scene.paint.Color;
+import javafx.scene.text.Font;
 
 public class Gui extends HBox {
 
 	private HBox main;
 	private Label playerLabel;
 	private Label lvllabel;
+	private Label gameOverLabel;
 	private GridPane gameGrid;
 	private GridPane previewGrid;
 	private HBox scoreBox;
@@ -26,8 +30,16 @@ public class Gui extends HBox {
 		main.setPadding(new Insets(10, 10, 10, 10));
 
 		// left side game grid
+		StackPane sp = new StackPane();
 		gameGrid = setupGridPane(22, 10);
 		gameGrid.setGridLinesVisible(true);
+		gameOverLabel = new Label("Game Over");
+		gameOverLabel.setFont(new Font("Cambria", 42));
+		gameOverLabel.setTextFill(Color.web("red"));
+		gameOverLabel.setRotate(45d);
+		gameOverLabel.setVisible(false);
+		sp.getChildren().addAll(gameGrid, gameOverLabel);
+		
 
 		// right side info box
 		VBox info = new VBox(10);
@@ -45,7 +57,7 @@ public class Gui extends HBox {
 		Label controlsLabel = new Label("P - Play/Pause\n^ - Rotate\n< - move left\n> - move right\nv - drop");
 		info.getChildren().addAll(previewGrid, playerLabel, lvllabel, scoreBox, controlsLabel);
 
-		main.getChildren().addAll(gameGrid, info);
+		main.getChildren().addAll(sp, info);
 	}
 
 	private GridPane setupGridPane(int rows, int columns) {
@@ -135,5 +147,9 @@ public class Gui extends HBox {
 
 	public void setMain(HBox main) {
 		this.main = main;
+	}
+
+	public Label getGameOverLabel() {
+		return gameOverLabel;
 	}
 }
