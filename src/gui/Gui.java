@@ -35,14 +35,12 @@ public class Gui extends HBox {
 		previewGrid = setupGridPane(4, 4);
 		previewGrid.setGridLinesVisible(true);
 		playerLabel = new Label("Player: " + "DummyName");
-		
+
 		scoreBox = new HBox();
 		Label scoreLabelText = new Label("Score: ");
 		Label scoreLabel = new Label("0");
 		scoreBox.getChildren().addAll(scoreLabelText, scoreLabel);
-		
-		
-		
+
 		lvllabel = new Label("Level: " + Integer.toString(1));
 		Label controlsLabel = new Label("P - Play/Pause\n^ - Rotate\n< - move left\n> - move right\nv - drop");
 		info.getChildren().addAll(previewGrid, playerLabel, lvllabel, scoreBox, controlsLabel);
@@ -69,31 +67,48 @@ public class Gui extends HBox {
 		for (int r = 0; r < rows; r++) {
 			for (int c = 0; c < columns; c++) {
 				if (matrix[r][c] == 1)
-					previewGrid.getChildren().get(r * columns + c).setStyle("-fx-background-color: " + tetromino.getColor());
+					previewGrid.getChildren().get(r * columns + c)
+							.setStyle("-fx-background-color: " + tetromino.getColor());
 				else
 					previewGrid.getChildren().get(r * columns + c).setStyle("-fx-background-color: " + "#ffffff");
 			}
 		}
 	}
-	
+
 	public void updateScore(int score) {
-		Label label = new Label(Integer.toString(score));	
-		scoreBox.getChildren().remove(1);	
+		Label label = new Label(Integer.toString(score));
+		scoreBox.getChildren().remove(1);
 		scoreBox.getChildren().add(label);
-		
 	}
 
 	public void updateGameGrid(Playfield field, Tetromino tetromino) {
 
 		ArrayList<ArrayList<Boolean>> matrix = field.getMatrix();
-		int rows = matrix.size();
-		int columns = matrix.get(0).size();
-		for (int r = 0; r < rows; r++) {
-			for (int c = 0; c < columns; c++) {
-				if (matrix.get(r).get(c))
-					gameGrid.getChildren().get(r * columns + c)
-							.setStyle("-fx-background-color: " + tetromino.getColor());
-				else gameGrid.getChildren().get(r * columns + c).setStyle("-fx-background-color: " + "#ffffff");
+		int[][] tMatrix = tetromino.getMatrix();
+		int row = tetromino.getRow();
+		int column = tetromino.getColumn();
+
+		int fcolumns = field.getWIDTH();
+		int frows = field.getHEIGHT();
+		int tcolumns = tetromino.getMatrix().length;
+		int trows = tetromino.getMatrix()[0].length;
+		String color = tetromino.getColor();
+
+		for (int r = 0; r < trows; r++) {
+			if ((row + r) < frows)
+				for (int c = 0; c < tcolumns; c++) {
+					if ((column + c) >= 0 && (column + c) < fcolumns) {
+						if (matrix.get(row + r).get(column + c) && tMatrix[r][c] == 1) {
+							gameGrid.getChildren().get((row + r) * fcolumns + (column + c)).setStyle("-fx-background-color: " + color);
+						}
+					}
+				}
+		}
+
+		for (int r = 0; r < frows; r++) {
+			for (int c = 0; c < fcolumns; c++) {
+				if (!matrix.get(r).get(c))
+					gameGrid.getChildren().get((r) * fcolumns + (c)).setStyle("-fx-background-color: #ffffff");
 			}
 		}
 	}
