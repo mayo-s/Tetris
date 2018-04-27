@@ -116,7 +116,6 @@ public class Game {
 
 	boolean newScore() {
 		if (score != oldScore) {
-			System.out.println("Send new Score " + score + " ( " + oldScore + " )");
 			oldScore = score;
 			return true;
 		}
@@ -144,7 +143,7 @@ public class Game {
 	}
 
 	private ArrayList<Boolean> completeRows() {
-		 ArrayList<ArrayList<Boolean>>matrix = field.getMatrix();
+		ArrayList<ArrayList<Boolean>> matrix = field.getMatrix();
 		int row = currTetrominoCoords[0];
 		ArrayList<Boolean> complete = new ArrayList<>(Arrays.asList(false, false, false, false));
 
@@ -166,7 +165,14 @@ public class Game {
 	}
 
 	private void removeCompleteRows(ArrayList<Boolean> completeRows) {
+		int row = currTetrominoCoords[0];
 
+		for(int r = 0; r < completeRows.size(); r++) {
+			if(completeRows.get(r)) {
+				field.getMatrix().remove(row + r);
+				field.getMatrix().add(0, field.addRow());
+			}
+		}
 	}
 
 	void moveDown() {
@@ -189,7 +195,7 @@ public class Game {
 						// newMatrix[row + r + 1][column + c] = 1;
 					} else if (newMatrix.get(row + r + 1).get(column + c) == false && currTetromino[r][c] == 1) {
 						newMatrix.get(row + r + 1).set(column + c, true);
-						newMatrix.get(row + r ).set(column + c, false);
+						newMatrix.get(row + r).set(column + c, false);
 					}
 				}
 				if (failed)
@@ -218,9 +224,9 @@ public class Game {
 			for (int c = (0 + left); c <= (3 - right); c++) {
 				for (int r = 0; r <= (3 - bottom); r++) {
 					// clear old Tetromino
-//					if (newMatrix.get(row + r).get(column + c) && currTetromino[r][c] == 1) {
-//						newMatrix.get(row + r).set(column + c, false);
-//					}
+					// if (newMatrix.get(row + r).get(column + c) && currTetromino[r][c] == 1) {
+					// newMatrix.get(row + r).set(column + c, false);
+					// }
 					if (newMatrix.get(row + r).get(column + c - 1) && currTetromino[r][c] == 1) {
 						failed = true;
 						break;
