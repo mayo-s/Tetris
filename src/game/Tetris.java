@@ -17,6 +17,7 @@ public class Tetris extends Application {
 	private Game game;
 	private Gui gui;
 	private Timeline interval;
+	private boolean paused;
 
 	public static void main(String[] args) {
 		launch(args);
@@ -27,6 +28,7 @@ public class Tetris extends Application {
 		stage.setTitle("Tetris by Mario Schuetz");
 		game = new Game();
 		gui = new Gui();
+		paused = false;
 		Scene scene = new Scene(gui.getMain());
 		stage.setScene(scene);
 		stage.show();
@@ -62,18 +64,31 @@ public class Tetris extends Application {
 			@Override
 			public void handle(KeyEvent event) {
 				if (!game.isGameOver()) {
-					if (event.getCode() == KeyCode.LEFT) {
-						game.moveLeft();
+					if (!paused) {
+
+						if (event.getCode() == KeyCode.LEFT) {
+							game.moveLeft();
+						}
+						if (event.getCode() == KeyCode.RIGHT) {
+							game.moveRight();
+						}
+						if (event.getCode() == KeyCode.DOWN) {
+							game.moveDown();
+						}
+						if (event.getCode() == KeyCode.UP) {
+							game.moveRotate();
+						}
+						if(event.getCode() == KeyCode.P) {
+							paused = true;
+							interval.pause();
+						}
+					} else if(paused) {
+						if(event.getCode() == KeyCode.P) {
+							paused = false;
+							interval.play();
+						}
 					}
-					if (event.getCode() == KeyCode.RIGHT) {
-						game.moveRight();
-					}
-					if (event.getCode() == KeyCode.DOWN) {
-						game.moveDown();
-					}
-					if (event.getCode() == KeyCode.UP) {
-						game.moveRotate();
-					}
+
 					gui.updateGameGrid(game.getField(), game.getNextTetrominos().get(0));
 				}
 			}
