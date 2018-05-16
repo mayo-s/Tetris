@@ -13,7 +13,6 @@ import elements.S;
 import elements.T;
 import elements.Tetromino;
 import elements.Z;
-import test.Test;
 
 public class Game {
 
@@ -83,6 +82,7 @@ public class Game {
 
 		gameOver = gameOver();
 		if (!gameOver) {
+			score++;
 			ArrayList<Boolean> cr = completeRows();
 			if (cr.contains(true)) {
 				removeCompleteRows(cr);
@@ -318,10 +318,6 @@ public class Game {
 		int bottom = emptyLineBottom(currTetromino);
 		int left = emptyLineLeft(currTetromino);
 		int right = emptyLineRight(currTetromino);
-
-		System.out.println("row = " + row + " column = " + column);
-		Test t = new Test();
-		t.printMatrix(field.getMatrix(), 2);
 
 		if (!(column < 0 || row > field.getHEIGHT())) {
 			for (int r = 0; r <= (3 - bottom); r++) {
