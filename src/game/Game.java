@@ -13,6 +13,7 @@ import elements.S;
 import elements.T;
 import elements.Tetromino;
 import elements.Z;
+import test.Test;
 
 public class Game {
 
@@ -194,7 +195,8 @@ public class Game {
 
 	void moveDown() {
 		if (!collisionBottom()) {
-			ArrayList<ArrayList<Boolean>> newMatrix = field.getMatrix();
+			@SuppressWarnings("unchecked")
+			ArrayList<ArrayList<Boolean>> newMatrix = (ArrayList<ArrayList<Boolean>>) field.getMatrix().clone();
 			int[][] currTetromino = tetrominos.get(0).getMatrix();
 			int row = tetrominos.get(0).getRow();
 			int column = tetrominos.get(0).getColumn();
@@ -202,9 +204,13 @@ public class Game {
 			int bottom = emptyLineBottom(currTetromino);
 			int left = emptyLineLeft(currTetromino);
 			int right = emptyLineRight(currTetromino);
+
 			for (int r = (3 - bottom); r >= 0; r--) {
 				for (int c = (0 + left); c <= (3 - right); c++) {
-					if (newMatrix.get(row + r + 1).get(column + c) == true && currTetromino[r][c] == 1) {
+
+					if ((column + c) < 0 || (column + c) >= field.getWIDTH()) {
+						// ignore
+					} else if (newMatrix.get(row + r + 1).get(column + c) == true && currTetromino[r][c] == 1) {
 						failed = true;
 						next();
 						break;
@@ -229,7 +235,8 @@ public class Game {
 
 	void moveLeft() {
 		if (!collisionLeft()) {
-			ArrayList<ArrayList<Boolean>> newMatrix = field.getMatrix();
+			@SuppressWarnings("unchecked")
+			ArrayList<ArrayList<Boolean>> newMatrix = (ArrayList<ArrayList<Boolean>>) field.getMatrix().clone();
 			int[][] currTetromino = tetrominos.get(0).getMatrix();
 			int row = tetrominos.get(0).getRow();
 			int column = tetrominos.get(0).getColumn();
@@ -243,9 +250,12 @@ public class Game {
 					if (newMatrix.get(row + r).get(column + c - 1) && currTetromino[r][c] == 1) {
 						failed = true;
 						break;
-					} else if (newMatrix.get(row + r).get(column + c - 1) && currTetromino[r][c] == 0) {
-						// ignore
-					} else if (!newMatrix.get(row + r).get(column + c - 1) && currTetromino[r][c] == 1) {
+					}
+					// else if (newMatrix.get(row + r).get(column + c - 1) && currTetromino[r][c] ==
+					// 0) {
+					// // ignore
+					// }
+					else if (!newMatrix.get(row + r).get(column + c - 1) && currTetromino[r][c] == 1) {
 						newMatrix.get(row + r).set(column + c - 1, true);
 						newMatrix.get(row + r).set(column + c, false);
 					}
@@ -262,7 +272,8 @@ public class Game {
 
 	void moveRight() {
 		if (!collisionRight()) {
-			ArrayList<ArrayList<Boolean>> newMatrix = field.getMatrix();
+			@SuppressWarnings("unchecked")
+			ArrayList<ArrayList<Boolean>> newMatrix = (ArrayList<ArrayList<Boolean>>) field.getMatrix().clone();
 			int[][] currTetromino = tetrominos.get(0).getMatrix();
 			int row = tetrominos.get(0).getRow();
 			int column = tetrominos.get(0).getColumn();
@@ -276,9 +287,12 @@ public class Game {
 					if (newMatrix.get(row + r).get(column + c + 1) && currTetromino[r][c] == 1) {
 						failed = true;
 						break;
-					} else if (newMatrix.get(row + r).get(column + c + 1) && currTetromino[r][c] == 0) {
-						// ignore
-					} else if (!newMatrix.get(row + r).get(column + c + 1) && currTetromino[r][c] == 1) {
+					}
+					// else if (newMatrix.get(row + r).get(column + c + 1) && currTetromino[r][c] ==
+					// 0) {
+					// // ignore
+					// }
+					else if (!newMatrix.get(row + r).get(column + c + 1) && currTetromino[r][c] == 1) {
 						newMatrix.get(row + r).set(column + c + 1, true);
 						newMatrix.get(row + r).set(column + c, false);
 					}
@@ -294,7 +308,8 @@ public class Game {
 	}
 
 	void moveRotate() {
-		ArrayList<ArrayList<Boolean>> newMatrix = field.getMatrix();
+		@SuppressWarnings("unchecked")
+		ArrayList<ArrayList<Boolean>> newMatrix = (ArrayList<ArrayList<Boolean>>) field.getMatrix().clone();
 		int[][] currTetromino = tetrominos.get(0).getMatrix();
 		int[][] rotatedTetromino = rotateTetromino(currTetromino);
 		int row = tetrominos.get(0).getRow();
@@ -304,28 +319,36 @@ public class Game {
 		int left = emptyLineLeft(currTetromino);
 		int right = emptyLineRight(currTetromino);
 
-		for (int r = 0; r <= (3 - bottom); r++) {
-			for (int c = (0 + left); c <= (3 - right); c++) {
-				// clear currTetromino
-				if (newMatrix.get(row + r).get(column + c) && currTetromino[r][c] == 1) {
-					newMatrix.get(row + r).set(column + c, false);
+		System.out.println("row = " + row + " column = " + column);
+		Test t = new Test();
+		t.printMatrix(field.getMatrix(), 2);
+
+		if (!(column < 0 || row > field.getHEIGHT())) {
+			for (int r = 0; r <= (3 - bottom); r++) {
+				for (int c = (0 + left); c <= (3 - right); c++) {
+
+					// clear currTetromino
+					if (newMatrix.get(row + r).get(column + c) && currTetromino[r][c] == 1) {
+						newMatrix.get(row + r).set(column + c, false);
+					}
+					// rotate
+					if (newMatrix.get(row + r).get(column + c) && rotatedTetromino[r][c] == 1) {
+						failed = true;
+						break;
+					} else if ((newMatrix.get(row + r).get(column + c) && rotatedTetromino[r][c] == 0)
+							|| (!newMatrix.get(row + r).get(column + c) && rotatedTetromino[r][c] == 1)) {
+						newMatrix.get(row + r).set(column + c, true);
+					} else if (!newMatrix.get(row + r).get(column + c) && rotatedTetromino[r][c] == 0) {
+						newMatrix.get(row + r).set(column + c, false);
+					} else {
+						failed = true;
+						break;
+					}
 				}
-				if (newMatrix.get(row + r).get(column + c) && rotatedTetromino[r][c] == 1) {
-					failed = true;
+				if (failed)
 					break;
-				} else if ((newMatrix.get(row + r).get(column + c) && rotatedTetromino[r][c] == 0)
-						|| (!newMatrix.get(row + r).get(column + c) && rotatedTetromino[r][c] == 1)) {
-					newMatrix.get(row + r).set(column + c, true);
-				} else if (!newMatrix.get(row + r).get(column + c) && rotatedTetromino[r][c] == 0) {
-					newMatrix.get(row + r).set(column + c, false);
-				} else {
-					failed = true;
-					break;
-				}
 			}
-			if (failed)
-				break;
-		}
+		} else failed = true;
 
 		if (!failed) {
 			field.setMatrix(newMatrix);
