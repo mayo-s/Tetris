@@ -8,6 +8,12 @@ public class Test {
 
 	}
 
+	/**
+	 * This will print out your given 2D matrix
+	 * @param object can be int[][] or ArrayList<ArrayList<Boolean>>
+	 * @param type specify your input: 1 for int[][] or for ArrayList<ArrayList<Boolean>>
+	 * 
+	 */
 	public void printMatrix(Object object, int type) {
 
 		if (type == 1) {
@@ -20,6 +26,7 @@ public class Test {
 			}
 			System.out.println();
 		}else if (type == 2) {
+			@SuppressWarnings("unchecked")
 			ArrayList<ArrayList<Boolean>> matrix = (ArrayList<ArrayList<Boolean>>) object;
 			for (ArrayList<Boolean> i : matrix) {
 				for (boolean b : i) {
