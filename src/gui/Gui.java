@@ -23,6 +23,7 @@ public class Gui extends HBox {
 	private GridPane gameGrid;
 	private GridPane previewGrid;
 	private HBox scoreBox;
+	private HBox lvlBox;
 
 	public Gui() {
 
@@ -53,9 +54,14 @@ public class Gui extends HBox {
 		Label scoreLabel = new Label("0");
 		scoreBox.getChildren().addAll(scoreLabelText, scoreLabel);
 
-		lvllabel = new Label("Level: " + Integer.toString(1));
+		lvlBox = new HBox();
+
+		Label lvlLabelText = new Label("Level: ");
+		Label lvlLabel = new Label("1");
+		lvlBox.getChildren().addAll(lvlLabelText, lvlLabel);
+		
 		Label controlsLabel = new Label("P - Play/Pause\n^ - Rotate\n< - move left\n> - move right\nv - drop");
-		info.getChildren().addAll(previewGrid, playerLabel, lvllabel, scoreBox, controlsLabel);
+		info.getChildren().addAll(previewGrid, playerLabel, lvlBox, scoreBox, controlsLabel);
 
 		main.getChildren().addAll(sp, info);
 	}
@@ -91,6 +97,12 @@ public class Gui extends HBox {
 		Label label = new Label(Integer.toString(score));
 		scoreBox.getChildren().remove(1);
 		scoreBox.getChildren().add(label);
+	}
+	
+	public void updateLvl(int lvl) {
+		Label label = new Label(Integer.toString(lvl));
+		lvlBox.getChildren().remove(1);
+		lvlBox.getChildren().add(label);
 	}
 
 	public void updateGameGrid(Playfield field, Tetromino tetromino) {

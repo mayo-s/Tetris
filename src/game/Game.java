@@ -23,7 +23,8 @@ public class Game {
 	private Playfield field;
 	private boolean gameOver;
 	private int lvl;
-	private int tcount = 1;
+	private int tcount; // tetromino count
+	private int lcount; // eliminated line count
 	private int score;
 	private int oldScore;
 	private int sngl = 100;
@@ -42,6 +43,8 @@ public class Game {
 		score = 0;
 		oldScore = score;
 		lvl = 1;
+		tcount = 0;
+		lcount = 0;
 
 		for (int i = 0; i < LIMIT; i++) {
 			tetrominos.add(randomTetromino());
@@ -149,6 +152,15 @@ public class Game {
 		}
 		return false;
 	}
+	
+	boolean levelUp() {
+		if(lcount >= 10 * lvl) {
+			lvl++;
+			lcount = 0;
+			return true;
+		}
+		return false;
+	}
 
 	private void updateScore(ArrayList<Boolean> completeRows) {
 		int count = 0;
@@ -168,6 +180,7 @@ public class Game {
 			newScore = score + (tetris * lvl);
 
 		score = newScore;
+		lcount += count;
 	}
 
 	private ArrayList<Boolean> completeRows() {
@@ -478,5 +491,9 @@ public class Game {
 
 	public int getScore() {
 		return score;
+	}
+
+	public int getLvl() {
+		return lvl;
 	}
 }

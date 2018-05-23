@@ -37,7 +37,8 @@ public class Tetris extends Application {
 	}
 
 	private void intervalEvent() {
-		interval = new Timeline(new KeyFrame(Duration.millis(500), new EventHandler<ActionEvent>() {
+		double time = Math.pow((0.8 - ((game.getLvl() - 1) * 0.007)), (game.getLvl() - 1)) * 1000;
+		interval = new Timeline(new KeyFrame(Duration.millis(time), new EventHandler<ActionEvent>() {
 
 			@Override
 			public void handle(ActionEvent event) {
@@ -47,9 +48,15 @@ public class Tetris extends Application {
 				} else {
 					if (game.newScore())
 						gui.updateScore(game.getScore());
+						
 					game.moveDown();
 					gui.updatePreviewGrid(game.getNextTetrominos().get(1));
 					gui.updateGameGrid(game.getField(), game.getNextTetrominos().get(0));
+					if(game.levelUp()) {
+						gui.updateLvl(game.getLvl());
+						interval.stop();
+						intervalEvent();
+					}
 				}
 			}
 		}));
