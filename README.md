@@ -11,10 +11,11 @@ Basic Rules
 - Playfield dimension 10x22(top 2 hidden)
 - Game Over when new Tetromino is blocked
 
-Score by clearing lines
-- Single = 1 point
-- Double = 3 points
-- Triple = 5 points
-- Tetris = 8 points
+Score by clearing lines (n * lvl)
+- Single = 100 point
+- Double = 300 points
+- Triple = 500 points
+- Tetris = 800 points
+- each line downwards +1
 
 

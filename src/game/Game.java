@@ -22,8 +22,14 @@ public class Game {
 	private final int STARTCOLUMN = 3;
 	private Playfield field;
 	private boolean gameOver;
+	private int lvl;
+	private int tcount = 1;
 	private int score;
 	private int oldScore;
+	private int sngl = 100;
+	private int dbl = 300;
+	private int trpl = 500;
+	private int tetris = 800;
 
 	public Game() {
 		init();
@@ -35,6 +41,7 @@ public class Game {
 		field = new Playfield();
 		score = 0;
 		oldScore = score;
+		lvl = 1;
 
 		for (int i = 0; i < LIMIT; i++) {
 			tetrominos.add(randomTetromino());
@@ -82,7 +89,8 @@ public class Game {
 
 		gameOver = gameOver();
 		if (!gameOver) {
-			score++;
+
+			tcount++;
 			ArrayList<Boolean> cr = completeRows();
 			if (cr.contains(true)) {
 				removeCompleteRows(cr);
@@ -93,8 +101,10 @@ public class Game {
 			tetrominos.remove(0);
 			tetrominos.add(randomTetromino());
 			tetrominoToField();
-		} else
+		} else {
 			System.out.println("GAME OVER");
+			System.out.println(tcount + " Tetrominos used");
+		}
 
 	}
 
@@ -149,13 +159,13 @@ public class Game {
 
 		int newScore = score;
 		if (count == 1)
-			newScore = score + 1;
+			newScore = score + (sngl * lvl);
 		else if (count == 2)
-			newScore = score + 3;
+			newScore = score + (dbl * lvl);
 		else if (count == 3)
-			newScore = score + 5;
+			newScore = score + (trpl * lvl);
 		else if (count == 4)
-			newScore = score + 8;
+			newScore = score + (tetris * lvl);
 
 		score = newScore;
 	}
@@ -226,6 +236,7 @@ public class Game {
 			}
 
 			if (!failed) {
+				score++;
 				field.setMatrix(newMatrix);
 				tetrominos.get(0).setRow(row + 1);
 			}
@@ -344,7 +355,8 @@ public class Game {
 				if (failed)
 					break;
 			}
-		} else failed = true;
+		} else
+			failed = true;
 
 		if (!failed) {
 			field.setMatrix(newMatrix);
