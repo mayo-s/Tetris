@@ -18,7 +18,6 @@ public class Gui extends HBox {
 
 	private HBox main;
 	private Label playerLabel;
-	private Label lvllabel;
 	private Label gameOverLabel;
 	private GridPane gameGrid;
 	private GridPane previewGrid;
@@ -40,7 +39,6 @@ public class Gui extends HBox {
 		gameOverLabel.setRotate(45d);
 		gameOverLabel.setVisible(false);
 		sp.getChildren().addAll(gameGrid, gameOverLabel);
-		
 
 		// right side info box
 		VBox info = new VBox(10);
@@ -55,11 +53,10 @@ public class Gui extends HBox {
 		scoreBox.getChildren().addAll(scoreLabelText, scoreLabel);
 
 		lvlBox = new HBox();
-
 		Label lvlLabelText = new Label("Level: ");
 		Label lvlLabel = new Label("1");
 		lvlBox.getChildren().addAll(lvlLabelText, lvlLabel);
-		
+
 		Label controlsLabel = new Label("P - Play/Pause\n^ - Rotate\n< - move left\n> - move right\nv - drop");
 		info.getChildren().addAll(previewGrid, playerLabel, lvlBox, scoreBox, controlsLabel);
 
@@ -98,7 +95,7 @@ public class Gui extends HBox {
 		scoreBox.getChildren().remove(1);
 		scoreBox.getChildren().add(label);
 	}
-	
+
 	public void updateLvl(int lvl) {
 		Label label = new Label(Integer.toString(lvl));
 		lvlBox.getChildren().remove(1);
@@ -123,7 +120,8 @@ public class Gui extends HBox {
 				for (int c = 0; c < tcolumns; c++) {
 					if ((column + c) >= 0 && (column + c) < fcolumns) {
 						if (matrix.get(row + r).get(column + c) && tMatrix[r][c] == 1) {
-							gameGrid.getChildren().get((row + r) * fcolumns + (column + c)).setStyle("-fx-background-color: " + color);
+							gameGrid.getChildren().get((row + r) * fcolumns + (column + c))
+									.setStyle("-fx-background-color: " + color);
 						}
 					}
 				}
