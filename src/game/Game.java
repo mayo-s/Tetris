@@ -107,6 +107,7 @@ public class Game {
 		} else {
 			System.out.println("GAME OVER");
 			System.out.println(tcount + " Tetrominos used");
+			System.out.println(lcount + " lines cleared");
 		}
 
 	}
@@ -152,11 +153,10 @@ public class Game {
 		}
 		return false;
 	}
-	
+
 	boolean levelUp() {
-		if(lcount >= 10 * lvl) {
+		if (lcount / lvl >= 10) {
 			lvl++;
-			lcount = 0;
 			return true;
 		}
 		return false;
@@ -274,12 +274,7 @@ public class Game {
 					if (newMatrix.get(row + r).get(column + c - 1) && currTetromino[r][c] == 1) {
 						failed = true;
 						break;
-					}
-					// else if (newMatrix.get(row + r).get(column + c - 1) && currTetromino[r][c] ==
-					// 0) {
-					// // ignore
-					// }
-					else if (!newMatrix.get(row + r).get(column + c - 1) && currTetromino[r][c] == 1) {
+					} else if (!newMatrix.get(row + r).get(column + c - 1) && currTetromino[r][c] == 1) {
 						newMatrix.get(row + r).set(column + c - 1, true);
 						newMatrix.get(row + r).set(column + c, false);
 					}
