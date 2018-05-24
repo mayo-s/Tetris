@@ -43,7 +43,7 @@ public class Game {
 		score = 0;
 		oldScore = score;
 		lvl = 1;
-		tcount = 0;
+		tcount = 1;
 		lcount = 0;
 
 		for (int i = 0; i < LIMIT; i++) {
@@ -154,9 +154,8 @@ public class Game {
 	}
 	
 	boolean levelUp() {
-		if(lcount >= 10 * lvl) {
+		if(lcount / lvl >= 10) {
 			lvl++;
-			lcount = 0;
 			return true;
 		}
 		return false;
@@ -495,5 +494,13 @@ public class Game {
 
 	public int getLvl() {
 		return lvl;
+	}
+
+	public int getTcount() {
+		return tcount;
+	}
+
+	public int getLcount() {
+		return lcount;
 	}
 }
