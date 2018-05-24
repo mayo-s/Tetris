@@ -52,6 +52,8 @@ public class Tetris extends Application {
 					game.moveDown();
 					gui.updatePreviewGrid(game.getNextTetrominos().get(1));
 					gui.updateGameGrid(game.getField(), game.getNextTetrominos().get(0));
+					gui.updateLineCount(game.getLcount());
+					gui.updateTetroCount(game.getTcount());
 					if(game.levelUp()) {
 						gui.updateLvl(game.getLvl());
 						interval.stop();

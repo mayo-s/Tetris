@@ -21,8 +21,10 @@ public class Gui extends HBox {
 	private Label gameOverLabel;
 	private GridPane gameGrid;
 	private GridPane previewGrid;
-	private HBox scoreBox;
 	private HBox lvlBox;
+	private HBox scoreBox;
+	private HBox lineCountBox;
+	private HBox tetroCountBox;
 
 	public Gui() {
 
@@ -56,9 +58,19 @@ public class Gui extends HBox {
 		Label lvlLabelText = new Label("Level: ");
 		Label lvlLabel = new Label("1");
 		lvlBox.getChildren().addAll(lvlLabelText, lvlLabel);
+		
+		tetroCountBox = new HBox();
+		Label tcLabelText = new Label("Tetromino #");
+		Label tcLabel = new Label("1");
+		tetroCountBox.getChildren().addAll(tcLabelText, tcLabel);
+		
+		lineCountBox = new HBox();
+		Label lcLabelText = new Label("Lines cleared: ");
+		Label lcLabel = new Label("0");
+		lineCountBox.getChildren().addAll(lcLabelText, lcLabel);
 
 		Label controlsLabel = new Label("P - Play/Pause\n^ - Rotate\n< - move left\n> - move right\nv - drop");
-		info.getChildren().addAll(previewGrid, playerLabel, lvlBox, scoreBox, controlsLabel);
+		info.getChildren().addAll(previewGrid, playerLabel, lvlBox, scoreBox, tetroCountBox, lineCountBox, controlsLabel);
 
 		main.getChildren().addAll(sp, info);
 	}
@@ -100,6 +112,18 @@ public class Gui extends HBox {
 		Label label = new Label(Integer.toString(lvl));
 		lvlBox.getChildren().remove(1);
 		lvlBox.getChildren().add(label);
+	}
+	
+	public void updateLineCount(int lines) {
+		Label label = new Label(Integer.toString(lines));
+		lineCountBox.getChildren().remove(1);
+		lineCountBox.getChildren().add(label);
+	}
+	
+	public void updateTetroCount(int tetros) {
+		Label label = new Label(Integer.toString(tetros));
+		tetroCountBox.getChildren().remove(1);
+		tetroCountBox.getChildren().add(label);
 	}
 
 	public void updateGameGrid(Playfield field, Tetromino tetromino) {

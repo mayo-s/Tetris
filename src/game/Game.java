@@ -43,7 +43,7 @@ public class Game {
 		score = 0;
 		oldScore = score;
 		lvl = 1;
-		tcount = 0;
+		tcount = 1;
 		lcount = 0;
 
 		for (int i = 0; i < LIMIT; i++) {
@@ -490,5 +490,13 @@ public class Game {
 
 	public int getLvl() {
 		return lvl;
+	}
+
+	public int getTcount() {
+		return tcount;
+	}
+
+	public int getLcount() {
+		return lcount;
 	}
 }
