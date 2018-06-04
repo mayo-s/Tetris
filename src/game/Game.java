@@ -89,7 +89,6 @@ public class Game {
 	}
 
 	private void next() {
-
 		gameOver = gameOver();
 		if (!gameOver) {
 
@@ -152,9 +151,9 @@ public class Game {
 		}
 		return false;
 	}
-	
+
 	boolean levelUp() {
-		if(lcount / lvl >= 10) {
+		if (lcount / lvl >= 10) {
 			lvl++;
 			return true;
 		}
@@ -411,20 +410,14 @@ public class Game {
 	// 0000
 	//
 	private int emptyLineBottom(int[][] matrix) {
-		int lines = 0;
-		boolean empty = true;
 		for (int r = 3; r >= 0; r--) {
 			for (int c = 0; c < 4; c++) {
 				if (matrix[r][c] == 1) {
-					empty = false;
+					return 3 - r;
 				}
 			}
-			if (empty) {
-				lines++;
-			} else
-				break;
 		}
-		return lines;
+		throw new IllegalStateException("Tetromino is empty");
 	}
 
 	// vertical
@@ -435,37 +428,25 @@ public class Game {
 	// 0010
 	//
 	private int emptyLineRight(int[][] matrix) {
-		int lines = 0;
-		boolean empty = true;
 		for (int c = 3; c >= 0; c--) {
 			for (int r = 0; r <= 3; r++) {
 				if (matrix[r][c] == 1) {
-					empty = false;
+					return 3 - c;
 				}
 			}
-			if (empty) {
-				lines++;
-			} else
-				break;
 		}
-		return lines;
+		throw new IllegalStateException("Tetromino is empty");
 	}
 
 	private int emptyLineLeft(int[][] matrix) {
-		int lines = 0;
-		boolean empty = true;
 		for (int c = 0; c <= 3; c++) {
 			for (int r = 0; r <= 3; r++) {
 				if (matrix[r][c] == 1) {
-					empty = false;
+					return 0 + c;
 				}
 			}
-			if (empty) {
-				lines++;
-			} else
-				break;
 		}
-		return lines;
+		throw new IllegalStateException("Tetromino is empty");
 	}
 
 	public List<Tetromino> getNextTetrominos() {
