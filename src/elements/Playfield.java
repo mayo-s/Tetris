@@ -4,7 +4,7 @@ import java.util.ArrayList;
 
 public class Playfield {
 
-	private ArrayList<ArrayList<Boolean>> matrix;
+	private ArrayList<String[]> matrix;
 	private final int HEIGHT = 22;
 	private final int WIDTH = 10;
 	
@@ -19,11 +19,8 @@ public class Playfield {
 		}
 	}
 	
-	public ArrayList<Boolean> addRow() {	
-		ArrayList<Boolean> row = new ArrayList<>();
-		for(int c = 0; c < WIDTH; c++) {
-			row.add(false);
-		}	
+	public String[] addRow() {	
+		String[] row = new String[WIDTH];
 		return row;
 	}
 
@@ -35,11 +32,11 @@ public class Playfield {
 		return HEIGHT;
 	}
 
-	public ArrayList<ArrayList<Boolean>> getMatrix() {
+	public ArrayList<String[]> getMatrix() {
 		return matrix;
 	}
 
-	public void setMatrix(ArrayList<ArrayList<Boolean>> matrix) {
+	public void setMatrix(ArrayList<String[]> matrix) {
 		this.matrix = matrix;
-	}	
+	}
 }

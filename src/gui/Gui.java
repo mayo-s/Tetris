@@ -128,7 +128,7 @@ public class Gui extends HBox {
 
 	public void updateGameGrid(Playfield field, Tetromino tetromino) {
 
-		ArrayList<ArrayList<Boolean>> matrix = field.getMatrix();
+		ArrayList<String[]> matrix = field.getMatrix();
 		int[][] tMatrix = tetromino.getMatrix();
 		int row = tetromino.getRow();
 		int column = tetromino.getColumn();
@@ -137,7 +137,6 @@ public class Gui extends HBox {
 		int frows = field.getHEIGHT();
 		int tcolumns = tetromino.getMatrix().length;
 		int trows = tetromino.getMatrix()[0].length;
-		String color = tetromino.getColor();
 
 		for (int r = 0; r < trows; r++) {
 			if ((row + r) < frows)
@@ -145,7 +144,7 @@ public class Gui extends HBox {
 					if ((column + c) >= 0 && (column + c) < fcolumns) {
 						if (tMatrix[r][c] == 1) {
 							gameGrid.getChildren().get((row + r) * fcolumns + (column + c))
-									.setStyle("-fx-background-color: " + color);
+									.setStyle("-fx-background-color: " + field.getMatrix().get(row + r)[column + c]);
 						}
 					}
 				}
@@ -153,7 +152,7 @@ public class Gui extends HBox {
 
 		for (int r = 0; r < frows; r++) {
 			for (int c = 0; c < fcolumns; c++) {
-				if (!matrix.get(r).get(c))
+				if (matrix.get(r)[c] == null)
 					gameGrid.getChildren().get(r * fcolumns + c).setStyle("-fx-background-color: #ffffff");
 			}
 		}

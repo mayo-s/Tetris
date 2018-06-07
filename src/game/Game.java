@@ -20,6 +20,7 @@ public class Game {
 	private final int LIMIT = 2; // current + next
 	private final int STARTROW = 0;
 	private final int STARTCOLUMN = 3;
+	private final int[] POINTS = { 0, 100, 300, 500, 800 };
 	private Playfield field;
 	private boolean gameOver;
 	private int lvl;
@@ -27,7 +28,6 @@ public class Game {
 	private int lcount; // eliminated line count
 	private int score;
 	private int oldScore;
-	private final int[] POINTS = { 0, 100, 300, 500, 800 };
 
 	public Game() {
 		init();
@@ -112,6 +112,7 @@ public class Game {
 	private void tetrominoToField() {
 
 		int[][] currTetromino = tetrominos.get(0).getMatrix();
+		String color = tetrominos.get(0).getColor();
 		int row = tetrominos.get(0).getRow();
 		int rows = currTetromino.length;
 		int column = tetrominos.get(0).getColumn();
@@ -119,8 +120,8 @@ public class Game {
 
 		for (int r = 0; r < rows; r++) {
 			for (int c = 0; c < columns; c++) {
-				if (!field.getMatrix().get(row + r).get(column + c) && currTetromino[r][c] == 1)
-					field.getMatrix().get(row + r).set((column + c), true);
+				if (field.getMatrix().get(row + r)[column + c] == null && currTetromino[r][c] == 1)
+					field.getMatrix().get(row + r)[column + c] = color;
 			}
 		}
 	}
@@ -170,15 +171,15 @@ public class Game {
 	}
 
 	private ArrayList<Boolean> completeRows() {
-		ArrayList<ArrayList<Boolean>> matrix = field.getMatrix();
+		ArrayList<String[]> matrix = field.getMatrix();
 		int row = tetrominos.get(0).getRow();
 		ArrayList<Boolean> complete = new ArrayList<>(Arrays.asList(false, false, false, false));
 
 		for (int r = row; r <= (row + 3); r++) {
 			boolean gap = false;
 			if (r < matrix.size()) {
-				for (Boolean cell : matrix.get(r)) {
-					if (cell == false) {
+				for (String cell : matrix.get(r)) {
+					if (cell == null) {
 						gap = true;
 						break;
 					}
@@ -188,6 +189,8 @@ public class Game {
 				}
 			}
 		}
+		for(boolean gap : complete) System.out.println(gap);
+		System.out.println();
 		return complete;
 	}
 
@@ -204,11 +207,11 @@ public class Game {
 
 	void moveDown() {
 		if (!collisionBottom()) {
-			@SuppressWarnings("unchecked")
-			ArrayList<ArrayList<Boolean>> newMatrix = (ArrayList<ArrayList<Boolean>>) field.getMatrix().clone();
+			ArrayList<String[]> newMatrix = field.getMatrix();
 			int[][] currTetromino = tetrominos.get(0).getMatrix();
 			int row = tetrominos.get(0).getRow();
 			int column = tetrominos.get(0).getColumn();
+			String color = tetrominos.get(0).getColor();
 			boolean failed = false;
 			int bottom = emptyLineBottom(currTetromino);
 			int left = emptyLineLeft(currTetromino);
@@ -219,15 +222,15 @@ public class Game {
 
 					if ((column + c) < 0 || (column + c) >= field.getWIDTH()) {
 						// ignore
-					} else if (newMatrix.get(row + r + 1).get(column + c) == true && currTetromino[r][c] == 1) {
+					} else if (newMatrix.get(row + r + 1)[column + c] != null && currTetromino[r][c] == 1) {
 						failed = true;
 						next();
 						break;
-					} else if (newMatrix.get(row + r + 1).get(column + c) == true && currTetromino[r][c] == 0) {
+					} else if (newMatrix.get(row + r + 1)[column + c] != null && currTetromino[r][c] == 0) {
 						// newMatrix[row + r + 1][column + c] = 1;
-					} else if (newMatrix.get(row + r + 1).get(column + c) == false && currTetromino[r][c] == 1) {
-						newMatrix.get(row + r + 1).set(column + c, true);
-						newMatrix.get(row + r).set(column + c, false);
+					} else if (newMatrix.get(row + r + 1)[column + c] == null && currTetromino[r][c] == 1) {
+						newMatrix.get(row + r + 1)[column + c] = color;
+						newMatrix.get(row + r)[column + c] = null;
 					}
 				}
 				if (failed)
@@ -245,11 +248,11 @@ public class Game {
 
 	void moveLeft() {
 		if (!collisionLeft()) {
-			@SuppressWarnings("unchecked")
-			ArrayList<ArrayList<Boolean>> newMatrix = (ArrayList<ArrayList<Boolean>>) field.getMatrix().clone();
+			ArrayList<String[]> newMatrix = field.getMatrix();
 			int[][] currTetromino = tetrominos.get(0).getMatrix();
 			int row = tetrominos.get(0).getRow();
 			int column = tetrominos.get(0).getColumn();
+			String color = tetrominos.get(0).getColor();
 			boolean failed = false;
 			int bottom = emptyLineBottom(currTetromino);
 			int left = emptyLineLeft(currTetromino);
@@ -257,7 +260,7 @@ public class Game {
 
 			for (int c = (0 + left); c <= (3 - right); c++) {
 				for (int r = 0; r <= (3 - bottom); r++) {
-					if (newMatrix.get(row + r).get(column + c - 1) && currTetromino[r][c] == 1) {
+					if (newMatrix.get(row + r)[column + c - 1] != null && currTetromino[r][c] == 1) {
 						failed = true;
 						break;
 					}
@@ -265,9 +268,9 @@ public class Game {
 					// 0) {
 					// // ignore
 					// }
-					else if (!newMatrix.get(row + r).get(column + c - 1) && currTetromino[r][c] == 1) {
-						newMatrix.get(row + r).set(column + c - 1, true);
-						newMatrix.get(row + r).set(column + c, false);
+					else if (newMatrix.get(row + r)[column + c - 1] == null && currTetromino[r][c] == 1) {
+						newMatrix.get(row + r)[column + c - 1] = color;
+						newMatrix.get(row + r)[column + c] = null;
 					}
 				}
 				if (failed)
@@ -282,11 +285,11 @@ public class Game {
 
 	void moveRight() {
 		if (!collisionRight()) {
-			@SuppressWarnings("unchecked")
-			ArrayList<ArrayList<Boolean>> newMatrix = (ArrayList<ArrayList<Boolean>>) field.getMatrix().clone();
+			ArrayList<String[]> newMatrix = field.getMatrix();
 			int[][] currTetromino = tetrominos.get(0).getMatrix();
 			int row = tetrominos.get(0).getRow();
 			int column = tetrominos.get(0).getColumn();
+			String color = tetrominos.get(0).getColor();
 			boolean failed = false;
 			int bottom = emptyLineBottom(currTetromino);
 			int left = emptyLineLeft(currTetromino);
@@ -294,7 +297,7 @@ public class Game {
 
 			for (int c = (3 - right); c >= (0 + left); c--) {
 				for (int r = 0; r <= (3 - bottom); r++) {
-					if (newMatrix.get(row + r).get(column + c + 1) && currTetromino[r][c] == 1) {
+					if (newMatrix.get(row + r)[column + c + 1] != null && currTetromino[r][c] == 1) {
 						failed = true;
 						break;
 					}
@@ -302,9 +305,9 @@ public class Game {
 					// 0) {
 					// // ignore
 					// }
-					else if (!newMatrix.get(row + r).get(column + c + 1) && currTetromino[r][c] == 1) {
-						newMatrix.get(row + r).set(column + c + 1, true);
-						newMatrix.get(row + r).set(column + c, false);
+					else if (newMatrix.get(row + r)[column + c + 1] == null && currTetromino[r][c] == 1) {
+						newMatrix.get(row + r)[column + c + 1] = color;
+						newMatrix.get(row + r)[column + c] = null;
 					}
 				}
 				if (failed)
@@ -318,12 +321,12 @@ public class Game {
 	}
 
 	void moveRotate() {
-		@SuppressWarnings("unchecked")
-		ArrayList<ArrayList<Boolean>> newMatrix = (ArrayList<ArrayList<Boolean>>) field.getMatrix().clone();
+		ArrayList<String[]> newMatrix = field.getMatrix();
 		int[][] currTetromino = tetrominos.get(0).getMatrix();
 		int[][] rotatedTetromino = rotateTetromino(currTetromino);
 		int row = tetrominos.get(0).getRow();
 		int column = tetrominos.get(0).getColumn();
+		String color = tetrominos.get(0).getColor();
 		boolean failed = false;
 		int bottom = emptyLineBottom(currTetromino);
 		int left = emptyLineLeft(currTetromino);
@@ -334,18 +337,18 @@ public class Game {
 				for (int c = (0 + left); c <= (3 - right); c++) {
 
 					// clear currTetromino
-					if (newMatrix.get(row + r).get(column + c) && currTetromino[r][c] == 1) {
-						newMatrix.get(row + r).set(column + c, false);
+					if (newMatrix.get(row + r)[column + c] != null && currTetromino[r][c] == 1) {
+						newMatrix.get(row + r)[column + c] = null;
 					}
 					// rotate
-					if (newMatrix.get(row + r).get(column + c) && rotatedTetromino[r][c] == 1) {
+					if (newMatrix.get(row + r)[column + c] != null && rotatedTetromino[r][c] == 1) {
 						failed = true;
 						break;
-					} else if ((newMatrix.get(row + r).get(column + c) && rotatedTetromino[r][c] == 0)
-							|| (!newMatrix.get(row + r).get(column + c) && rotatedTetromino[r][c] == 1)) {
-						newMatrix.get(row + r).set(column + c, true);
-					} else if (!newMatrix.get(row + r).get(column + c) && rotatedTetromino[r][c] == 0) {
-						newMatrix.get(row + r).set(column + c, false);
+					} else if ((newMatrix.get(row + r)[column + c] != null && rotatedTetromino[r][c] == 0)
+							|| (newMatrix.get(row + r)[column + c] == null && rotatedTetromino[r][c] == 1)) {
+						newMatrix.get(row + r)[column + c] = color;
+					} else if (newMatrix.get(row + r)[column + c] == null && rotatedTetromino[r][c] == 0) {
+						newMatrix.get(row + r)[column + c] = null;
 					} else {
 						failed = true;
 						break;
