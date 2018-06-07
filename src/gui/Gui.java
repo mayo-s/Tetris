@@ -143,7 +143,7 @@ public class Gui extends HBox {
 			if ((row + r) < frows)
 				for (int c = 0; c < tcolumns; c++) {
 					if ((column + c) >= 0 && (column + c) < fcolumns) {
-						if (matrix.get(row + r).get(column + c) && tMatrix[r][c] == 1) {
+						if (tMatrix[r][c] == 1) {
 							gameGrid.getChildren().get((row + r) * fcolumns + (column + c))
 									.setStyle("-fx-background-color: " + color);
 						}
@@ -154,7 +154,7 @@ public class Gui extends HBox {
 		for (int r = 0; r < frows; r++) {
 			for (int c = 0; c < fcolumns; c++) {
 				if (!matrix.get(r).get(c))
-					gameGrid.getChildren().get((r) * fcolumns + (c)).setStyle("-fx-background-color: #ffffff");
+					gameGrid.getChildren().get(r * fcolumns + c).setStyle("-fx-background-color: #ffffff");
 			}
 		}
 	}

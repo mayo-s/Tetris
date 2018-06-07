@@ -27,10 +27,7 @@ public class Game {
 	private int lcount; // eliminated line count
 	private int score;
 	private int oldScore;
-	private int sngl = 100;
-	private int dbl = 300;
-	private int trpl = 500;
-	private int tetris = 800;
+	private final int[] POINTS = { 0, 100, 300, 500, 800 };
 
 	public Game() {
 		init();
@@ -89,6 +86,7 @@ public class Game {
 	}
 
 	private void next() {
+
 		gameOver = gameOver();
 		if (!gameOver) {
 
@@ -98,6 +96,7 @@ public class Game {
 				removeCompleteRows(cr);
 				updateScore(cr);
 			}
+
 			tetrominos.get(0).setRow(STARTROW);
 			tetrominos.get(0).setColumn(STARTCOLUMN);
 			tetrominos.remove(0);
@@ -106,7 +105,6 @@ public class Game {
 		} else {
 			System.out.println("GAME OVER");
 			System.out.println(tcount + " Tetrominos used");
-			System.out.println(lcount + " lines cleared");
 		}
 
 	}
@@ -167,18 +165,7 @@ public class Game {
 			if (complete)
 				count++;
 		}
-
-		int newScore = score;
-		if (count == 1)
-			newScore = score + (sngl * lvl);
-		else if (count == 2)
-			newScore = score + (dbl * lvl);
-		else if (count == 3)
-			newScore = score + (trpl * lvl);
-		else if (count == 4)
-			newScore = score + (tetris * lvl);
-
-		score = newScore;
+		score = score + POINTS[count] * lvl;
 		lcount += count;
 	}
 
@@ -273,7 +260,12 @@ public class Game {
 					if (newMatrix.get(row + r).get(column + c - 1) && currTetromino[r][c] == 1) {
 						failed = true;
 						break;
-					} else if (!newMatrix.get(row + r).get(column + c - 1) && currTetromino[r][c] == 1) {
+					}
+					// else if (newMatrix.get(row + r).get(column + c - 1) && currTetromino[r][c] ==
+					// 0) {
+					// // ignore
+					// }
+					else if (!newMatrix.get(row + r).get(column + c - 1) && currTetromino[r][c] == 1) {
 						newMatrix.get(row + r).set(column + c - 1, true);
 						newMatrix.get(row + r).set(column + c, false);
 					}
