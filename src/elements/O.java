@@ -3,7 +3,7 @@ package elements;
 public class O  implements Tetromino{
 	
 	int[][] tetromino;
-	String color = "#FF5733";
+	String color = "yellow";
 	int row;
 	int column;
 	
