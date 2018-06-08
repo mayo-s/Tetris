@@ -48,7 +48,6 @@ public class Game {
 		}
 
 		System.out.println("START\n");
-		tetrominoToField();
 	}
 
 	private Tetromino randomTetromino() {
