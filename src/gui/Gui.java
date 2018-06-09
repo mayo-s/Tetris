@@ -56,19 +56,20 @@ public class Gui extends HBox {
 		Label lvlLabelText = new Label("Level: ");
 		Label lvlLabel = new Label("1");
 		lvlBox.getChildren().addAll(lvlLabelText, lvlLabel);
-		
+
 		tetroCountBox = new HBox();
 		Label tcLabelText = new Label("Tetromino #");
 		Label tcLabel = new Label("1");
 		tetroCountBox.getChildren().addAll(tcLabelText, tcLabel);
-		
+
 		lineCountBox = new HBox();
 		Label lcLabelText = new Label("Lines cleared: ");
 		Label lcLabel = new Label("0");
 		lineCountBox.getChildren().addAll(lcLabelText, lcLabel);
 
 		Label controlsLabel = new Label("P - Play/Pause\n^ - Rotate\n< - move left\n> - move right\nv - drop");
-		info.getChildren().addAll(previewGrid, playerLabel, lvlBox, scoreBox, tetroCountBox, lineCountBox, controlsLabel);
+		info.getChildren().addAll(previewGrid, playerLabel, lvlBox, scoreBox, tetroCountBox, lineCountBox,
+				controlsLabel);
 
 		main.getChildren().addAll(sp, info);
 	}
@@ -83,6 +84,34 @@ public class Gui extends HBox {
 			}
 		}
 		return newGridPane;
+	}
+
+	public void updateGameGrid(Playfield field, Tetromino tetromino) {
+
+		int fcolumns = field.getWIDTH();
+		int frows = field.getHEIGHT();
+		int coordR = tetromino.getRow();
+		int coordC = tetromino.getColumn();
+		int[][] tmatrix = tetromino.getMatrix();
+		int tdimension = tmatrix.length;
+		String tcolor = tetromino.getColor();
+
+		// field
+		for (int r = 0; r < frows; r++) {
+			for (int c = 0; c < fcolumns; c++) {
+				gameGrid.getChildren().get(r * fcolumns + c)
+						.setStyle("-fx-background-color: " + field.getMatrix().get(r)[c]);
+			}
+		}
+
+		// Tetromino in field
+		for (int r = 0; r < tdimension; r++) {
+			for (int c = 0; c < tdimension; c++) {
+				if (tmatrix[r][c] == 1)
+					gameGrid.getChildren().get((coordR + r) * fcolumns + (coordC + c))
+							.setStyle("-fx-background-color: " + tcolor);
+			}
+		}
 	}
 
 	public void updatePreviewGrid(Tetromino tetromino) {
@@ -111,29 +140,17 @@ public class Gui extends HBox {
 		lvlBox.getChildren().remove(1);
 		lvlBox.getChildren().add(label);
 	}
-	
+
 	public void updateLineCount(int lines) {
 		Label label = new Label(Integer.toString(lines));
 		lineCountBox.getChildren().remove(1);
 		lineCountBox.getChildren().add(label);
 	}
-	
+
 	public void updateTetroCount(int tetros) {
 		Label label = new Label(Integer.toString(tetros));
 		tetroCountBox.getChildren().remove(1);
 		tetroCountBox.getChildren().add(label);
-	}
-
-	public void updateGameGrid(Playfield field, Tetromino tetromino) {
-
-		int fcolumns = field.getWIDTH();
-		int frows = field.getHEIGHT();
-
-		for (int r = 0; r < frows; r++) {
-			for (int c = 0; c < fcolumns; c++) {
-				gameGrid.getChildren().get(r * fcolumns + c).setStyle("-fx-background-color: " + field.getMatrix().get(r)[c]);
-			}			
-		}
 	}
 
 	public GridPane getGameGrid() {
