@@ -18,4 +18,6 @@ Score by clearing lines (n * lvl)
 - Tetris = 800 points
 - each line downwards +1
 
+![alt text](https://github.com/mayo-s/Tetris/blob/master/tetris.png?raw=true "Screenshot of Tetris by Mario Schuetz")
+
 
