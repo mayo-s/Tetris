@@ -21,30 +21,29 @@ public class AI {
 		this.pf = pf;
 		this.tetrominos = tetrominos;
 
-		evaluate();
+//		evaluate();
 	}
 
-	private void evaluate() {
-		createGraph();
-	}
+//	private void evaluate() {
+//		createGraph();
+//	}
 
 	// find lowest accessible gap
-	private void createGraph() {
-		int row = emptyRow();
-		int column = 0;
-		ArrayList<ArrayList<Boolean>> matrix = pf.getMatrix();
+//	private void createGraph() {
+//		int row = emptyRow();
+//		int column = 0;
+//		ArrayList<String[]> matrix = pf.getMatrix();
+//
+//	}
 
-	}
-
-	@SuppressWarnings("unlikely-arg-type")
-	private int emptyRow() {
-
-		for (ArrayList<Boolean> row : pf.getMatrix()) {
-			if (row.contains(true))
-				return row.indexOf(row);
-		}
-
-		return 0;
-	}
+//	private int emptyRow() {
+//
+//		for (String[] row : pf.getMatrix()) {
+//			if (row.contains(true))
+//				return row.indexOf(row);
+//		}
+//
+//		return 0;
+//	}
 
 }
