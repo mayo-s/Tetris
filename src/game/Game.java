@@ -188,9 +188,6 @@ public class Game {
 				}
 			}
 		}
-		for (boolean gap : complete)
-			System.out.println(gap);
-		System.out.println();
 		return complete;
 	}
 
