@@ -18,20 +18,21 @@ public class I implements Tetromino{
             this.column = column;
 	}
 
-	@Override
 	public int[][] getMatrix() {
 		return tetromino;
 	}
 
-	@Override
 	public void setMatrix(int[][] matrix) {
 		tetromino = matrix;		
 	}
 
-	@Override
 	public String getColor() {
 		return color;
 	}
+
+	public void setColor(String color) {
+		this.color = color;		
+	}	
 
 	public int getRow() {
 		return row;
@@ -47,5 +48,5 @@ public class I implements Tetromino{
 
 	public void setColumn(int column) {
 		this.column = column;
-	}	
+	}
 }
