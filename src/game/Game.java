@@ -4,15 +4,8 @@ import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
 
-import elements.I;
-import elements.J;
-import elements.L;
-import elements.O;
 import elements.Playfield;
-import elements.S;
-import elements.T;
 import elements.Tetromino;
-import elements.Z;
 
 public class Game {
 
@@ -33,6 +26,7 @@ public class Game {
 	private int lcount; // eliminated line count
 	private int score;
 	private int oldScore;
+	private Tetromino oldTetro;
 
 	public Game() {
 		init();
@@ -50,38 +44,15 @@ public class Game {
 		for (int i = 0; i < LIMIT; i++) {
 			tetrominos.add(randomTetromino());
 		}
+		oldTetro = tetrominos.get(0);
 
 		System.out.println("START\n");
 	}
 
 	private Tetromino randomTetromino() {
-		int tetro = (int) (Math.random() * 7);
+		String[] tetroModel = { "I", "J", "L", "O", "S", "T", "Z" };
+		Tetromino newTetromino = new Tetromino(tetroModel[(int) (Math.random() * 7)]);
 		int randomRotation = (int) (Math.random() * 4);
-		Tetromino newTetromino = null;
-		switch (tetro) {
-		case 0:
-			newTetromino = new T(STARTROW, STARTCOLUMN);
-			break;
-		case 1:
-			newTetromino = new I(STARTROW, STARTCOLUMN);
-			break;
-		case 2:
-			newTetromino = new O(STARTROW, STARTCOLUMN);
-			break;
-		case 3:
-			newTetromino = new J(STARTROW, STARTCOLUMN);
-			break;
-		case 4:
-			newTetromino = new L(STARTROW, STARTCOLUMN);
-			break;
-		case 5:
-			newTetromino = new S(STARTROW, STARTCOLUMN);
-			break;
-		case 6:
-			newTetromino = new Z(STARTROW, STARTCOLUMN);
-			break;
-		}
-
 		for (int i = 0; i < randomRotation; i++) {
 			newTetromino.setMatrix(rotateTetromino(newTetromino.getMatrix()));
 		}
@@ -97,8 +68,8 @@ public class Game {
 				removeCompleteRows(cr);
 				updateScore(cr);
 			}
-			tetrominos.get(0).setRow(STARTROW);
-			tetrominos.get(0).setColumn(STARTCOLUMN);
+//			tetrominos.get(0).setRow(STARTROW);
+//			tetrominos.get(0).setColumn(STARTCOLUMN);
 			tetrominos.remove(0);
 			tetrominos.add(randomTetromino());
 		} else {
@@ -146,6 +117,14 @@ public class Game {
 	boolean newScore() {
 		if (score != oldScore) {
 			oldScore = score;
+			return true;
+		}
+		return false;
+	}
+
+	boolean newTetro() {
+		if (tetrominos.get(0) != oldTetro) {
+			oldTetro = tetrominos.get(0);
 			return true;
 		}
 		return false;
