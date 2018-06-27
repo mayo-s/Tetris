@@ -8,11 +8,15 @@ import elements.Tetromino;
 
 public class AI {
 
-	private Playfield field;
+	private Playfield field = new Playfield();
+	private final int BOTTOM = field.getHEIGHT();
+	private final int BORDER = field.getWIDTH();
 	private ArrayList<String[]> fMatrix;
-	private final int ROWS = field.getHEIGHT();
-	private final int COLUMNS = field.getWIDTH();
 	private List<Tetromino> tetrominos;
+
+	public AI() {
+
+	}
 
 	/**
 	 * @param field
@@ -20,72 +24,74 @@ public class AI {
 	 * @param tetrominos
 	 *            list of current and following Tetrominos
 	 */
-	public AI(Playfield field, List<Tetromino> tetrominos) {
-		this.field = field;
+	public Tetromino evaluate(Playfield field, List<Tetromino> tetrominos) {
 		this.fMatrix = field.getMatrix();
 		this.tetrominos = tetrominos;
-		evaluate();
-	}
+		ArrayList<Tetromino> options = initialList();
 
-	public Tetromino evaluate() {
-		ArrayList<Tetromino> options = makeList();
-		
 		return null;
 	}
 
-	private ArrayList<Tetromino> makeList() {
+	private ArrayList<Tetromino> initialList() {
 		Tetromino t = tetrominos.get(0);
 		int[][] tmatrix = t.getMatrix();
+		String tcolor = t.getColor();
 		ArrayList<Tetromino> allOptions = new ArrayList<>();
-		for (int r = 0; r < ROWS; r++) {
-			for (int c = 0; c < COLUMNS; c++) {
-				t.setRow(r);
-				t.setColumn(c);
-				// initial
-				allOptions.add(t);
-				// rotate 1
-				t.setMatrix(rotate(tmatrix));
-				allOptions.add(t);
-				// rotate 2
-				t.setMatrix(rotate(tmatrix));
-				allOptions.add(t);
-				// rotate 3
-				t.setMatrix(rotate(tmatrix));
-				allOptions.add(t);
 
-			}
-		}
-		return reduceList(allOptions);
-	}
-
-	private ArrayList<Tetromino> reduceList(ArrayList<Tetromino> allOptions) {
-
-		for (int i = allOptions.size() - 1; i >= 0; i--) {
-			Tetromino t = allOptions.get(i);
-			int[][] tmatrix = t.getMatrix();
-			int row = t.getRow();
-			int column = t.getColumn();
-			for (int r = 0; r < 4; ++r) {
-				if (row + r < ROWS)
-					for (int c = 0; c < 4; ++c) {
-						if (tmatrix[r][c] == 1 && (column + c >= COLUMNS || fMatrix.get(row + r)[column + c] != null))
-							allOptions.remove(i);
+		for (int fRow = topRow(); fRow < BOTTOM; fRow++) {
+			for (int fColumn = 0; fColumn < BORDER; fColumn++) {
+				for (int rotation = 0; rotation < 4; rotation++) {
+					if (addToOptions(tmatrix, fRow, fColumn)) {
+						Tetromino newT = new Tetromino("");
+						newT.setMatrix(tmatrix);
+						newT.setColor(tcolor);
+						newT.setRow(fRow);
+						newT.setColumn(fColumn);
+						allOptions.add(newT);
 					}
+					tmatrix = rotate(tmatrix);
+				}
 			}
 		}
-		return null;
+		return allOptions;
 	}
 
-	private int[][] rotate(int[][] tetromino) {
-		int size = tetromino.length;
+	private boolean addToOptions(int[][] tmatrix, int fRow, int fColumn) {
+
+		for (int tRow = 0; tRow < tmatrix.length; ++tRow) {
+			if (fRow + tRow < BOTTOM) {
+				for (int tColumn = 0; tColumn < tmatrix.length; ++tColumn) {
+					if (tmatrix[tRow][tColumn] == 1 && (fColumn + tColumn >= BORDER || fMatrix.get(fRow + tRow)[fColumn + tColumn] != null)) {
+						return false;
+					}
+				}
+			} else {
+				return false;
+			}
+		}
+		return true;
+	}
+
+	private int[][] rotate(int[][] tmatrix) {
+		int size = tmatrix.length;
 		int[][] rotated = new int[size][size];
 
 		for (int i = 0; i < size; ++i) {
 			for (int j = 0; j < size; ++j) {
-				rotated[i][j] = tetromino[size - j - 1][i];
+				rotated[i][j] = tmatrix[size - j - 1][i];
 			}
 		}
 		return rotated;
+	}
+
+	private int topRow() {
+		for (int fRow = 2; fRow < BOTTOM - 1; fRow++) {
+			for (int fColumn = 0; fColumn < BORDER; fColumn++) {
+				if (fMatrix.get(fRow)[fColumn] != null)
+					return fRow - 1;
+			}
+		}
+		return BOTTOM - 1;
 	}
 
 }

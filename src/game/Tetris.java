@@ -1,5 +1,6 @@
 package game;
 
+import ai.AI;
 import gui.Gui;
 import javafx.animation.KeyFrame;
 import javafx.animation.Timeline;
@@ -16,6 +17,7 @@ public class Tetris extends Application {
 
 	private Game game;
 	private Gui gui;
+	private AI ai;
 	private Timeline interval;
 	private boolean paused;
 
@@ -28,6 +30,7 @@ public class Tetris extends Application {
 		stage.setTitle("Tetris by Mario Schuetz");
 		game = new Game();
 		gui = new Gui();
+		ai = new AI();
 		paused = false;
 		Scene scene = new Scene(gui.getMain());
 		stage.setScene(scene);
@@ -51,6 +54,9 @@ public class Tetris extends Application {
 						
 					game.moveDown();
 					gui.updatePreviewGrid(game.getNextTetrominos().get(1));
+					if(game.newTetro()) {
+						ai();
+					}
 					gui.updateGameGrid(game.getField(), game.getNextTetrominos().get(0));
 					gui.updateLineCount(game.getLcount());
 					gui.updateTetroCount(game.getTcount());
@@ -102,5 +108,9 @@ public class Tetris extends Application {
 				}
 			}
 		});
+	}
+	
+	private void ai() {
+		ai.evaluate(game.getField(), game.getNextTetrominos());
 	}
 }
