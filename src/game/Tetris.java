@@ -53,7 +53,7 @@ public class Tetris extends Application {
 					interval.stop();
 				} else {
 
-					game.moveDown();
+					game.move("down");
 					gui.updatePreviewGrid(game.getNextTetrominos().get(1));
 					gui.updateScore(game.getScore());
 					gui.updateGameGrid(game.getField(), game.getNextTetrominos().get(0));
@@ -81,16 +81,16 @@ public class Tetris extends Application {
 					if (!paused) {
 
 						if (event.getCode() == KeyCode.LEFT) {
-							game.moveLeft();
+							game.move("left");
 						}
 						if (event.getCode() == KeyCode.RIGHT) {
-							game.moveRight();
+							game.move("right");
 						}
 						if (event.getCode() == KeyCode.DOWN) {
-							game.moveDown();
+							game.move("down");
 						}
 						if (event.getCode() == KeyCode.UP) {
-							game.moveRotate();
+							game.move("rotate");
 						}
 						if (event.getCode() == KeyCode.P) {
 							paused = true;

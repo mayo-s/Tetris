@@ -180,6 +180,34 @@ public class Game {
 		}
 	}
 
+	void move(String move) {
+		switch (move) {
+		case "left":
+			if(moveLeft()) 
+				tetrominos.get(0).setColumn(tetrominos.get(0).getColumn() - 1);
+			break;
+		case "right":
+			if(moveRight()) 
+				tetrominos.get(0).setColumn(tetrominos.get(0).getColumn() + 1);
+			break;
+		case "down":
+			if(moveDown()) {
+				score++;
+				tetrominos.get(0).setRow(tetrominos.get(0).getRow() + 1);
+			} else {
+				tetrominoToField();
+				next();				
+			}
+			break;
+		case "rotate":
+			moveRotate();
+			break;
+		default: break;
+		}
+		
+
+	}
+
 	boolean moveDown() {
 
 		ArrayList<String[]> fmatrix = field.getMatrix();
@@ -190,14 +218,10 @@ public class Game {
 		for (int r = 0; r < tmatrix.length; r++) {
 			for (int c = 0; c < tmatrix.length; c++) {
 				if (tmatrix[r][c] == 1 && (row + r >= BOTTOM || fmatrix.get(row + r + 1)[column + c] != null)) {
-					tetrominoToField();
-					next();
 					return false;
 				}
 			}
 		}
-		score++;
-		tetrominos.get(0).setRow(row + 1);
 		return true;
 	}
 
@@ -211,12 +235,10 @@ public class Game {
 		for (int c = 0; c < tdimension; c++) {
 			for (int r = 0; r < tdimension; r++) {
 				if (tmatrix[r][c] == 1 && (column + c <= LEFTEDGE || fmatrix.get(row + r)[column + c - 1] != null)) {
-
 					return false;
 				}
 			}
 		}
-		tetrominos.get(0).setColumn(column - 1);
 		return true;
 	}
 
@@ -234,7 +256,6 @@ public class Game {
 				}
 			}
 		}
-		tetrominos.get(0).setColumn(column + 1);
 		return true;
 	}
 
