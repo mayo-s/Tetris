@@ -110,20 +110,20 @@ public class Tetris extends Application {
 	}
 
 	private void ai() {
-		int[] aiCommands = ai.evaluate(game.getField(), game.getNextTetrominos());
-		Tetromino tetro = game.getNextTetrominos().get(0);
-		int fRow = aiCommands[1];
-		int fColumn = aiCommands[2];
-		for (int i = 0; i < aiCommands[0]; i++) {
-			game.moveRotate();
-		}
-		// move to column
-		if (fColumn > tetro.getColumn()) {
-		} else if (fColumn < tetro.getColumn()) {
-
-		}
-		game.moveDown();
-		gui.updateGameGrid(game.getField(), game.getNextTetrominos().get(0));
+//		int[] aiCommands = ai.evaluate(game.getField(), game.getNextTetrominos());
+//		Tetromino tetro = game.getNextTetrominos().get(0);
+//		int fRow = aiCommands[1];
+//		int fColumn = aiCommands[2];
+//		for (int i = 0; i < aiCommands[0]; i++) {
+//			game.moveRotate();
+//		}
+//		// move to column
+//		if (fColumn > tetro.getColumn()) {
+//		} else if (fColumn < tetro.getColumn()) {
+//
+//		}
+//		game.moveDown();
+//		gui.updateGameGrid(game.getField(), game.getNextTetrominos().get(0));
 		
 	}
 

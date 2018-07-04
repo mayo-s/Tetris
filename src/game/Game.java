@@ -8,17 +8,13 @@ import elements.Playfield;
 import elements.Tetromino;
 
 public class Game {
-
-	private List<Tetromino> tetrominos;
+	
 	private Playfield field = new Playfield();
+	private Interaction ia = new Interaction();
 	private final int LIMIT = 2; // current + next
 	private final int STARTROW = 0;
 	private final int STARTCOLUMN = 3;
 	private final int[] POINTS = { 0, 100, 300, 500, 800 };
-	// field outline
-	private final int LEFTEDGE = 0;
-	private final int RIGHTEDGE = field.getWIDTH() - 1;
-	private final int BOTTOM = field.getHEIGHT() - 1;
 
 	private boolean gameOver;
 	private int lvl;
@@ -26,6 +22,7 @@ public class Game {
 	private int lcount; // eliminated line count
 	private int score;
 	private int oldScore;
+	private List<Tetromino> tetrominos;
 	private Tetromino oldTetro;
 
 	public Game() {
@@ -179,19 +176,25 @@ public class Game {
 			}
 		}
 	}
-
+	
+	// should this return a boolean aswell?
 	void move(String move) {
+		ArrayList<String[]> fmatrix = field.getMatrix();
+		int[][] tmatrix = tetrominos.get(0).getMatrix();
+		int row = tetrominos.get(0).getRow();
+		int column = tetrominos.get(0).getColumn();
+		
 		switch (move) {
 		case "left":
-			if(moveLeft()) 
+			if(ia.left(fmatrix, tmatrix, row, column)) 
 				tetrominos.get(0).setColumn(tetrominos.get(0).getColumn() - 1);
 			break;
 		case "right":
-			if(moveRight()) 
+			if(ia.right(fmatrix, tmatrix, row, column)) 
 				tetrominos.get(0).setColumn(tetrominos.get(0).getColumn() + 1);
 			break;
 		case "down":
-			if(moveDown()) {
+			if(ia.down(fmatrix, tmatrix, row, column)) {
 				score++;
 				tetrominos.get(0).setRow(tetrominos.get(0).getRow() + 1);
 			} else {
@@ -200,82 +203,11 @@ public class Game {
 			}
 			break;
 		case "rotate":
-			moveRotate();
+			int[][] rtmatrix = rotateTetromino(tmatrix);
+			if(ia.rotate(fmatrix, rtmatrix, row, column)) tetrominos.get(0).setMatrix(rtmatrix);
 			break;
 		default: break;
 		}
-		
-
-	}
-
-	boolean moveDown() {
-
-		ArrayList<String[]> fmatrix = field.getMatrix();
-		int[][] tmatrix = tetrominos.get(0).getMatrix();
-		int row = tetrominos.get(0).getRow();
-		int column = tetrominos.get(0).getColumn();
-
-		for (int r = 0; r < tmatrix.length; r++) {
-			for (int c = 0; c < tmatrix.length; c++) {
-				if (tmatrix[r][c] == 1 && (row + r >= BOTTOM || fmatrix.get(row + r + 1)[column + c] != null)) {
-					return false;
-				}
-			}
-		}
-		return true;
-	}
-
-	boolean moveLeft() {
-		ArrayList<String[]> fmatrix = field.getMatrix();
-		int[][] tmatrix = tetrominos.get(0).getMatrix();
-		int row = tetrominos.get(0).getRow();
-		int column = tetrominos.get(0).getColumn();
-		int tdimension = tmatrix.length;
-
-		for (int c = 0; c < tdimension; c++) {
-			for (int r = 0; r < tdimension; r++) {
-				if (tmatrix[r][c] == 1 && (column + c <= LEFTEDGE || fmatrix.get(row + r)[column + c - 1] != null)) {
-					return false;
-				}
-			}
-		}
-		return true;
-	}
-
-	boolean moveRight() {
-		ArrayList<String[]> fmatrix = field.getMatrix();
-		int[][] tmatrix = tetrominos.get(0).getMatrix();
-		int row = tetrominos.get(0).getRow();
-		int column = tetrominos.get(0).getColumn();
-		int tdimension = tmatrix.length;
-
-		for (int c = tdimension - 1; c >= 0; c--) {
-			for (int r = 0; r < tdimension; r++) {
-				if (tmatrix[r][c] == 1 && (column + c >= RIGHTEDGE || fmatrix.get(row + r)[column + c + 1] != null)) {
-					return false;
-				}
-			}
-		}
-		return true;
-	}
-
-	boolean moveRotate() {
-		ArrayList<String[]> fmatrix = field.getMatrix();
-		int[][] tmatrix = rotateTetromino(tetrominos.get(0).getMatrix());
-		int row = tetrominos.get(0).getRow();
-		int column = tetrominos.get(0).getColumn();
-		int tdimension = tmatrix.length;
-
-		for (int c = 0; c < tdimension; c++) {
-			for (int r = 0; r < tdimension; r++) {
-				if (tmatrix[r][c] == 1 && (column + c >= RIGHTEDGE || column + c <= LEFTEDGE
-						|| fmatrix.get(row + r)[column + c] != null)) {
-					return false;
-				}
-			}
-		}
-		tetrominos.get(0).setMatrix(tmatrix);
-		return true;
 	}
 
 	public List<Tetromino> getNextTetrominos() {
