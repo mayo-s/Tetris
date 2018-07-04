@@ -1,6 +1,7 @@
 package game;
 
 import ai.AI;
+import elements.Tetromino;
 import gui.Gui;
 import javafx.animation.KeyFrame;
 import javafx.animation.Timeline;
@@ -41,6 +42,8 @@ public class Tetris extends Application {
 
 	private void intervalEvent() {
 		double time = Math.pow((0.8 - ((game.getLvl() - 1) * 0.007)), (game.getLvl() - 1)) * 1000;
+
+		gui.updatePreviewGrid(game.getNextTetrominos().get(1));
 		interval = new Timeline(new KeyFrame(Duration.millis(time), new EventHandler<ActionEvent>() {
 
 			@Override
@@ -49,18 +52,14 @@ public class Tetris extends Application {
 					gui.getGameOverLabel().setVisible(true);
 					interval.stop();
 				} else {
-					if (game.newScore())
-						gui.updateScore(game.getScore());
-						
+
 					game.moveDown();
 					gui.updatePreviewGrid(game.getNextTetrominos().get(1));
-					if(game.newTetro()) {
-						ai();
-					}
+					gui.updateScore(game.getScore());
 					gui.updateGameGrid(game.getField(), game.getNextTetrominos().get(0));
 					gui.updateLineCount(game.getLcount());
 					gui.updateTetroCount(game.getTcount());
-					if(game.levelUp()) {
+					if (game.levelUp()) {
 						gui.updateLvl(game.getLvl());
 						interval.stop();
 						intervalEvent();
@@ -93,12 +92,12 @@ public class Tetris extends Application {
 						if (event.getCode() == KeyCode.UP) {
 							game.moveRotate();
 						}
-						if(event.getCode() == KeyCode.P) {
+						if (event.getCode() == KeyCode.P) {
 							paused = true;
 							interval.pause();
 						}
-					} else if(paused) {
-						if(event.getCode() == KeyCode.P) {
+					} else if (paused) {
+						if (event.getCode() == KeyCode.P) {
 							paused = false;
 							interval.play();
 						}
@@ -109,8 +108,23 @@ public class Tetris extends Application {
 			}
 		});
 	}
-	
+
 	private void ai() {
-		ai.evaluate(game.getField(), game.getNextTetrominos());
+		int[] aiCommands = ai.evaluate(game.getField(), game.getNextTetrominos());
+		Tetromino tetro = game.getNextTetrominos().get(0);
+		int fRow = aiCommands[1];
+		int fColumn = aiCommands[2];
+		for (int i = 0; i < aiCommands[0]; i++) {
+			game.moveRotate();
+		}
+		// move to column
+		if (fColumn > tetro.getColumn()) {
+		} else if (fColumn < tetro.getColumn()) {
+
+		}
+		game.moveDown();
+		gui.updateGameGrid(game.getField(), game.getNextTetrominos().get(0));
+		
 	}
+
 }

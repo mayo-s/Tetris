@@ -52,6 +52,7 @@ public class Game {
 	private Tetromino randomTetromino() {
 		String[] tetroModel = { "I", "J", "L", "O", "S", "T", "Z" };
 		Tetromino newTetromino = new Tetromino(tetroModel[(int) (Math.random() * 7)]);
+		// Tetromino newTetromino = new Tetromino("I");
 		int randomRotation = (int) (Math.random() * 4);
 		for (int i = 0; i < randomRotation; i++) {
 			newTetromino.setMatrix(rotateTetromino(newTetromino.getMatrix()));
@@ -68,8 +69,6 @@ public class Game {
 				removeCompleteRows(cr);
 				updateScore(cr);
 			}
-//			tetrominos.get(0).setRow(STARTROW);
-//			tetrominos.get(0).setColumn(STARTCOLUMN);
 			tetrominos.remove(0);
 			tetrominos.add(randomTetromino());
 		} else {
@@ -181,101 +180,81 @@ public class Game {
 		}
 	}
 
-	void moveDown() {
+	boolean moveDown() {
 
 		ArrayList<String[]> fmatrix = field.getMatrix();
 		int[][] tmatrix = tetrominos.get(0).getMatrix();
 		int row = tetrominos.get(0).getRow();
 		int column = tetrominos.get(0).getColumn();
-		boolean movable = true;
 
 		for (int r = 0; r < tmatrix.length; r++) {
 			for (int c = 0; c < tmatrix.length; c++) {
 				if (tmatrix[r][c] == 1 && (row + r >= BOTTOM || fmatrix.get(row + r + 1)[column + c] != null)) {
-					movable = false;
-					break;
+					tetrominoToField();
+					next();
+					return false;
 				}
 			}
-			if (!movable)
-				break;
 		}
-		if (movable) {
-			score++;
-			tetrominos.get(0).setRow(row + 1);
-		} else {
-			tetrominoToField();
-			next();
-		}
+		score++;
+		tetrominos.get(0).setRow(row + 1);
+		return true;
 	}
 
-	void moveLeft() {
+	boolean moveLeft() {
 		ArrayList<String[]> fmatrix = field.getMatrix();
 		int[][] tmatrix = tetrominos.get(0).getMatrix();
 		int row = tetrominos.get(0).getRow();
 		int column = tetrominos.get(0).getColumn();
 		int tdimension = tmatrix.length;
-		boolean movable = true;
 
 		for (int c = 0; c < tdimension; c++) {
 			for (int r = 0; r < tdimension; r++) {
 				if (tmatrix[r][c] == 1 && (column + c <= LEFTEDGE || fmatrix.get(row + r)[column + c - 1] != null)) {
-					movable = false;
-					break;
+
+					return false;
 				}
 			}
-			if (!movable)
-				break;
 		}
-		if (movable) {
-			tetrominos.get(0).setColumn(column - 1);
-		}
+		tetrominos.get(0).setColumn(column - 1);
+		return true;
 	}
 
-	void moveRight() {
+	boolean moveRight() {
 		ArrayList<String[]> fmatrix = field.getMatrix();
 		int[][] tmatrix = tetrominos.get(0).getMatrix();
 		int row = tetrominos.get(0).getRow();
 		int column = tetrominos.get(0).getColumn();
 		int tdimension = tmatrix.length;
-		boolean movable = true;
 
 		for (int c = tdimension - 1; c >= 0; c--) {
 			for (int r = 0; r < tdimension; r++) {
 				if (tmatrix[r][c] == 1 && (column + c >= RIGHTEDGE || fmatrix.get(row + r)[column + c + 1] != null)) {
-					movable = false;
-					break;
+					return false;
 				}
 			}
-			if (!movable)
-				break;
 		}
-		if (movable) {
-			tetrominos.get(0).setColumn(column + 1);
-		}
+		tetrominos.get(0).setColumn(column + 1);
+		return true;
 	}
 
-	void moveRotate() {
+	boolean moveRotate() {
 		ArrayList<String[]> fmatrix = field.getMatrix();
 		int[][] tmatrix = rotateTetromino(tetrominos.get(0).getMatrix());
 		int row = tetrominos.get(0).getRow();
 		int column = tetrominos.get(0).getColumn();
 		int tdimension = tmatrix.length;
-		boolean rotatable = true;
 
 		for (int c = 0; c < tdimension; c++) {
 			for (int r = 0; r < tdimension; r++) {
 				if (tmatrix[r][c] == 1 && (column + c >= RIGHTEDGE || column + c <= LEFTEDGE
 						|| fmatrix.get(row + r)[column + c] != null)) {
-					rotatable = false;
-					break;
+					return false;
 				}
 			}
-			if (!rotatable)
-				break;
 		}
-		if (rotatable) {
-			tetrominos.get(0).setMatrix(tmatrix);
-		}
+		tetrominos.get(0).setMatrix(tmatrix);
+		return true;
 	}
 
 	public List<Tetromino> getNextTetrominos() {
