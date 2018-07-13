@@ -4,14 +4,14 @@ import java.util.ArrayList;
 
 import elements.Playfield;
 
-public class Interaction {
+public class Move {
 
 	private Playfield field = new Playfield();
 	private final int LEFTEDGE = 0;
 	private final int RIGHTEDGE = field.getWIDTH() - 1;
 	private final int BOTTOM = field.getHEIGHT() - 1;
 
-	public Interaction() {
+	public Move() {
 	}
 
 	/**
@@ -19,12 +19,16 @@ public class Interaction {
 	 *            current Playfield
 	 * @param tetromino
 	 *            current Tetromino
+	 * @param frow
+	 * 			  row position in field
+	 * @param fcolumn
+	 * 			  column position in field
 	 * @return is move downwards possible?
 	 */
-	boolean down(ArrayList<String[]> fmatrix, int[][] tmatrix, int row, int column) {
+	public boolean down(ArrayList<String[]> fmatrix, int[][] tmatrix, int frow, int fcolumn) {
 		for (int r = 0; r < tmatrix.length; r++) {
 			for (int c = 0; c < tmatrix.length; c++) {
-				if (tmatrix[r][c] == 1 && (row + r >= BOTTOM || fmatrix.get(row + r + 1)[column + c] != null)) {
+				if (tmatrix[r][c] == 1 && (frow + r >= BOTTOM || fcolumn + c > RIGHTEDGE || fmatrix.get(frow + r + 1)[fcolumn + c] != null)) {
 					return false;
 				}
 			}
