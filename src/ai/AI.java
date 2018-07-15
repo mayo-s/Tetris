@@ -124,8 +124,8 @@ public class AI {
 			System.out.println("id " + it.getId() + " rotation " + it.getRotation() + " row: " + it.getFrow()
 					+ " column: " + it.getFcolumn() + " score: " + it.getScore());
 		}
-		
-		int[] instructions = {tree.last().getRotation(), tree.last().getFcolumn()};
+		Node bestLeaf = tree.last();
+		int[] instructions = {bestLeaf.getRotation(), bestLeaf.getFrow(), bestLeaf.getFcolumn()};
 		return instructions;
 	}
 
