@@ -1,7 +1,6 @@
 package game;
 
 import ai.AI;
-import elements.Tetromino;
 import gui.Gui;
 import javafx.animation.KeyFrame;
 import javafx.animation.Timeline;
@@ -54,6 +53,7 @@ public class Tetris extends Application {
 				} else {
 
 					game.move("down");
+					if(game.newTetro()) ai.start(game.getField(), game.getNextTetrominos());
 					gui.updatePreviewGrid(game.getNextTetrominos().get(1));
 					gui.updateScore(game.getScore());
 					gui.updateGameGrid(game.getField(), game.getNextTetrominos().get(0));
@@ -110,7 +110,7 @@ public class Tetris extends Application {
 	}
 
 	private void ai() {
-//		int[] aiCommands = ai.evaluate(game.getField(), game.getNextTetrominos());
+		int[] aiCommands = ai.start(game.getField(), game.getNextTetrominos());
 //		Tetromino tetro = game.getNextTetrominos().get(0);
 //		int fRow = aiCommands[1];
 //		int fColumn = aiCommands[2];

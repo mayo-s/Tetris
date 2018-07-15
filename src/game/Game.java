@@ -4,13 +4,10 @@ import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
 
-import elements.Playfield;
-import elements.Tetromino;
-
 public class Game {
 	
 	private Playfield field = new Playfield();
-	private Interaction ia = new Interaction();
+	private Move ia = new Move();
 	private final int LIMIT = 2; // current + next
 	private final int STARTROW = 0;
 	private final int STARTCOLUMN = 3;
@@ -47,9 +44,9 @@ public class Game {
 	}
 
 	private Tetromino randomTetromino() {
-		String[] tetroModel = { "I", "J", "L", "O", "S", "T", "Z" };
-		Tetromino newTetromino = new Tetromino(tetroModel[(int) (Math.random() * 7)]);
-		// Tetromino newTetromino = new Tetromino("I");
+//		String[] tetroModel = { "I", "J", "L", "O", "S", "T", "Z" };
+//		Tetromino newTetromino = new Tetromino(tetroModel[(int) (Math.random() * 7)]);
+		Tetromino newTetromino = new Tetromino("O");
 		int randomRotation = (int) (Math.random() * 4);
 		for (int i = 0; i < randomRotation; i++) {
 			newTetromino.setMatrix(rotateTetromino(newTetromino.getMatrix()));

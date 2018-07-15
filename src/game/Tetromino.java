@@ -1,4 +1,4 @@
-package elements;
+package game;
 
 public class Tetromino {
 

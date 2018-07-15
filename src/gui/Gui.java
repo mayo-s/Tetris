@@ -1,7 +1,7 @@
 package gui;
 
-import elements.Playfield;
-import elements.Tetromino;
+import game.Playfield;
+import game.Tetromino;
 import javafx.geometry.Insets;
 import javafx.scene.control.Label;
 import javafx.scene.layout.GridPane;

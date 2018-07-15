@@ -2,8 +2,6 @@ package game;
 
 import java.util.ArrayList;
 
-import elements.Playfield;
-
 public class Move {
 
 	private Playfield field = new Playfield();
