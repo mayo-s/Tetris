@@ -13,19 +13,19 @@ public class Node implements Comparable<Node>{
 		this.score = score;
 	}
 
-//	@Override
-//	public int compareTo(Node o) {
-//		if(this.score > o.getScore()) return 1;
-//		else if(this.score < o.getScore()) return -1;
-//		return 0;
-//	}
-
 	@Override
 	public int compareTo(Node o) {
-		if(this.id > o.getId()) return 1;
-		else if(this.id < o.getId()) return -1;
+		if(this.score > o.getScore()) return 1;
+		else if(this.score < o.getScore()) return -1;
 		return 0;
 	}
+
+//	@Override
+//	public int compareTo(Node o) {
+//		if(this.id > o.getId()) return 1;
+//		else if(this.id < o.getId()) return -1;
+//		return 0;
+//	}
 	
 	public int getScore() {
 		return score;

@@ -1,6 +1,7 @@
 package ai;
 
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.Iterator;
 import java.util.List;
 import java.util.TreeSet;
@@ -14,9 +15,11 @@ public class AI {
 	private Move move = new Move();
 	private Playfield field = new Playfield();
 	private final int BOTTOM = field.getHEIGHT();
-	private final int BORDER = field.getWIDTH();
+	private final int RIGHTBORDER = field.getWIDTH();
+	private final int LEFTBORDER = 0;
 	private ArrayList<String[]> fMatrix;
 	private List<Tetromino> tetrominos;
+	private int topRow = 2;
 
 	public AI() {
 
@@ -35,8 +38,11 @@ public class AI {
 		this.field = field;
 		this.fMatrix = field.getMatrix();
 		this.tetrominos = tetrominos;
-		
-		return buildTree();
+		int[][] tmatrix = tetrominos.get(0).getMatrix();
+		int fRow = tetrominos.get(0).getRow();
+		int fColumn = tetrominos.get(0).getColumn();
+
+		return buildTree(tmatrix, fRow, fColumn);
 	}
 
 	private boolean finalPosition(int[][] tmatrix, int fRow, int fColumn) {
@@ -45,8 +51,8 @@ public class AI {
 		for (int tRow = 0; tRow < tmatrix.length; ++tRow) {
 			if (fRow + tRow < BOTTOM) {
 				for (int tColumn = 0; tColumn < tmatrix.length; ++tColumn) {
-					if (tmatrix[tRow][tColumn] == 1
-							&& (fColumn + tColumn >= BORDER || fMatrix.get(fRow + tRow)[fColumn + tColumn] != null)) {
+					if (tmatrix[tRow][tColumn] == 1 && (fColumn + tColumn >= RIGHTBORDER
+							|| fMatrix.get(fRow + tRow)[fColumn + tColumn] != null)) {
 						return false;
 					}
 				}
@@ -69,50 +75,32 @@ public class AI {
 		return rotated;
 	}
 
-	// find first occupied row (top to bottom)
-	private int topRow() {
-		for (int fRow = 2; fRow < BOTTOM; fRow++) {
-			for (int fColumn = 0; fColumn < BORDER; fColumn++) {
-				if (fMatrix.get(fRow)[fColumn] != null)
-					return fRow;
-			}
-		}
-		return BOTTOM - 1;
-	}
-
-	// private int findLowestRow(ArrayList<Tetromino> options) {
-	// int lowest = 0;
-	// int index = 0;
-	// for(int i = 0; i < options.size(); i++) {
-	// Tetromino t = options.get(i);
-	// if(t.getRow() < lowest) {
-	// lowest = t.getRow();
-	// index = i;
-	// }
-	// }
-	// return index;
-	// }
-
-	private int[] buildTree() {
+	private int[] buildTree(int[][] tmatrix, int fRow, int fColumn) {
 		int nodeId = 0;
 		TreeSet<Node> tree = new TreeSet<Node>();
-				
-		Tetromino t = tetrominos.get(0);
-		int[][] tmatrix = t.getMatrix();
+		int cRow = fRow;
+		int cColumn = fColumn;
+
 		Test test = new Test();
 		test.printTetromino(tmatrix);
-		// String tcolor = t.getColor();
 
-		for (int fRow = topRow() - 4; fRow < BOTTOM; fRow++) {
-			for (int fColumn = 0; fColumn < BORDER; fColumn++) {
-				for (int rotation = 0; rotation < 4; rotation++) {
-					if (finalPosition(tmatrix, fRow, fColumn)) {
-						tree.add(new Node(nodeId, rotation, fRow, fColumn, buildScore(field, fRow, fColumn, tmatrix), null));
-						nodeId++;
-					}
-					tmatrix = rotate(tmatrix);
-				}
+		for (int rotation = 0; rotation < 4; rotation++) {
+			while (move.left(fMatrix, tmatrix, cRow, cColumn)) {
+				cColumn--;
 			}
+
+			while (move.right(fMatrix, tmatrix, cRow, cColumn)) {
+				while (move.down(fMatrix, tmatrix, cRow, cColumn)) {
+					cRow++;
+				}
+				tree.add(new Node(nodeId, rotation, cRow, cColumn, buildScore(cRow, cColumn, tmatrix), null));
+				nodeId++;
+				cColumn++;
+			}
+			tmatrix = rotate(tmatrix);
+			cRow = fRow;
+			cColumn = fColumn;
+
 		}
 
 		System.out.println(tree.size() + " tree elements");
@@ -124,20 +112,64 @@ public class AI {
 			System.out.println("id " + it.getId() + " rotation " + it.getRotation() + " row: " + it.getFrow()
 					+ " column: " + it.getFcolumn() + " score: " + it.getScore());
 		}
+
+		if (tree.isEmpty())
+			tree.add(new Node(nodeId, 0, 18, -2, 0, null));
 		Node bestLeaf = tree.last();
-		int[] instructions = {bestLeaf.getRotation(), bestLeaf.getFrow(), bestLeaf.getFcolumn()};
+		int[] instructions = { bestLeaf.getRotation(), bestLeaf.getFrow(), bestLeaf.getFcolumn() };
 		return instructions;
 	}
 
-	private int buildScore(Playfield field, int fRow, int fColumn, int[][] tmatrix) {
+	private int buildScore(int fRow, int fColumn, int[][] tmatrix) {
 		int score = 0;
-		
-		// adds height - return int (how much)
-		// clears lines - return int (how many)
-		// covers gaps - return int (how many)
-		
-		
+
+		Playfield field = new Playfield();
+		ArrayList<String[]> fmatrix = field.getMatrix();
+		int dimension = tmatrix.length;
+		for (int r = 0; r < dimension; r++) {
+			for (int c = 0; c < dimension; c++) {
+				if (tmatrix[r][c] == 1)
+					fmatrix.get(fRow + r)[fColumn + c] = "x";
+			}
+		}
+
+		// adds height
+		score += scoreHeight(fmatrix, fRow);
+		// clears lines
+		score += scoreLines(fmatrix, fRow);
+		// covers gaps
+		score += scoreGaps();
+		System.out.println("Build score " + score);
 		return score;
+	}
+
+	private int scoreLines(ArrayList<String[]> fmatrix, int row) {
+		int score = 0;
+		for (int r = row; r <= (row + 3); r++) {
+			boolean gap = false;
+			if (r < fmatrix.size()) {
+				for (String cell : fmatrix.get(r)) {
+					if (cell == null) {
+						gap = true;
+						break;
+					}
+				}
+				if (!gap) {
+					score += 100;
+				}
+			}
+		}
+		return score;
+	}
+
+	private int scoreHeight(ArrayList<String[]> fmatrix, int fRow) {
+		// TODO Auto-generated method stub
+		return 0;
+	}
+
+	private int scoreGaps() {
+		// TODO Auto-generated method stub
+		return 0;
 	}
 
 	private void alphaBeta() {
