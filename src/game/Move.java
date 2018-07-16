@@ -41,7 +41,7 @@ public class Move {
 	 *            current Tetromino
 	 * @return is move leftwards possible?
 	 */
-	boolean left(ArrayList<String[]> fmatrix, int[][] tmatrix, int row, int column) {
+	public boolean left(ArrayList<String[]> fmatrix, int[][] tmatrix, int row, int column) {
 		int tdimension = tmatrix.length;
 		for (int c = 0; c < tdimension; c++) {
 			for (int r = 0; r < tdimension; r++) {
@@ -60,7 +60,7 @@ public class Move {
 	 *            current Tetromino
 	 * @return is move rightwards possible?
 	 */
-	boolean right(ArrayList<String[]> fmatrix, int[][] tmatrix, int row, int column) {
+	public boolean right(ArrayList<String[]> fmatrix, int[][] tmatrix, int row, int column) {
 		int tdimension = tmatrix.length;
 		for (int c = tdimension - 1; c >= 0; c--) {
 			for (int r = 0; r < tdimension; r++) {
@@ -80,7 +80,7 @@ public class Move {
 	 *            rotated Tetromino
 	 * @return is rotation possible?
 	 */
-	boolean rotate(ArrayList<String[]> fmatrix, int[][] tmatrix, int row, int column) {
+	public boolean rotate(ArrayList<String[]> fmatrix, int[][] tmatrix, int row, int column) {
 		int tdimension = tmatrix.length;
 		for (int c = 0; c < tdimension; c++) {
 			for (int r = 0; r < tdimension; r++) {
