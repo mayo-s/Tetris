@@ -11,7 +11,6 @@ import java.util.TreeSet;
 import game.Move;
 import game.Playfield;
 import game.Tetromino;
-import test.Test;
 
 public class AI {
 	private Move move = new Move();
@@ -78,9 +77,6 @@ public class AI {
 		int cRow = fRow;
 		int cColumn = fColumn;
 
-		Test test = new Test();
-		test.printTetromino(tmatrix);
-
 		for (int rotation = 0; rotation < 4; rotation++) {
 			while (move.left(fMatrix, tmatrix, cRow, cColumn)) {
 				cColumn--;
@@ -102,15 +98,16 @@ public class AI {
 		}
 
 		// just checking
-		System.out.println(tree.size() + " tree elements");
-		for (Map.Entry<Node, Integer> entry : tree.entrySet()) {
-			Node node = entry.getKey();
-			Integer score = entry.getValue();
+		// System.out.println(tree.size() + " tree elements");
+		// for (Map.Entry<Node, Integer> entry : tree.entrySet()) {
+		// Node node = entry.getKey();
+		// Integer score = entry.getValue();
+		//
+		// System.out.println("id " + node.getId() + " rotation " + node.getRotation() +
+		// " row: " + node.getFrow()
+		// + " column: " + node.getFcolumn() + " score: " + score);
+		// }
 
-			System.out.println("id " + node.getId() + " rotation " + node.getRotation() + " row: " + node.getFrow()
-					+ " column: " + node.getFcolumn() + " score: " + score);
-		}
-		
 		Node bestLeaf = getBestLeaf(tree);
 		int[] instructions = { bestLeaf.getRotation(), bestLeaf.getFrow(), bestLeaf.getFcolumn() };
 		return instructions;
@@ -119,14 +116,12 @@ public class AI {
 	private Node getBestLeaf(TreeMap<Node, Integer> tree) {
 		Map.Entry<Node, Integer> maxScore = null;
 
-		for (Map.Entry<Node, Integer> entry : tree.entrySet())
-		{
-		    if (maxScore == null || entry.getValue().compareTo(maxScore.getValue()) > 0)
-		    {
-		        maxScore = entry;
-		    }
+		for (Map.Entry<Node, Integer> entry : tree.entrySet()) {
+			if (maxScore == null || entry.getValue().compareTo(maxScore.getValue()) > 0) {
+				maxScore = entry;
+			}
 		}
-		
+
 		return maxScore.getKey();
 	}
 
@@ -144,10 +139,7 @@ public class AI {
 		}
 
 		// adds height
-		if (topRow <= fRow)
-			score -= (fRow % topRow) * 100;
-		else
-			score -= (topRow % fRow) * 100;
+		score -= (fRow - topRow) * 100;
 		// need rotation
 		score -= rotation * 10;
 		// move away from center field
@@ -159,7 +151,7 @@ public class AI {
 		score += scoreLines(fmatrix, fRow);
 		// covers gaps
 		score += scoreGaps();
-		System.out.println("Build score " + score);
+		// System.out.println("Build score " + score);
 		return score;
 	}
 
