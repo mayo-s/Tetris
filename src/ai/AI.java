@@ -139,7 +139,7 @@ public class AI {
 		}
 
 		// adds height
-		score -= (fRow - topRow) * 100;
+		score += (fRow - topRow) * 20;
 		// need rotation
 		score -= rotation * 10;
 		// move away from center field
