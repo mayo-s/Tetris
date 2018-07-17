@@ -44,9 +44,9 @@ public class Game {
 	}
 
 	private Tetromino randomTetromino() {
-//		String[] tetroModel = { "I", "J", "L", "O", "S", "T", "Z" };
-//		Tetromino newTetromino = new Tetromino(tetroModel[(int) (Math.random() * 7)]);
-		Tetromino newTetromino = new Tetromino("O");
+		String[] tetroModel = { "I", "J", "L", "O", "S", "T", "Z" };
+		Tetromino newTetromino = new Tetromino(tetroModel[(int) (Math.random() * 7)]);
+//		Tetromino newTetromino = new Tetromino("O");
 		int randomRotation = (int) (Math.random() * 4);
 		for (int i = 0; i < randomRotation; i++) {
 			newTetromino.setMatrix(rotateTetromino(newTetromino.getMatrix()));
@@ -175,7 +175,7 @@ public class Game {
 	}
 	
 	// should this return a boolean aswell?
-	void move(String move) {
+	boolean move(String move) {
 		ArrayList<String[]> fmatrix = field.getMatrix();
 		int[][] tmatrix = tetrominos.get(0).getMatrix();
 		int row = tetrominos.get(0).getRow();
@@ -185,15 +185,16 @@ public class Game {
 		case "left":
 			if(ia.left(fmatrix, tmatrix, row, column)) 
 				tetrominos.get(0).setColumn(tetrominos.get(0).getColumn() - 1);
-			break;
+			return true;
 		case "right":
 			if(ia.right(fmatrix, tmatrix, row, column)) 
 				tetrominos.get(0).setColumn(tetrominos.get(0).getColumn() + 1);
-			break;
+			return true;
 		case "down":
 			if(ia.down(fmatrix, tmatrix, row, column)) {
 				score++;
 				tetrominos.get(0).setRow(tetrominos.get(0).getRow() + 1);
+				return true;
 			} else {
 				tetrominoToField();
 				next();				
@@ -202,9 +203,10 @@ public class Game {
 		case "rotate":
 			int[][] rtmatrix = rotateTetromino(tmatrix);
 			if(ia.rotate(fmatrix, rtmatrix, row, column)) tetrominos.get(0).setMatrix(rtmatrix);
-			break;
-		default: break;
+			return true;
+		default: return false;
 		}
+		return false;
 	}
 
 	public List<Tetromino> getNextTetrominos() {

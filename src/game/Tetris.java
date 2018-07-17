@@ -52,9 +52,8 @@ public class Tetris extends Application {
 					interval.stop();
 				} else {
 
+					if(aiOn && !game.isGameOver() && game.newTetro()) ai();
 					game.move("down");
-					if (aiOn && game.newTetro())
-						ai();
 					gui.updatePreviewGrid(game.getNextTetrominos().get(1));
 					gui.updateScore(game.getScore());
 					gui.updateGameGrid(game.getField(), game.getNextTetrominos().get(0));
@@ -127,8 +126,8 @@ public class Tetris extends Application {
 		
 		AI ai = new AI();
 		int[] aiCommands = ai.start(game.getField(), game.getNextTetrominos());
-		// System.out.println(
-		//		"Returned values: rotation x" + aiCommands[0] + " row " + aiCommands[1] + " column " + aiCommands[2]);
+		 System.out.println(
+				"Returned values: rotation x" + aiCommands[0] + " row " + aiCommands[1] + " column " + aiCommands[2]);
 		Tetromino tetro = game.getNextTetrominos().get(0);
 		int rotation = aiCommands[0];
 		int fRow = aiCommands[1];
@@ -139,7 +138,7 @@ public class Tetris extends Application {
 		}
 		
 		if (fColumn < tetro.getColumn()) {
-			for (int i = tetro.getColumn(); i >= fColumn; i--) {
+			for (int i = tetro.getColumn(); i > fColumn; i--) {
 				game.move("left");
 //				gui.updateGameGrid(game.getField(), game.getNextTetrominos().get(0));
 			}
@@ -149,10 +148,12 @@ public class Tetris extends Application {
 //				gui.updateGameGrid(game.getField(), game.getNextTetrominos().get(0));
 			}
 		}
-		
-		for (int i = tetro.getRow(); i <= fRow; i++) {
-			game.move("down");
-//			gui.updateGameGrid(game.getField(), game.getNextTetrominos().get(0));
+//		for (int i = tetro.getRow(); i < fRow; i++) {
+//			game.move("down");
+////			gui.updateGameGrid(game.getField(), game.getNextTetrominos().get(0));
+//		}
+		while(game.move("down")) {
+			
 		}
 	}
 }
