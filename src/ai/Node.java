@@ -9,7 +9,7 @@ public class Node implements Comparable<Node> {
 		this.rotation = rotation;
 		this.frow = frow;
 		this.fcolumn = fcolumn;
-		this.setScore(score);
+		this.score = score;
 		this.prevNode = prevNode;
 	}
 
