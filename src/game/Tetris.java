@@ -31,12 +31,18 @@ public class Tetris extends Application {
 		game = new Game();
 		gui = new Gui();
 		paused = false;
-		aiOn = false;
+		aiOn = true;
 		Scene scene = new Scene(gui.getMain());
 		stage.setScene(scene);
 		stage.show();
 		intervalEvent();
 		userEvent(scene);
+		if(aiOn) {
+			System.out.println("AI ON");
+			ai();		
+		}
+		else
+			System.out.println("AI OFF");
 	}
 
 	private void intervalEvent() {
@@ -103,6 +109,12 @@ public class Tetris extends Application {
 							ai();
 						}
 
+					} else if(!paused && aiOn) {
+						if (event.getCode() == KeyCode.P) {
+							System.out.println("PAUSED");
+							paused = true;
+							interval.pause();
+						}
 					} else if (paused) {
 						if (event.getCode() == KeyCode.P) {
 							System.out.println("PLAY");
@@ -126,11 +138,11 @@ public class Tetris extends Application {
 		
 		AI ai = new AI();
 		int[] aiCommands = ai.start(game.getField(), game.getNextTetrominos());
-		 System.out.println(
-				"Returned values: rotation x" + aiCommands[0] + " row " + aiCommands[1] + " column " + aiCommands[2]);
+//		 System.out.println(
+//				"Returned values: rotation x" + aiCommands[0] + " row " + aiCommands[1] + " column " + aiCommands[2]);
 		Tetromino tetro = game.getNextTetrominos().get(0);
 		int rotation = aiCommands[0];
-		int fRow = aiCommands[1];
+//		int fRow = aiCommands[1];
 		int fColumn = aiCommands[2];
 		for (int i = 1; i <= rotation; i++) {
 			game.move("rotate");
@@ -143,7 +155,7 @@ public class Tetris extends Application {
 //				gui.updateGameGrid(game.getField(), game.getNextTetrominos().get(0));
 			}
 		} else if (fColumn > tetro.getColumn()) {
-			for (int i = tetro.getColumn(); i <= fColumn; i++) {
+			for (int i = tetro.getColumn(); i < fColumn; i++) {
 				game.move("right");
 //				gui.updateGameGrid(game.getField(), game.getNextTetrominos().get(0));
 			}
