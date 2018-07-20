@@ -5,7 +5,7 @@ import java.util.Arrays;
 import java.util.List;
 
 public class Game {
-	
+
 	private Playfield field = new Playfield();
 	private Move ia = new Move();
 	private final int LIMIT = 2; // current + next
@@ -49,7 +49,7 @@ public class Game {
 //		Tetromino newTetromino = new Tetromino("O");
 		int randomRotation = (int) (Math.random() * 4);
 		for (int i = 0; i < randomRotation; i++) {
-			newTetromino.setMatrix(rotateTetromino(newTetromino.getMatrix()));
+			newTetromino.setMatrix(newTetromino.rotate());
 		}
 		return newTetromino;
 	}
@@ -66,7 +66,7 @@ public class Game {
 			tetrominos.remove(0);
 			tetrominos.add(randomTetromino());
 		} else {
-			System.out.println("GAME OVER/n");
+			System.out.println("GAME OVER");
 			System.out.println(tcount + " Tetrominos used");
 			System.out.println(lcount + " lines cleared");
 			System.out.println(score + " final score");
@@ -93,18 +93,6 @@ public class Game {
 		if (tetrominos.get(0).getRow() == STARTROW && tetrominos.get(0).getColumn() == STARTCOLUMN)
 			return true;
 		return false;
-	}
-
-	private int[][] rotateTetromino(int[][] tetromino) {
-		int size = tetromino.length;
-		int[][] rotated = new int[size][size];
-
-		for (int i = 0; i < size; ++i) {
-			for (int j = 0; j < size; ++j) {
-				rotated[i][j] = tetromino[size - j - 1][i];
-			}
-		}
-		return rotated;
 	}
 
 	boolean newScore() {
@@ -173,38 +161,40 @@ public class Game {
 			}
 		}
 	}
-	
+
 	// should this return a boolean aswell?
 	boolean move(String move) {
 		ArrayList<String[]> fmatrix = field.getMatrix();
 		int[][] tmatrix = tetrominos.get(0).getMatrix();
 		int row = tetrominos.get(0).getRow();
 		int column = tetrominos.get(0).getColumn();
-		
+
 		switch (move) {
 		case "left":
-			if(ia.left(fmatrix, tmatrix, row, column)) 
+			if (ia.left(fmatrix, tmatrix, row, column))
 				tetrominos.get(0).setColumn(tetrominos.get(0).getColumn() - 1);
 			return true;
 		case "right":
-			if(ia.right(fmatrix, tmatrix, row, column)) 
+			if (ia.right(fmatrix, tmatrix, row, column))
 				tetrominos.get(0).setColumn(tetrominos.get(0).getColumn() + 1);
 			return true;
 		case "down":
-			if(ia.down(fmatrix, tmatrix, row, column)) {
+			if (ia.down(fmatrix, tmatrix, row, column)) {
 				score++;
 				tetrominos.get(0).setRow(tetrominos.get(0).getRow() + 1);
 				return true;
 			} else {
 				tetrominoToField();
-				next();				
+				next();
 			}
 			break;
 		case "rotate":
-			int[][] rtmatrix = rotateTetromino(tmatrix);
-			if(ia.rotate(fmatrix, rtmatrix, row, column)) tetrominos.get(0).setMatrix(rtmatrix);
+			int[][] rtmatrix = tetrominos.get(0).rotate();
+			if (ia.rotate(fmatrix, rtmatrix, row, column))
+				tetrominos.get(0).setMatrix(rtmatrix);
 			return true;
-		default: return false;
+		default:
+			return false;
 		}
 		return false;
 	}

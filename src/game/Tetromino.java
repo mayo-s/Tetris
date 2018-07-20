@@ -2,7 +2,7 @@ package game;
 
 public class Tetromino {
 
-	int[][] tetromino;
+	int[][] matrix;
 	String color;
 	int row;
 	int column;
@@ -20,7 +20,7 @@ public class Tetromino {
 
 		switch (shape) {
 		case "I":
-			tetromino = new int[][] {
+			matrix = new int[][] {
 				{ 0, 0, 1, 0 }, 
 				{ 0, 0, 1, 0 }, 
 				{ 0, 0, 1, 0 }, 
@@ -28,7 +28,7 @@ public class Tetromino {
 			color = "cyan";
 			break;
 		case "J":
-			tetromino = new int[][] { 
+			matrix = new int[][] { 
 				{ 0, 0, 0, 0 }, 
 				{ 0, 0, 1, 0 }, 
 				{ 0, 0, 1, 0 }, 
@@ -36,7 +36,7 @@ public class Tetromino {
 			color = "blue";
 			break;
 		case "L":
-			tetromino = new int[][] { 
+			matrix = new int[][] { 
 				{ 0, 0, 0, 0 }, 
 				{ 0, 1, 0, 0 }, 
 				{ 0, 1, 0, 0 }, 
@@ -44,7 +44,7 @@ public class Tetromino {
 			color = "orange";
 			break;
 		case "O":
-			tetromino = new int[][] { 
+			matrix = new int[][] { 
 				{ 0, 0, 0, 0 }, 
 				{ 0, 1, 1, 0 }, 
 				{ 0, 1, 1, 0 }, 
@@ -52,7 +52,7 @@ public class Tetromino {
 			color = "yellow";
 			break;
 		case "S":
-			tetromino = new int[][] { 
+			matrix = new int[][] { 
 				{ 0, 0, 0, 0 }, 
 				{ 0, 0, 1, 1 }, 
 				{ 0, 1, 1, 0 }, 
@@ -60,7 +60,7 @@ public class Tetromino {
 			color = "green";
 			break;
 		case "T":
-			tetromino = new int[][] { 
+			matrix = new int[][] { 
 				{ 0, 0, 0, 0 }, 
 				{ 0, 1, 1, 1 }, 
 				{ 0, 0, 1, 0 }, 
@@ -68,7 +68,7 @@ public class Tetromino {
 			color = "purple";
 			break;
 		case "Z":
-			tetromino = new int[][] { 
+			matrix = new int[][] { 
 				{ 0, 0, 0, 0 }, 
 				{ 0, 1, 1, 0 }, 
 				{ 0, 0, 1, 1 }, 
@@ -76,7 +76,7 @@ public class Tetromino {
 			color = "red";
 			break;
 		default:
-			tetromino = new int[][] { 
+			matrix = new int[][] { 
 				{ 0, 0, 0, 0 }, 
 				{ 0, 0, 0, 0 }, 
 				{ 0, 0, 0, 0 }, 
@@ -85,13 +85,37 @@ public class Tetromino {
 			break;
 		}
 	}
+	
+	public int[][] rotate() {
+		int size = matrix.length;
+		int[][] rotated = new int[size][size];
+
+		for (int r = 0; r < size; ++r) {
+			for (int c = 0; c < size; ++c) {
+				rotated[r][c] = matrix[size - c - 1][r];
+			}
+		}
+		return rotated;
+	}
+	
+	public int[][] copy() {
+		int size = matrix.length;
+		int[][] newTetro = new int[size][size];
+
+		for (int r = 0; r < size; ++r) {
+			for (int c = 0; c < size; ++c) {
+				newTetro[r][c] = matrix[r][c];
+			}
+		}
+		return newTetro;
+	}
 
 	public int[][] getMatrix() {
-		return tetromino;
+		return matrix;
 	}
 
 	public void setMatrix(int[][] matrix) {
-		tetromino = matrix;
+		this.matrix = matrix;
 	}
 
 	public String getColor() {
