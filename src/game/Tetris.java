@@ -31,7 +31,7 @@ public class Tetris extends Application {
 		game = new Game();
 		gui = new Gui();
 		paused = false;
-		aiOn = true;
+		aiOn = false;
 		Scene scene = new Scene(gui.getMain());
 		stage.setScene(scene);
 		stage.show();
@@ -115,19 +115,17 @@ public class Tetris extends Application {
 							paused = true;
 							interval.pause();
 						}
+						if (event.getCode() == KeyCode.A) {
+							System.out.println("AI OFF");
+							aiOn = false;
+						}
 					} else if (paused) {
 						if (event.getCode() == KeyCode.P) {
 							System.out.println("PLAY");
 							paused = false;
 							interval.play();
 						}
-					} else if (aiOn) {
-						if (event.getCode() == KeyCode.A) {
-							System.out.println("AI OFF");
-							aiOn = false;
-						}
 					}
-
 					gui.updateGameGrid(game.getField(), game.getNextTetrominos().get(0));
 				}
 			}
