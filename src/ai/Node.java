@@ -2,15 +2,13 @@ package ai;
 
 public class Node implements Comparable<Node> {
 	private int id, rotation, frow, fcolumn, score;
-	private Integer prevNode;
 
-	public Node(int id, int rotation, int frow, int fcolumn, int score, Integer prevNode) {
+	public Node(int id, int rotation, int frow, int fcolumn, int score) {
 		this.id = id;
 		this.rotation = rotation;
 		this.frow = frow;
 		this.fcolumn = fcolumn;
 		this.score = score;
-		this.prevNode = prevNode;
 	}
 
 	@Override
@@ -37,10 +35,6 @@ public class Node implements Comparable<Node> {
 
 	public int getFcolumn() {
 		return fcolumn;
-	}
-
-	public Integer getPrevNode() {
-		return prevNode;
 	}
 
 	public int getScore() {

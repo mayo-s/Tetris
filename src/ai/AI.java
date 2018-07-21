@@ -107,7 +107,7 @@ public class AI {
 						rotation);
 //				System.out.println("Add to Tree: Node-" + nodeId + " rotation x" + rotation + " row " + cRow
 //						+ " column " + cColumn + " score " + score);
-				tree.put(new Node(nodeId, rotation, cRow, cColumn, score, null), score);
+				tree.put(new Node(nodeId, rotation, cRow, cColumn, score), score);
 				nodeId++;
 			}
 			tmatrix = rotateMatrix(tmatrix);
@@ -130,18 +130,18 @@ public class AI {
 		int score = 0;
 
 		// adds height
-		score += (fRow - topRow) * 14;
+		score += (fRow - topRow) * 16;
 		// needs rotation (time penalty)
 		// score -= rotation * 2;
 		// move away from center field
 		if (fColumn < 3)
-			score += (3 - fColumn) * 11;
+			score += (3 - fColumn) * 12;
 		if (fColumn > 3)
-			score += (fColumn - 3) * 11;
+			score += (fColumn - 3) * 12;
 		// clears lines
 		score += scoreClearLines(fmatrix, fRow) * 16;
 		// covers gaps - negative score
-		score -= scoreCoverGaps(fmatrix, fRow, fColumn) * 14;
+		score -= scoreCoverGaps(fmatrix, fRow, fColumn) * 16;
 		return score;
 	}
 
