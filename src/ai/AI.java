@@ -43,10 +43,14 @@ public class AI {
 	}
 
 	/**
-	 * @param fmatrix current field matrix to check
-	 * @param tetro current Tetromino to check
-	 * @param tetroListPosition position in List of Tetrominos
-	 * @return TreeMap<Node, Integer> with instructions (rotation, final field row and column) and score
+	 * @param fmatrix
+	 *            current field matrix to check
+	 * @param tetro
+	 *            current Tetromino to check
+	 * @param tetroListPosition
+	 *            position in List of Tetrominos
+	 * @return TreeMap<Node, Integer> with instructions (rotation, final field row
+	 *         and column) and score
 	 */
 	private TreeMap<Node, Integer> findBestPosition(ArrayList<String[]> fmatrix, int tetroListPosition) {
 		Tetromino tetro = tetrominos.get(tetroListPosition);
@@ -55,16 +59,16 @@ public class AI {
 		int fColumn = tetro.getColumn();
 
 		TreeMap<Node, Integer> tree = buildTree(fmatrix, tmatrix, fRow, fColumn);
-		
+
 		// BUILD SUBTREE
 		if (tetroListPosition + 1 < this.tetrominos.size()) {
 			tetroListPosition++;
-			
+
 			for (Map.Entry<Node, Integer> entry : tree.entrySet()) {
 				Node node = entry.getKey();
 				int[][] rmatrix = tetro.copy();
 				int rotation = node.getRotation();
-				for(int i = 0; i < rotation; i++) {
+				for (int i = 0; i < rotation; i++) {
 					rmatrix = rotateMatrix(rmatrix);
 				}
 
@@ -76,11 +80,12 @@ public class AI {
 				node.setScore(newScore);
 				entry.setValue(newScore);
 			}
-		}		
+		}
 		return tree;
 	}
 
-	private TreeMap<Node, Integer> buildTree(ArrayList<String[]> fmatrix, int[][] tmatrix, int startRow, int startColumn) {
+	private TreeMap<Node, Integer> buildTree(ArrayList<String[]> fmatrix, int[][] tmatrix, int startRow,
+			int startColumn) {
 		int nodeId = 0;
 		int topRow = topRow(fmatrix);
 		TreeMap<Node, Integer> tree = new TreeMap<Node, Integer>();
@@ -105,8 +110,9 @@ public class AI {
 
 				Integer score = buildScore(buildField(fmatrix, tmatrix, cRow, cColumn), topRow, cRow, cColumn,
 						rotation);
-//				System.out.println("Add to Tree: Node-" + nodeId + " rotation x" + rotation + " row " + cRow
-//						+ " column " + cColumn + " score " + score);
+				// System.out.println("Add to Tree: Node-" + nodeId + " rotation x" + rotation +
+				// " row " + cRow
+				// + " column " + cColumn + " score " + score);
 				tree.put(new Node(nodeId, rotation, cRow, cColumn, score), score);
 				nodeId++;
 			}
@@ -130,22 +136,21 @@ public class AI {
 		int score = 0;
 
 		// adds height
-		score += (fRow - topRow) * 16;
-		// needs rotation (time penalty)
-		// score -= rotation * 2;
+		score += Math.pow(fRow, 2);
 		// move away from center field
 		if (fColumn < 3)
-			score += (3 - fColumn) * 12;
+			score += Math.pow(2, (3 - fColumn));
 		if (fColumn > 3)
-			score += (fColumn - 3) * 12;
+			score += Math.pow(2, (fColumn - 3));
 		// clears lines
-		score += scoreClearLines(fmatrix, fRow) * 16;
+		int lines = countClearableLines(fmatrix, fRow);
+		score += Math.pow(20, lines);
 		// covers gaps - negative score
-		score -= scoreCoverGaps(fmatrix, fRow, fColumn) * 16;
+		score -= countCoveredGaps(fmatrix, fRow, fColumn) * 18;
 		return score;
 	}
 
-	private int scoreClearLines(ArrayList<String[]> fmatrix, int row) {
+	private int countClearableLines(ArrayList<String[]> fmatrix, int row) {
 		int linesComplete = 0;
 		for (int r = row; r <= (row + 3); r++) {
 			boolean gap = false;
@@ -164,7 +169,7 @@ public class AI {
 		return linesComplete;
 	}
 
-	private int scoreCoverGaps(ArrayList<String[]> fmatrix, int row, int column) {
+	private int countCoveredGaps(ArrayList<String[]> fmatrix, int row, int column) {
 		int gaps = 0;
 
 		for (int r = 0; r < 4; r++) {
@@ -224,7 +229,7 @@ public class AI {
 		}
 		return newMatrix;
 	}
-	
+
 	private int[][] rotateMatrix(int[][] tmatrix) {
 		int size = tmatrix.length;
 		int[][] rotated = new int[size][size];
