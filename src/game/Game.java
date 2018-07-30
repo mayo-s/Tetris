@@ -46,7 +46,7 @@ public class Game {
 	private Tetromino randomTetromino() {
 		String[] tetroModel = { "I", "J", "L", "O", "S", "T", "Z" };
 		Tetromino newTetromino = new Tetromino(tetroModel[(int) (Math.random() * 7)]);
-//		Tetromino newTetromino = new Tetromino("O");
+//		Tetromino newTetromino = new Tetromino("I");
 		int randomRotation = (int) (Math.random() * 4);
 		for (int i = 0; i < randomRotation; i++) {
 			newTetromino.setMatrix(newTetromino.rotate());
@@ -103,7 +103,7 @@ public class Game {
 		return false;
 	}
 
-	boolean newTetro() {
+	public boolean newTetro() {
 		if (tetrominos.get(0) != oldTetro) {
 			oldTetro = tetrominos.get(0);
 			return true;
@@ -111,7 +111,7 @@ public class Game {
 		return false;
 	}
 
-	boolean levelUp() {
+	public boolean levelUp() {
 		if (lcount / lvl >= 10) {
 			lvl++;
 			return true;
@@ -163,7 +163,7 @@ public class Game {
 	}
 
 	// should this return a boolean aswell?
-	boolean move(String move) {
+	public boolean move(String move) {
 		ArrayList<String[]> fmatrix = field.getMatrix();
 		int[][] tmatrix = tetrominos.get(0).getMatrix();
 		int row = tetrominos.get(0).getRow();

@@ -1,6 +1,8 @@
-package game;
+package tetris;
 
 import ai.AI;
+import game.Game;
+import game.Tetromino;
 import gui.Gui;
 import javafx.animation.KeyFrame;
 import javafx.animation.Timeline;
