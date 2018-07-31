@@ -2,6 +2,8 @@ package tetris;
 
 import ai.AI;
 import game.Game;
+import game.Move;
+import game.Playfield;
 import game.Tetromino;
 import gui.Gui;
 import javafx.animation.KeyFrame;
@@ -19,6 +21,8 @@ public class Tetris extends Application {
 
 	private Game game;
 	private Gui gui;
+	private Move move;
+	private AI ai;
 	private Timeline interval;
 	private boolean paused;
 	private boolean aiOn;
@@ -32,8 +36,10 @@ public class Tetris extends Application {
 		stage.setTitle("Tetris by Mario Schuetz");
 		game = new Game();
 		gui = new Gui();
+		move = new Move(game);
 		paused = false;
 		aiOn = false;
+		ai = new AI(move);
 		Scene scene = new Scene(gui.getMain());
 		stage.setScene(scene);
 		stage.show();
@@ -61,10 +67,12 @@ public class Tetris extends Application {
 				} else {
 
 					if(aiOn && !game.isGameOver() && game.newTetro()) ai();
-					game.move("down");
+					Tetromino tetro = game.getNextTetrominos().get(0);
+					Playfield field = game.getField();					
+					move.down(field.getMatrix(), tetro.getMatrix(), tetro.getRow(), tetro.getColumn(), true);
 					gui.updatePreviewGrid(game.getNextTetrominos().get(1));
 					gui.updateScore(game.getScore());
-					gui.updateGameGrid(game.getField(), game.getNextTetrominos().get(0));
+					gui.updateGameGrid(field, tetro);
 					gui.updateLineCount(game.getLcount());
 					gui.updateTetroCount(game.getTcount());
 					if (game.levelUp()) {
@@ -88,17 +96,20 @@ public class Tetris extends Application {
 				if (!game.isGameOver()) {
 					if (!paused && !aiOn) {
 
+						Tetromino tetro = game.getNextTetrominos().get(0);
+						Playfield field = game.getField();
+						
 						if (event.getCode() == KeyCode.LEFT) {
-							game.move("left");
+							move.left(field.getMatrix(), tetro.getMatrix(), tetro.getRow(), tetro.getColumn(), true);
 						}
 						if (event.getCode() == KeyCode.RIGHT) {
-							game.move("right");
+							move.right(field.getMatrix(), tetro.getMatrix(), tetro.getRow(), tetro.getColumn(), true);
 						}
 						if (event.getCode() == KeyCode.DOWN) {
-							game.move("down");
+							move.down(field.getMatrix(), tetro.getMatrix(), tetro.getRow(), tetro.getColumn(), true);
 						}
 						if (event.getCode() == KeyCode.UP) {
-							game.move("rotate");
+							move.rotate(field.getMatrix(), tetro.getMatrix(), tetro.getRow(), tetro.getColumn(), true);
 						}
 						if (event.getCode() == KeyCode.P) {
 							System.out.println("PAUSED");
@@ -135,28 +146,28 @@ public class Tetris extends Application {
 	}
 
 	private void ai() {
-		
-		AI ai = new AI();
+
 		int[] aiCommands = ai.start(game.getField(), game.getNextTetrominos());
-//		 System.out.println(
-//				"Returned values: rotation x" + aiCommands[0] + " row " + aiCommands[1] + " column " + aiCommands[2]);
+//		System.out.println("Returned values: rotation x" + aiCommands[0] + " row " + aiCommands[1] + " column " + aiCommands[2]);
+		Playfield field = game.getField();
 		Tetromino tetro = game.getNextTetrominos().get(0);
+		
 		int rotation = aiCommands[0];
 //		int fRow = aiCommands[1];
 		int fColumn = aiCommands[2];
 		for (int i = 1; i <= rotation; i++) {
-			game.move("rotate");
+			move.rotate(field.getMatrix(), tetro.getMatrix(), tetro.getRow(), tetro.getColumn(), true);
 //			gui.updateGameGrid(game.getField(), game.getNextTetrominos().get(0));
 		}
 		
 		if (fColumn < tetro.getColumn()) {
 			for (int i = tetro.getColumn(); i > fColumn; i--) {
-				game.move("left");
+				move.left(field.getMatrix(), tetro.getMatrix(), tetro.getRow(), tetro.getColumn(), true);
 //				gui.updateGameGrid(game.getField(), game.getNextTetrominos().get(0));
 			}
 		} else if (fColumn > tetro.getColumn()) {
 			for (int i = tetro.getColumn(); i < fColumn; i++) {
-				game.move("right");
+				move.right(field.getMatrix(), tetro.getMatrix(), tetro.getRow(), tetro.getColumn(), true);
 //				gui.updateGameGrid(game.getField(), game.getNextTetrominos().get(0));
 			}
 		}
@@ -164,7 +175,7 @@ public class Tetris extends Application {
 //			game.move("down");
 ////			gui.updateGameGrid(game.getField(), game.getNextTetrominos().get(0));
 //		}
-		while(game.move("down")) {
+		while(move.down(field.getMatrix(), tetro.getMatrix(), tetro.getRow(), tetro.getColumn(), true)) {
 			
 		}
 	}

@@ -10,15 +10,15 @@ import game.Playfield;
 import game.Tetromino;
 
 public class AI {
-	private Move move = new Move();
+	private Move move;
 	private Playfield field = new Playfield();
 	private final int BOTTOM = field.getHEIGHT() - 1;
 	private final int LEFTBORDER = 0;
 	private final int RIGHTBORDER = field.getWIDTH() - 1;
 	private List<Tetromino> tetrominos;
 
-	public AI() {
-
+	public AI(Move move) {
+		this.move = move;
 	}
 
 	/**
@@ -84,8 +84,7 @@ public class AI {
 		return tree;
 	}
 
-	private TreeMap<Node, Integer> buildTree(ArrayList<String[]> fmatrix, int[][] tmatrix, int startRow,
-			int startColumn) {
+	private TreeMap<Node, Integer> buildTree(ArrayList<String[]> fmatrix, int[][] tmatrix, int startRow, int startColumn) {
 		int nodeId = 0;
 		int topRow = topRow(fmatrix);
 		TreeMap<Node, Integer> tree = new TreeMap<Node, Integer>();
@@ -94,25 +93,24 @@ public class AI {
 			int cRow = startRow;
 			int left = startColumn;
 			int right = startColumn;
-			while (move.left(fmatrix, tmatrix, cRow, left)) {
+
+			while (move.left(fmatrix, tmatrix, cRow, left, false)) {
 				left--;
 			}
-			while (move.right(fmatrix, tmatrix, cRow, right)) {
+			while (move.right(fmatrix, tmatrix, cRow, right, false)) {
 				right++;
 			}
 
 			for (int cColumn = left; cColumn <= right; cColumn++) {
 				cRow = startRow; // return to top of field
 				// find final row
-				while (move.down(fmatrix, tmatrix, cRow, cColumn)) {
+				while (move.down(fmatrix, tmatrix, cRow, cColumn, false)) {
 					cRow++;
 				}
 
 				Integer score = buildScore(buildField(fmatrix, tmatrix, cRow, cColumn), topRow, cRow, cColumn,
 						rotation);
-				// System.out.println("Add to Tree: Node-" + nodeId + " rotation x" + rotation +
-				// " row " + cRow
-				// + " column " + cColumn + " score " + score);
+//				 System.out.println("Add to Tree: Node-" + nodeId + " rotation x" + rotation +" row " + cRow  + " column " + cColumn + " score " + score);
 				tree.put(new Node(nodeId, rotation, cRow, cColumn, score), score);
 				nodeId++;
 			}
@@ -137,6 +135,9 @@ public class AI {
 
 		// adds height
 		score += Math.pow(fRow, 2);
+		// penalty for adding height
+		 int heightPenalty = (int) (Math.pow(fRow - topRow, 2) * Math.signum(fRow - topRow));
+		 score += heightPenalty;
 		// move away from center field
 		if (fColumn < 3)
 			score += Math.pow(2, (3 - fColumn));
@@ -146,7 +147,8 @@ public class AI {
 		int lines = countClearableLines(fmatrix, fRow);
 		score += Math.pow(20, lines);
 		// covers gaps - negative score
-		score -= countCoveredGaps(fmatrix, fRow, fColumn) * 18;
+		score -= countCoveredGaps(fmatrix, fRow, fColumn) * 20;
+
 		return score;
 	}
 
