@@ -15,10 +15,10 @@ import javafx.scene.text.Font;
 public class Gui extends HBox {
 
 	private HBox main;
-	private Label playerLabel;
-	private Label gameOverLabel;
 	private GridPane gameGrid;
 	private GridPane previewGrid;
+	private Label playerLabel;
+	private Label gameOverLabel;
 	private HBox lvlBox;
 	private HBox scoreBox;
 	private HBox lineCountBox;
@@ -41,8 +41,8 @@ public class Gui extends HBox {
 		sp.getChildren().addAll(gameGrid, gameOverLabel);
 
 		// right side info box
-		VBox info = new VBox(10);
-		info.setPadding(new Insets(10, 10, 10, 10));
+		VBox infoBox = new VBox(10);
+		infoBox.setPadding(new Insets(10, 10, 10, 10));
 		previewGrid = setupGridPane(4, 4);
 		previewGrid.setGridLinesVisible(true);
 		playerLabel = new Label("Player: " + "DummyName");
@@ -68,10 +68,10 @@ public class Gui extends HBox {
 		lineCountBox.getChildren().addAll(lcLabelText, lcLabel);
 
 		Label controlsLabel = new Label("\n^ - Rotate\n< - move left\n> - move right\nv - move down\n\nP - Play/Pause\nA - AI on/off");
-		info.getChildren().addAll(previewGrid, playerLabel, lvlBox, scoreBox, tetroCountBox, lineCountBox,
+		infoBox.getChildren().addAll(previewGrid, playerLabel, lvlBox, scoreBox, tetroCountBox, lineCountBox,
 				controlsLabel);
 
-		main.getChildren().addAll(sp, info);
+		main.getChildren().addAll(sp, infoBox);
 	}
 
 	private GridPane setupGridPane(int rows, int columns) {
