@@ -19,27 +19,27 @@ import javafx.util.Duration;
 
 public class Tetris extends Application {
 
-	private Game game;
-	private Gui gui;
-	private Move move;
-	private AI ai;
+	private static Game game;
+	private static Gui gui;
+	private static Move move;
+	private static AI ai;
 	private Timeline interval;
-	private boolean paused;
-	private boolean aiOn;
+	private static boolean paused;
+	private static boolean aiOn;
 
 	public static void main(String[] args) {
-		launch(args);
-	}
-
-	@Override
-	public void start(Stage stage) throws Exception {
-		stage.setTitle("Tetris by Mario Schuetz");
 		game = new Game();
 		gui = new Gui();
 		move = new Move(game);
 		paused = false;
 		aiOn = false;
 		ai = new AI(move);
+		launch(args);
+	}
+
+	@Override
+	public void start(Stage stage) throws Exception {
+		stage.setTitle("Tetris by Mario Schuetz");
 		Scene scene = new Scene(gui.getMain());
 		stage.setScene(scene);
 		stage.show();
