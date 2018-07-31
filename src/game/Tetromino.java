@@ -2,10 +2,10 @@ package game;
 
 public class Tetromino {
 
-	int[][] matrix;
-	String color;
-	int row;
-	int column;
+	private int[][] matrix;
+	private String color;
+	private int row;
+	private int column;
 
 	/**
 	 * @param shape
