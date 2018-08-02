@@ -1,9 +1,9 @@
 package ai;
 
 import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
-import java.util.TreeMap;
 
 import game.Move;
 import game.Playfield;
@@ -64,29 +64,29 @@ public class AI {
 			tetroListPosition++;
 
 			for (Map.Entry<Node, Integer> entry : tree.entrySet()) {
-				Node node = entry.getKey();
+				Node currLeaf = entry.getKey();
 				int[][] rmatrix = tetro.copy();
-				int rotation = node.getRotation();
+				int rotation = currLeaf.getRotation();
 				for (int i = 0; i < rotation; i++) {
 					rmatrix = rotateMatrix(rmatrix);
 				}
 
-				ArrayList<String[]> nextField = buildField(fmatrix, rmatrix, node.getFrow(), node.getFcolumn());
+				ArrayList<String[]> nextField = buildField(fmatrix, rmatrix, currLeaf.getFrow(), currLeaf.getFcolumn());
 
 				Map<Node, Integer> subTree = findBestPosition(nextField, tetroListPosition);
 				Node bestLeaf = getBestNode(subTree);
-				int newScore = node.getScore() + bestLeaf.getScore();
-				node.setScore(newScore);
+				int newScore = currLeaf.getScore() + bestLeaf.getScore();
+				currLeaf.setScore(newScore);
 				entry.setValue(newScore);
 			}
 		}
 		return tree;
 	}
 
-	private TreeMap<Node, Integer> buildTree(ArrayList<String[]> fmatrix, int[][] tmatrix, int startRow, int startColumn) {
-		int nodeId = 0;
+	private Map<Node, Integer> buildTree(ArrayList<String[]> fmatrix, int[][] tmatrix, int startRow, int startColumn) {
+		int leafId = 0;
 		int topRow = topRow(fmatrix);
-		TreeMap<Node, Integer> tree = new TreeMap<Node, Integer>();
+		Map<Node, Integer> tree = new HashMap<Node, Integer>();
 
 		for (int rotation = 0; rotation < 4; rotation++) {
 			int cRow = startRow;
@@ -110,8 +110,8 @@ public class AI {
 				Integer score = buildScore(buildField(fmatrix, tmatrix, cRow, cColumn), topRow, cRow, cColumn,
 						rotation);
 //				 System.out.println("Add to Tree: Node-" + nodeId + " rotation x" + rotation +" row " + cRow  + " column " + cColumn + " score " + score);
-				tree.put(new Node(nodeId, rotation, cRow, cColumn, score), score);
-				nodeId++;
+				tree.put(new Node(leafId, rotation, cRow, cColumn, score), score);
+				leafId++;
 			}
 			tmatrix = rotateMatrix(tmatrix);
 		}
