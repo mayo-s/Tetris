@@ -22,20 +22,19 @@ public class AI {
 	}
 
 	/**
+	 * 
 	 * @param field
 	 *            current Playfield
 	 * @param tetrominos
 	 *            list of current and following Tetrominos
+	 * @return a list of int - i.e. {3, 15, 8} ==> 3x rotate + final row 15 + final column 8
 	 */
-
-	// returns a list of int - i.e. {3, 15, 8} ==> 3x rotate + final row 15 +
-	// final column 8
 	public int[] start(Playfield field, List<Tetromino> tetrominos) {
 
 		this.field = field;
 		this.tetrominos = tetrominos;
 
-		TreeMap<Node, Integer> tree = findBestPosition(field.getMatrix(), 0);
+		Map<Node, Integer> tree = findBestPosition(field.getMatrix(), 0);
 		Node bestLeaf = getBestNode(tree);
 		int[] instructions = { bestLeaf.getRotation(), bestLeaf.getFrow(), bestLeaf.getFcolumn() };
 
@@ -52,13 +51,13 @@ public class AI {
 	 * @return TreeMap<Node, Integer> with instructions (rotation, final field row
 	 *         and column) and score
 	 */
-	private TreeMap<Node, Integer> findBestPosition(ArrayList<String[]> fmatrix, int tetroListPosition) {
+	private Map<Node, Integer> findBestPosition(ArrayList<String[]> fmatrix, int tetroListPosition) {
 		Tetromino tetro = tetrominos.get(tetroListPosition);
 		int[][] tmatrix = tetro.getMatrix();
 		int fRow = tetro.getRow();
 		int fColumn = tetro.getColumn();
 
-		TreeMap<Node, Integer> tree = buildTree(fmatrix, tmatrix, fRow, fColumn);
+		Map<Node, Integer> tree = buildTree(fmatrix, tmatrix, fRow, fColumn);
 
 		// BUILD SUBTREE
 		if (tetroListPosition + 1 < this.tetrominos.size()) {
@@ -74,7 +73,7 @@ public class AI {
 
 				ArrayList<String[]> nextField = buildField(fmatrix, rmatrix, node.getFrow(), node.getFcolumn());
 
-				TreeMap<Node, Integer> subTree = findBestPosition(nextField, tetroListPosition);
+				Map<Node, Integer> subTree = findBestPosition(nextField, tetroListPosition);
 				Node bestLeaf = getBestNode(subTree);
 				int newScore = node.getScore() + bestLeaf.getScore();
 				node.setScore(newScore);
@@ -191,7 +190,7 @@ public class AI {
 		return gaps;
 	}
 
-	private Node getBestNode(TreeMap<Node, Integer> tree) {
+	private Node getBestNode(Map<Node, Integer> tree) {
 		Map.Entry<Node, Integer> maxScore = null;
 		for (Map.Entry<Node, Integer> entry : tree.entrySet()) {
 			if (maxScore == null || entry.getValue().compareTo(maxScore.getValue()) > 0) {
