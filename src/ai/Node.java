@@ -10,12 +10,12 @@ public class Node implements Comparable<Node> {
 		this.fcolumn = fcolumn;
 		this.score = score;
 	}
-	
+
 	@Override
 	public int compareTo(Node o) {
-		if (this.score > o.getScore())
+		if (this.id > o.getId())
 			return 1;
-		else if (this.score < o.getScore())
+		else if (this.id < o.getId())
 			return -1;
 
 		return 0;
