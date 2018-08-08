@@ -34,7 +34,7 @@ public class AI {
 		this.field = field;
 		this.tetrominos = tetrominos;
 
-		Map<Node, Integer> tree = findBestPosition(field.getMatrix(), 0);
+		Map<Node, Integer> tree = evaluation(field.getMatrix(), 0);
 		Node bestLeaf = getBestNode(tree);
 		int[] instructions = { bestLeaf.getRotation(), bestLeaf.getFrow(), bestLeaf.getFcolumn() };
 
@@ -51,7 +51,7 @@ public class AI {
 	 * @return TreeMap<Node, Integer> with instructions (rotation, final field row
 	 *         and column) and score
 	 */
-	private Map<Node, Integer> findBestPosition(ArrayList<String[]> fmatrix, int tetroListPosition) {
+	private Map<Node, Integer> evaluation(ArrayList<String[]> fmatrix, int tetroListPosition) {
 		Tetromino tetro = tetrominos.get(tetroListPosition);
 		int[][] tmatrix = tetro.getMatrix();
 		int fRow = tetro.getRow();
@@ -63,8 +63,8 @@ public class AI {
 		if (tetroListPosition + 1 < this.tetrominos.size()) {
 			tetroListPosition++;
 
-			for (Map.Entry<Node, Integer> entry : tree.entrySet()) {
-				Node currLeaf = entry.getKey();
+			for (Map.Entry<Node, Integer> leaf : tree.entrySet()) {
+				Node currLeaf = leaf.getKey();
 				int[][] rmatrix = tetro.copy();
 				int rotation = currLeaf.getRotation();
 				for (int i = 0; i < rotation; i++) {
@@ -73,11 +73,11 @@ public class AI {
 
 				ArrayList<String[]> nextField = buildField(fmatrix, rmatrix, currLeaf.getFrow(), currLeaf.getFcolumn());
 
-				Map<Node, Integer> subTree = findBestPosition(nextField, tetroListPosition);
+				Map<Node, Integer> subTree = evaluation(nextField, tetroListPosition);
 				Node bestLeaf = getBestNode(subTree);
 				int newScore = currLeaf.getScore() + bestLeaf.getScore();
 				currLeaf.setScore(newScore);
-				entry.setValue(newScore);
+				leaf.setValue(newScore);
 			}
 		}
 		return tree;
@@ -107,8 +107,7 @@ public class AI {
 					cRow++;
 				}
 
-				Integer score = buildScore(buildField(fmatrix, tmatrix, cRow, cColumn), topRow, cRow, cColumn,
-						rotation);
+				Integer score = buildScore(buildField(fmatrix, tmatrix, cRow, cColumn), topRow, cRow, cColumn);
 //				 System.out.println("Add to Tree: Node-" + nodeId + " rotation x" + rotation +" row " + cRow  + " column " + cColumn + " score " + score);
 				tree.put(new Node(leafId, rotation, cRow, cColumn, score), score);
 				leafId++;
@@ -129,10 +128,10 @@ public class AI {
 		return BOTTOM;
 	}
 
-	private Integer buildScore(ArrayList<String[]> fmatrix, int topRow, int fRow, int fColumn, int rotation) {
+	private Integer buildScore(ArrayList<String[]> fmatrix, int topRow, int fRow, int fColumn) {
 		int score = 0;
 
-		// adds height
+		// check stack height
 		score += Math.pow(fRow, 2);
 		// penalty for adding height
 		 int heightPenalty = (int) (Math.pow(fRow - topRow, 2) * Math.signum(fRow - topRow));
