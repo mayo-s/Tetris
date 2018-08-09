@@ -96,12 +96,25 @@ public class Tetris extends Application {
 			public void handle(KeyEvent event) {
 				if (!game.isGameOver()) {
 					KeyCode keyPressed = event.getCode();
+					if (keyPressed == KeyCode.P) {
+						paused = !paused;
+						System.out.println("PAUSED " + paused);
+						if (paused)
+							interval.pause();
+						else
+							interval.play();
+					}
+
 					if (!paused) {
-
-						Tetromino tetro = game.getNextTetrominos().get(0);
-						Playfield field = game.getField();
-
+						if (keyPressed == KeyCode.A) {
+							aiOn = !aiOn;
+							System.out.println("AI " + aiOn);
+							ai();
+						}
 						if (!aiOn) {
+							Tetromino tetro = game.getNextTetrominos().get(0);
+							Playfield field = game.getField();
+
 							if (keyPressed == KeyCode.LEFT) {
 								move.left(field.getMatrix(), tetro.getMatrix(), tetro.getRow(), tetro.getColumn(), true);
 							} else if (keyPressed == KeyCode.RIGHT) {
@@ -111,26 +124,10 @@ public class Tetris extends Application {
 							} else if (keyPressed == KeyCode.UP) {
 								move.rotate(field.getMatrix(), tetro, tetro.getRow(), tetro.getColumn(), true);
 							}
-						}
-						if (keyPressed == KeyCode.P) {
-							paused = !paused;
-							System.out.println("PAUSED " + paused);
-							interval.pause();
-						}
-						if (keyPressed == KeyCode.A) {
-							aiOn = !aiOn;
-							System.out.println("AI " + aiOn);
-							ai();
-						}
-					} else {
-						if (keyPressed == KeyCode.P) {
-							paused = !paused;
-							System.out.println("PAUSED " + paused);
-							interval.play();
+							gui.updateGameGrid(game.getField(), game.getNextTetrominos().get(0));
 						}
 					}
 				}
-				gui.updateGameGrid(game.getField(), game.getNextTetrominos().get(0));
 			}
 		});
 	}
