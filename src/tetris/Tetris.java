@@ -19,22 +19,22 @@ import javafx.util.Duration;
 
 public class Tetris extends Application {
 
-	private static Game game;
-	private static Gui gui;
-	private static Move move;
-	private static AI ai;
-	private Timeline interval;
-	private static boolean paused;
-	private static boolean aiOn;
+	private static Game game = new Game();
+	private static Gui gui = new Gui();
+	private static Move move = new Move(game);
+	private static AI ai = new AI(move);
+	private static Timeline interval;
+	private static boolean paused = false;
+	private static boolean aiOn = false;
+	private static boolean sloMo = true;
 
 	public static void main(String[] args) {
-		game = new Game();
-		gui = new Gui();
-		move = new Move(game);
-		paused = false;
-		aiOn = false;
-		ai = new AI(move);
+
+		System.out.println("AI " + aiOn);
+		System.out.println("SLO MO " + sloMo);
 		launch(args);
+		if (aiOn)
+			ai();
 	}
 
 	@Override
@@ -45,11 +45,6 @@ public class Tetris extends Application {
 		stage.show();
 		intervalEvent();
 		userEvent(scene);
-
-		System.out.println("AI " + aiOn);
-		if (aiOn)
-			ai();
-
 	}
 
 	private void intervalEvent() {
@@ -111,6 +106,10 @@ public class Tetris extends Application {
 							System.out.println("AI " + aiOn);
 							ai();
 						}
+						if (keyPressed == KeyCode.S) {
+							sloMo = !sloMo;
+							System.out.println("Slow Motion " + sloMo);
+						}
 						if (!aiOn) {
 							Tetromino tetro = game.getNextTetrominos().get(0);
 							Playfield field = game.getField();
@@ -124,47 +123,39 @@ public class Tetris extends Application {
 							} else if (keyPressed == KeyCode.UP) {
 								move.rotate(field.getMatrix(), tetro, tetro.getRow(), tetro.getColumn(), true);
 							}
-							gui.updateGameGrid(game.getField(), game.getNextTetrominos().get(0));
 						}
+						gui.updateGameGrid(game.getField(), game.getNextTetrominos().get(0));
 					}
 				}
 			}
 		});
 	}
 
-	private void ai() {
-
+	private static void ai() {
 		int[] aiCommands = ai.start(game.getField(), game.getNextTetrominos());
-		// System.out.println("Returned values: rotation x" + aiCommands[0] + " row " +
-		// aiCommands[1] + " column " + aiCommands[2]);
+		autoMoveToPosition(aiCommands[0], aiCommands[1], aiCommands[2]);
+	}
+
+	private static void autoMoveToPosition(int rotation, int fRow, int fColumn) {
 		Playfield field = game.getField();
 		Tetromino tetro = game.getNextTetrominos().get(0);
 
-		int rotation = aiCommands[0];
-		// int fRow = aiCommands[1];
-		int fColumn = aiCommands[2];
 		for (int i = 1; i <= rotation; i++) {
 			move.rotate(field.getMatrix(), tetro, tetro.getRow(), tetro.getColumn(), true);
-			// gui.updateGameGrid(game.getField(), game.getNextTetrominos().get(0));
 		}
 
 		if (fColumn < tetro.getColumn()) {
 			for (int i = tetro.getColumn(); i > fColumn; i--) {
 				move.left(field.getMatrix(), tetro.getMatrix(), tetro.getRow(), tetro.getColumn(), true);
-				// gui.updateGameGrid(game.getField(), game.getNextTetrominos().get(0));
 			}
 		} else if (fColumn > tetro.getColumn()) {
 			for (int i = tetro.getColumn(); i < fColumn; i++) {
 				move.right(field.getMatrix(), tetro.getMatrix(), tetro.getRow(), tetro.getColumn(), true);
-				// gui.updateGameGrid(game.getField(), game.getNextTetrominos().get(0));
 			}
 		}
-		// for (int i = tetro.getRow(); i < fRow; i++) {
-		// game.move("down");
-		//// gui.updateGameGrid(game.getField(), game.getNextTetrominos().get(0));
-		// }
-		while (move.down(field.getMatrix(), tetro.getMatrix(), tetro.getRow(), tetro.getColumn(), true)) {
-
+		
+		for (int i = tetro.getRow(); i < fRow; i++) {
+			move.down(field.getMatrix(), tetro.getMatrix(), tetro.getRow(), tetro.getColumn(), true);
 		}
 	}
 }
