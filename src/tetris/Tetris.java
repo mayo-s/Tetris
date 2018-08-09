@@ -45,12 +45,11 @@ public class Tetris extends Application {
 		stage.show();
 		intervalEvent();
 		userEvent(scene);
-		if(aiOn) {
-			System.out.println("AI ON");
-			ai();		
-		}
-		else
-			System.out.println("AI OFF");
+
+		System.out.println("AI " + aiOn);
+		if (aiOn)
+			ai();
+
 	}
 
 	private void intervalEvent() {
@@ -66,9 +65,11 @@ public class Tetris extends Application {
 					interval.stop();
 				} else {
 
-					if(aiOn && !game.isGameOver() && game.newTetro()) ai();
+					if (aiOn && !game.isGameOver() && game.newTetro())
+						ai();
+
 					Tetromino tetro = game.getNextTetrominos().get(0);
-					Playfield field = game.getField();					
+					Playfield field = game.getField();
 					move.down(field.getMatrix(), tetro.getMatrix(), tetro.getRow(), tetro.getColumn(), true);
 					gui.updatePreviewGrid(game.getNextTetrominos().get(1));
 					gui.updateScore(game.getScore());
@@ -94,53 +95,42 @@ public class Tetris extends Application {
 			@Override
 			public void handle(KeyEvent event) {
 				if (!game.isGameOver()) {
-					if (!paused && !aiOn) {
+					KeyCode keyPressed = event.getCode();
+					if (!paused) {
 
 						Tetromino tetro = game.getNextTetrominos().get(0);
 						Playfield field = game.getField();
-						
-						if (event.getCode() == KeyCode.LEFT) {
-							move.left(field.getMatrix(), tetro.getMatrix(), tetro.getRow(), tetro.getColumn(), true);
+
+						if (!aiOn) {
+							if (keyPressed == KeyCode.LEFT) {
+								move.left(field.getMatrix(), tetro.getMatrix(), tetro.getRow(), tetro.getColumn(), true);
+							} else if (keyPressed == KeyCode.RIGHT) {
+								move.right(field.getMatrix(), tetro.getMatrix(), tetro.getRow(), tetro.getColumn(), true);
+							} else if (keyPressed == KeyCode.DOWN) {
+								move.down(field.getMatrix(), tetro.getMatrix(), tetro.getRow(), tetro.getColumn(), true);
+							} else if (keyPressed == KeyCode.UP) {
+								move.rotate(field.getMatrix(), tetro, tetro.getRow(), tetro.getColumn(), true);
+							}
 						}
-						if (event.getCode() == KeyCode.RIGHT) {
-							move.right(field.getMatrix(), tetro.getMatrix(), tetro.getRow(), tetro.getColumn(), true);
-						}
-						if (event.getCode() == KeyCode.DOWN) {
-							move.down(field.getMatrix(), tetro.getMatrix(), tetro.getRow(), tetro.getColumn(), true);
-						}
-						if (event.getCode() == KeyCode.UP) {
-							move.rotate(field.getMatrix(), tetro, tetro.getRow(), tetro.getColumn(), true);
-						}
-						if (event.getCode() == KeyCode.P) {
-							System.out.println("PAUSED");
-							paused = true;
+						if (keyPressed == KeyCode.P) {
+							paused = !paused;
+							System.out.println("PAUSED " + paused);
 							interval.pause();
 						}
-						if (event.getCode() == KeyCode.A) {
-							System.out.println("AI ON");
-							aiOn = true;
+						if (keyPressed == KeyCode.A) {
+							aiOn = !aiOn;
+							System.out.println("AI " + aiOn);
 							ai();
 						}
-
-					} else if(!paused && aiOn) {
-						if (event.getCode() == KeyCode.P) {
-							System.out.println("PAUSED");
-							paused = true;
-							interval.pause();
-						}
-						if (event.getCode() == KeyCode.A) {
-							System.out.println("AI OFF");
-							aiOn = false;
-						}
-					} else if (paused) {
-						if (event.getCode() == KeyCode.P) {
-							System.out.println("PLAY");
-							paused = false;
+					} else {
+						if (keyPressed == KeyCode.P) {
+							paused = !paused;
+							System.out.println("PAUSED " + paused);
 							interval.play();
 						}
 					}
-					gui.updateGameGrid(game.getField(), game.getNextTetrominos().get(0));
 				}
+				gui.updateGameGrid(game.getField(), game.getNextTetrominos().get(0));
 			}
 		});
 	}
@@ -148,35 +138,36 @@ public class Tetris extends Application {
 	private void ai() {
 
 		int[] aiCommands = ai.start(game.getField(), game.getNextTetrominos());
-//		System.out.println("Returned values: rotation x" + aiCommands[0] + " row " + aiCommands[1] + " column " + aiCommands[2]);
+		// System.out.println("Returned values: rotation x" + aiCommands[0] + " row " +
+		// aiCommands[1] + " column " + aiCommands[2]);
 		Playfield field = game.getField();
 		Tetromino tetro = game.getNextTetrominos().get(0);
-		
+
 		int rotation = aiCommands[0];
-//		int fRow = aiCommands[1];
+		// int fRow = aiCommands[1];
 		int fColumn = aiCommands[2];
 		for (int i = 1; i <= rotation; i++) {
 			move.rotate(field.getMatrix(), tetro, tetro.getRow(), tetro.getColumn(), true);
-//			gui.updateGameGrid(game.getField(), game.getNextTetrominos().get(0));
+			// gui.updateGameGrid(game.getField(), game.getNextTetrominos().get(0));
 		}
-		
+
 		if (fColumn < tetro.getColumn()) {
 			for (int i = tetro.getColumn(); i > fColumn; i--) {
 				move.left(field.getMatrix(), tetro.getMatrix(), tetro.getRow(), tetro.getColumn(), true);
-//				gui.updateGameGrid(game.getField(), game.getNextTetrominos().get(0));
+				// gui.updateGameGrid(game.getField(), game.getNextTetrominos().get(0));
 			}
 		} else if (fColumn > tetro.getColumn()) {
 			for (int i = tetro.getColumn(); i < fColumn; i++) {
 				move.right(field.getMatrix(), tetro.getMatrix(), tetro.getRow(), tetro.getColumn(), true);
-//				gui.updateGameGrid(game.getField(), game.getNextTetrominos().get(0));
+				// gui.updateGameGrid(game.getField(), game.getNextTetrominos().get(0));
 			}
 		}
-//		for (int i = tetro.getRow(); i < fRow; i++) {
-//			game.move("down");
-////			gui.updateGameGrid(game.getField(), game.getNextTetrominos().get(0));
-//		}
-		while(move.down(field.getMatrix(), tetro.getMatrix(), tetro.getRow(), tetro.getColumn(), true)) {
-			
+		// for (int i = tetro.getRow(); i < fRow; i++) {
+		// game.move("down");
+		//// gui.updateGameGrid(game.getField(), game.getNextTetrominos().get(0));
+		// }
+		while (move.down(field.getMatrix(), tetro.getMatrix(), tetro.getRow(), tetro.getColumn(), true)) {
+
 		}
 	}
 }
