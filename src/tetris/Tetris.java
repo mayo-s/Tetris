@@ -109,7 +109,7 @@ public class Tetris extends Application {
 							move.down(field.getMatrix(), tetro.getMatrix(), tetro.getRow(), tetro.getColumn(), true);
 						}
 						if (event.getCode() == KeyCode.UP) {
-							move.rotate(field.getMatrix(), tetro.getMatrix(), tetro.getRow(), tetro.getColumn(), true);
+							move.rotate(field.getMatrix(), tetro, tetro.getRow(), tetro.getColumn(), true);
 						}
 						if (event.getCode() == KeyCode.P) {
 							System.out.println("PAUSED");
@@ -156,7 +156,7 @@ public class Tetris extends Application {
 //		int fRow = aiCommands[1];
 		int fColumn = aiCommands[2];
 		for (int i = 1; i <= rotation; i++) {
-			move.rotate(field.getMatrix(), tetro.getMatrix(), tetro.getRow(), tetro.getColumn(), true);
+			move.rotate(field.getMatrix(), tetro, tetro.getRow(), tetro.getColumn(), true);
 //			gui.updateGameGrid(game.getField(), game.getNextTetrominos().get(0));
 		}
 		

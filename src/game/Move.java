@@ -111,11 +111,13 @@ public class Move {
 	 *            execute move in Game if possible?
 	 * @return true if move is possible, else false
 	 */
-	public boolean rotate(ArrayList<String[]> fmatrix, int[][] tmatrix, int frow, int fcolumn, boolean execute) {
-		int tdimension = tmatrix.length;
+	public boolean rotate(ArrayList<String[]> fmatrix, Tetromino tetro, int frow, int fcolumn, boolean execute) {
+		
+		int [][] rotatedMatrix = tetro.rotate();
+		int tdimension = rotatedMatrix.length;
 		for (int c = 0; c < tdimension; c++) {
 			for (int r = 0; r < tdimension; r++) {
-				if (tmatrix[r][c] == 1 && (fcolumn + c >= RIGHTEDGE || fcolumn + c <= LEFTEDGE || fmatrix.get(frow + r)[fcolumn + c] != null)) {
+				if (rotatedMatrix[r][c] == 1 && (fcolumn + c >= RIGHTEDGE || fcolumn + c <= LEFTEDGE || fmatrix.get(frow + r)[fcolumn + c] != null)) {
 					return false;
 				}
 			}
