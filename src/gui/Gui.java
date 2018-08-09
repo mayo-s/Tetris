@@ -68,8 +68,7 @@ public class Gui extends HBox {
 		lineCountBox.getChildren().addAll(lcLabelText, lcLabel);
 
 		Label controlsLabel = new Label("\n^ - Rotate\n< - move left\n> - move right\nv - move down\n\nP - Play/Pause\nA - AI on/off");
-		infoBox.getChildren().addAll(previewGrid, playerLabel, lvlBox, scoreBox, tetroCountBox, lineCountBox,
-				controlsLabel);
+		infoBox.getChildren().addAll(previewGrid, playerLabel, lvlBox, scoreBox, tetroCountBox, lineCountBox, controlsLabel);
 
 		main.getChildren().addAll(sp, infoBox);
 	}
@@ -99,8 +98,7 @@ public class Gui extends HBox {
 		// field
 		for (int r = 0; r < frows; r++) {
 			for (int c = 0; c < fcolumns; c++) {
-				gameGrid.getChildren().get(r * fcolumns + c)
-						.setStyle("-fx-background-color: " + field.getMatrix().get(r)[c]);
+				gameGrid.getChildren().get(r * fcolumns + c).setStyle("-fx-background-color: " + field.getMatrix().get(r)[c]);
 			}
 		}
 
@@ -108,8 +106,7 @@ public class Gui extends HBox {
 		for (int r = 0; r < tdimension; r++) {
 			for (int c = 0; c < tdimension; c++) {
 				if (tmatrix[r][c] == 1)
-					gameGrid.getChildren().get((coordR + r) * fcolumns + (coordC + c))
-							.setStyle("-fx-background-color: " + tcolor);
+					gameGrid.getChildren().get((coordR + r) * fcolumns + (coordC + c)).setStyle("-fx-background-color: " + tcolor);
 			}
 		}
 	}
@@ -121,8 +118,7 @@ public class Gui extends HBox {
 		for (int r = 0; r < rows; r++) {
 			for (int c = 0; c < columns; c++) {
 				if (matrix[r][c] == 1)
-					previewGrid.getChildren().get(r * columns + c)
-							.setStyle("-fx-background-color: " + tetromino.getColor());
+					previewGrid.getChildren().get(r * columns + c).setStyle("-fx-background-color: " + tetromino.getColor());
 				else
 					previewGrid.getChildren().get(r * columns + c).setStyle("-fx-background-color: " + "#ffffff");
 			}
