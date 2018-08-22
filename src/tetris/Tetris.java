@@ -26,12 +26,12 @@ public class Tetris extends Application {
 	private static Timeline interval;
 	private static boolean paused = false;
 	private static boolean aiOn = false;
-	private static boolean sloMo = true;
+	private static boolean sloMo = false;
 
 	public static void main(String[] args) {
 
 		System.out.println("AI " + aiOn);
-		System.out.println("SLO MO " + sloMo);
+		if(sloMo) System.out.println("SLO MO " + sloMo);
 		launch(args);
 		if (aiOn)
 			ai();
@@ -48,7 +48,8 @@ public class Tetris extends Application {
 	}
 
 	private void intervalEvent() {
-		double time = Math.pow((0.8 - ((game.getLvl() - 1) * 0.007)), (game.getLvl() - 1)) * 1000;
+		int lvl = game.getLvl();
+		double time = Math.pow((0.8 - ((lvl - 1) * 0.007)), (lvl - 1)) * 1000;
 
 		gui.updatePreviewGrid(game.getNextTetrominos().get(1));
 		interval = new Timeline(new KeyFrame(Duration.millis(time), new EventHandler<ActionEvent>() {
@@ -60,23 +61,23 @@ public class Tetris extends Application {
 					interval.stop();
 				} else {
 
-					if (aiOn && !game.isGameOver() && game.newTetro())
-						ai();
-
 					Tetromino tetro = game.getNextTetrominos().get(0);
 					Playfield field = game.getField();
 					move.down(field.getMatrix(), tetro.getMatrix(), tetro.getRow(), tetro.getColumn(), true);
+					gui.updateGameGrid(field, tetro);
+					if (aiOn && game.newTetro())
+						ai();
 					gui.updatePreviewGrid(game.getNextTetrominos().get(1));
 					gui.updateScore(game.getScore());
-					gui.updateGameGrid(field, tetro);
 					gui.updateLineCount(game.getLcount());
 					gui.updateTetroCount(game.getTcount());
 					if (game.levelUp()) {
-						gui.updateLvl(game.getLvl());
+						gui.updateLvl(lvl + 1);
 						interval.stop();
 						intervalEvent();
 					}
 				}
+
 			}
 		}));
 		interval.setCycleCount(Timeline.INDEFINITE);
@@ -108,7 +109,7 @@ public class Tetris extends Application {
 						}
 						if (keyPressed == KeyCode.S) {
 							sloMo = !sloMo;
-							System.out.println("Slow Motion " + sloMo);
+							System.out.println("SLO MO " + sloMo);
 						}
 						if (!aiOn) {
 							Tetromino tetro = game.getNextTetrominos().get(0);
@@ -132,7 +133,10 @@ public class Tetris extends Application {
 	}
 
 	private static void ai() {
+//		double startTime = System.currentTimeMillis();
 		int[] aiCommands = ai.start(game.getField(), game.getNextTetrominos());
+//		System.out.println("Evaluation Time: " + (System.currentTimeMillis() - startTime) + "ms");
+		gui.updateGameGrid(game.getField(), game.getNextTetrominos().get(0));
 		autoMoveToPosition(aiCommands[0], aiCommands[1], aiCommands[2]);
 	}
 
@@ -153,7 +157,7 @@ public class Tetris extends Application {
 				move.right(field.getMatrix(), tetro.getMatrix(), tetro.getRow(), tetro.getColumn(), true);
 			}
 		}
-		
+
 		for (int i = tetro.getRow(); i < fRow; i++) {
 			move.down(field.getMatrix(), tetro.getMatrix(), tetro.getRow(), tetro.getColumn(), true);
 		}

@@ -48,8 +48,7 @@ public class AI {
 	 *            current Tetromino to check
 	 * @param tetroListPosition
 	 *            position in List of Tetrominos
-	 * @return TreeMap<Node, Integer> with instructions (rotation, final field row
-	 *         and column) and score
+	 * @return TreeMap<Node, Integer> with instructions (rotation, final field row and column) and score
 	 */
 	private Map<Node, Integer> evaluation(ArrayList<String[]> fmatrix, int tetroListPosition) {
 		Tetromino tetro = tetrominos.get(tetroListPosition);
@@ -108,7 +107,7 @@ public class AI {
 				}
 
 				Integer score = buildScore(buildField(fmatrix, tmatrix, cRow, cColumn), topRow, cRow, cColumn);
-//				 System.out.println("Add to Tree: Node-" + nodeId + " rotation x" + rotation +" row " + cRow  + " column " + cColumn + " score " + score);
+				// System.out.println("Add to Tree: Node-" + nodeId + " rotation x" + rotation + " row " + cRow + " column " + cColumn + " score " + score);
 				tree.put(new Node(leafId, rotation, cRow, cColumn, score), score);
 				leafId++;
 			}
@@ -131,20 +130,21 @@ public class AI {
 	private Integer buildScore(ArrayList<String[]> fmatrix, int topRow, int fRow, int fColumn) {
 		int score = 0;
 
+		// clears lines
+		int lines = countClearableLines(fmatrix, fRow);
+		if (lines > 0)
+			score += Math.pow(20, lines);
 		// check stack height
-		score += Math.pow(fRow, 2);
+		score += Math.pow(fRow + lines, 2);
 		// penalty for adding height
-		 int heightPenalty = (int) (Math.pow(fRow - topRow, 2) * Math.signum(fRow - topRow));
-		 score += heightPenalty;
+		int heightPenalty = (int) (Math.pow((fRow - lines) - (topRow - lines), 2) * Math.signum(fRow - topRow));
+		score += heightPenalty;
 		// move away from center field
 		if (fColumn < 3)
 			score += Math.pow(2, (3 - fColumn));
 		if (fColumn > 3)
 			score += Math.pow(2, (fColumn - 3));
-		// clears lines
-		int lines = countClearableLines(fmatrix, fRow);
-		score += Math.pow(20, lines);
-		// covers gaps - negative score
+		// penalty for covering gaps
 		score -= countCoveredGaps(fmatrix, fRow, fColumn) * 20;
 
 		return score;
@@ -171,12 +171,12 @@ public class AI {
 
 	private int countCoveredGaps(ArrayList<String[]> fmatrix, int row, int column) {
 		int gaps = 0;
-
+		// TODO check from bottom upwards - not just around the tetro (multiple covered
+		// gaps)
 		for (int r = 0; r < 4; r++) {
 			if (r + row <= BOTTOM) {
 				for (int c = 0; c < 4; c++) {
-					if (c + column >= LEFTBORDER && c + column <= RIGHTBORDER
-							&& fmatrix.get(r + row)[c + column] != null) {
+					if (c + column >= LEFTBORDER && c + column <= RIGHTBORDER && fmatrix.get(r + row)[c + column] != null) {
 						int checkRow = r + row + 1;
 						while (checkRow <= BOTTOM && fmatrix.get(checkRow)[c + column] == null) {
 							gaps += 1;

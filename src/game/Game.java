@@ -7,7 +7,7 @@ import java.util.List;
 public class Game {
 
 	private Playfield field = new Playfield();
-	private final int LIMIT = 3; // current + next
+	private final int LIMIT = 2; // current + next
 	private final int STARTROW = 0;
 	private final int STARTCOLUMN = 3;
 	private final int[] POINTS = { 0, 100, 300, 500, 800 };
@@ -20,12 +20,14 @@ public class Game {
 	private int oldScore;
 	private List<Tetromino> tetrominos;
 	private Tetromino oldTetro;
+	private double startTime;
 
 	public Game() {
 		init();
 	}
 
 	private void init() {
+		startTime = System.currentTimeMillis();
 		gameOver = false;
 		tetrominos = new ArrayList<>(LIMIT);
 		score = 0;
@@ -40,12 +42,13 @@ public class Game {
 		oldTetro = tetrominos.get(0);
 
 		System.out.println("START\n");
+		System.out.println("Preview: " + (LIMIT - 1));
 	}
 
 	private Tetromino randomTetromino() {
 		String[] tetroModel = { "I", "J", "L", "O", "S", "T", "Z" };
 		Tetromino newTetromino = new Tetromino(tetroModel[(int) (Math.random() * 7)]);
-		// Tetromino newTetromino = new Tetromino("I");
+//		Tetromino newTetromino = new Tetromino("L");
 		int randomRotation = (int) (Math.random() * 4);
 		for (int i = 0; i < randomRotation; i++) {
 			newTetromino.setMatrix(newTetromino.rotate());
@@ -69,6 +72,7 @@ public class Game {
 			System.out.println(tcount + " Tetrominos used");
 			System.out.println(lcount + " lines cleared");
 			System.out.println(score + " final score");
+			System.out.println("Duration: " + (System.currentTimeMillis() - startTime)/1000/60 + "min");
 		}
 	}
 
@@ -165,20 +169,20 @@ public class Game {
 		score++;
 		tetrominos.get(0).setRow(tetrominos.get(0).getRow() + 1);
 	}
-	
+
 	void left() {
 		tetrominos.get(0).setColumn(tetrominos.get(0).getColumn() - 1);
 	}
-	
+
 	void right() {
 		tetrominos.get(0).setColumn(tetrominos.get(0).getColumn() + 1);
 	}
-	
+
 	void rotate() {
 		int[][] rtmatrix = tetrominos.get(0).rotate();
 		tetrominos.get(0).setMatrix(rtmatrix);
 	}
-	
+
 	public List<Tetromino> getNextTetrominos() {
 		return tetrominos;
 	}
