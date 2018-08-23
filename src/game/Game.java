@@ -17,7 +17,6 @@ public class Game {
 	private int tcount; // tetromino count
 	private int lcount; // eliminated line count
 	private int score;
-	private int oldScore;
 	private List<Tetromino> tetrominos;
 	private Tetromino oldTetro;
 	private double startTime;
@@ -31,7 +30,6 @@ public class Game {
 		gameOver = false;
 		tetrominos = new ArrayList<>(LIMIT);
 		score = 0;
-		oldScore = score;
 		lvl = 1;
 		tcount = 1;
 		lcount = 0;
@@ -95,14 +93,6 @@ public class Game {
 	boolean gameOver() {
 		if (tetrominos.get(0).getRow() == STARTROW && tetrominos.get(0).getColumn() == STARTCOLUMN)
 			return true;
-		return false;
-	}
-
-	boolean newScore() {
-		if (score != oldScore) {
-			oldScore = score;
-			return true;
-		}
 		return false;
 	}
 
