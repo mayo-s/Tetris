@@ -35,7 +35,7 @@ public class Gui extends HBox {
 
 		// left side game grid
 		StackPane sp = new StackPane();
-		gameGrid = setupGridPane(22, 10);
+		gameGrid = setupGridPane(20, 10);
 		gameGrid.setGridLinesVisible(true);
 		gameOverLabel = new Label("Game Over");
 		gameOverLabel.setFont(new Font("Cambria", 42));
@@ -101,7 +101,7 @@ public class Gui extends HBox {
 	public void updateGameGrid(Playfield field, Tetromino tetromino) {
 
 		int fcolumns = field.getWIDTH();
-		int frows = field.getHEIGHT();
+		int frows = field.getHEIGHT() - 2;
 		int coordR = tetromino.getRow();
 		int coordC = tetromino.getColumn();
 		int[][] tmatrix = tetromino.getMatrix();
@@ -111,15 +111,17 @@ public class Gui extends HBox {
 		// field
 		for (int r = 0; r < frows; r++) {
 			for (int c = 0; c < fcolumns; c++) {
-				gameGrid.getChildren().get(r * fcolumns + c).setStyle("-fx-background-color: " + field.getMatrix().get(r)[c]);
+				gameGrid.getChildren().get(r * fcolumns + c).setStyle("-fx-background-color: " + field.getMatrix().get(r + 2)[c]);
 			}
 		}
 
 		// Tetromino in field
 		for (int r = 0; r < tdimension; r++) {
-			for (int c = 0; c < tdimension; c++) {
-				if (tmatrix[r][c] == 1)
-					gameGrid.getChildren().get((coordR + r) * fcolumns + (coordC + c)).setStyle("-fx-background-color: " + tcolor);
+			if (coordR + r > 1) {
+				for (int c = 0; c < tdimension; c++) {
+					if (tmatrix[r][c] == 1)
+						gameGrid.getChildren().get((coordR + r - 2) * fcolumns + (coordC + c)).setStyle("-fx-background-color: " + tcolor);
+				}
 			}
 		}
 	}
