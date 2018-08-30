@@ -1,5 +1,8 @@
 package gui;
 
+import java.util.ArrayList;
+import java.util.List;
+
 import game.Playfield;
 import game.Tetromino;
 import javafx.geometry.Insets;
@@ -16,7 +19,8 @@ public class Gui extends HBox {
 
 	private HBox main;
 	private GridPane gameGrid;
-	private GridPane previewGrid;
+	// private GridPane previewGrid;
+	private List<GridPane> previewList;
 	private Label playerLabel;
 	private Label gameOverLabel;
 	private HBox lvlBox;
@@ -24,7 +28,7 @@ public class Gui extends HBox {
 	private HBox lineCountBox;
 	private HBox tetroCountBox;
 
-	public Gui() {
+	public Gui(int preview) {
 
 		main = new HBox();
 		main.setPadding(new Insets(10, 10, 10, 10));
@@ -43,8 +47,17 @@ public class Gui extends HBox {
 		// right side info box
 		VBox infoBox = new VBox(10);
 		infoBox.setPadding(new Insets(10, 10, 10, 10));
-		previewGrid = setupGridPane(4, 4);
-		previewGrid.setGridLinesVisible(true);
+
+		if (preview > 1) {
+			previewList = new ArrayList<GridPane>();
+			for (int i = 1; i < preview; i++) {
+				GridPane previewGrid;
+				previewGrid = setupGridPane(4, 4);
+				previewGrid.setGridLinesVisible(true);
+				previewList.add(previewGrid);
+				infoBox.getChildren().add(previewGrid);
+			}
+		}
 		playerLabel = new Label("Player: " + "DummyName");
 
 		scoreBox = new HBox();
@@ -68,7 +81,7 @@ public class Gui extends HBox {
 		lineCountBox.getChildren().addAll(lcLabelText, lcLabel);
 
 		Label controlsLabel = new Label("\n^ - Rotate\n< - move left\n> - move right\nv - move down\n\nP - Play/Pause\nA - AI on/off");
-		infoBox.getChildren().addAll(previewGrid, playerLabel, lvlBox, scoreBox, tetroCountBox, lineCountBox, controlsLabel);
+		infoBox.getChildren().addAll(playerLabel, lvlBox, scoreBox, tetroCountBox, lineCountBox, controlsLabel);
 
 		main.getChildren().addAll(sp, infoBox);
 	}
@@ -111,16 +124,21 @@ public class Gui extends HBox {
 		}
 	}
 
-	public void updatePreviewGrid(Tetromino tetromino) {
-		int[][] matrix = tetromino.getMatrix();
-		int rows = matrix.length;
-		int columns = matrix[0].length;
-		for (int r = 0; r < rows; r++) {
-			for (int c = 0; c < columns; c++) {
-				if (matrix[r][c] == 1)
-					previewGrid.getChildren().get(r * columns + c).setStyle("-fx-background-color: " + tetromino.getColor());
-				else
-					previewGrid.getChildren().get(r * columns + c).setStyle("-fx-background-color: " + "#ffffff");
+	public void updatePreviewGrid(List<Tetromino> tetrominos) {
+
+		for (int i = 0; i < previewList.size(); i++) {
+			GridPane previewGrid = previewList.get(i);
+			Tetromino tetromino = tetrominos.get(i + 1);
+			int[][] matrix = tetromino.getMatrix();
+			int rows = matrix.length;
+			int columns = matrix[0].length;
+			for (int r = 0; r < rows; r++) {
+				for (int c = 0; c < columns; c++) {
+					if (matrix[r][c] == 1)
+						previewGrid.getChildren().get(r * columns + c).setStyle("-fx-background-color: " + tetromino.getColor());
+					else
+						previewGrid.getChildren().get(r * columns + c).setStyle("-fx-background-color: " + "#ffffff");
+				}
 			}
 		}
 	}
@@ -147,22 +165,6 @@ public class Gui extends HBox {
 		Label label = new Label(Integer.toString(tetros));
 		tetroCountBox.getChildren().remove(1);
 		tetroCountBox.getChildren().add(label);
-	}
-
-	public GridPane getGameGrid() {
-		return gameGrid;
-	}
-
-	public void setGameGrid(GridPane gameGrid) {
-		this.gameGrid = gameGrid;
-	}
-
-	public GridPane getPreviewGrid() {
-		return previewGrid;
-	}
-
-	public void setPreviewGrid(GridPane previewGrid) {
-		this.previewGrid = previewGrid;
 	}
 
 	public HBox getMain() {

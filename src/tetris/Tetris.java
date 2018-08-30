@@ -20,7 +20,7 @@ import javafx.util.Duration;
 public class Tetris extends Application {
 
 	private static Game game = new Game();
-	private static Gui gui = new Gui();
+	private static Gui gui = new Gui(game.getNextTetrominos().size());
 	private static Move move = new Move(game);
 	private static AI ai = new AI(move);
 	private static Timeline interval;
@@ -51,7 +51,7 @@ public class Tetris extends Application {
 		int lvl = game.getLvl();
 		double time = Math.pow((0.8 - ((lvl - 1) * 0.007)), (lvl - 1)) * 1000;
 
-		gui.updatePreviewGrid(game.getNextTetrominos().get(1));
+		if(game.getNextTetrominos().size() > 1) gui.updatePreviewGrid(game.getNextTetrominos());
 		interval = new Timeline(new KeyFrame(Duration.millis(time), new EventHandler<ActionEvent>() {
 
 			@Override
@@ -67,7 +67,7 @@ public class Tetris extends Application {
 					gui.updateGameGrid(field, tetro);
 					if (aiOn && game.newTetro())
 						ai();
-					gui.updatePreviewGrid(game.getNextTetrominos().get(1));
+					if(game.getNextTetrominos().size() > 1) gui.updatePreviewGrid(game.getNextTetrominos());
 					gui.updateScore(game.getScore());
 					gui.updateLineCount(game.getLcount());
 					gui.updateTetroCount(game.getTcount());
