@@ -7,7 +7,7 @@ import java.util.List;
 public class Game {
 
 	private Playfield field = new Playfield();
-	private final int LIMIT = 2; // current + next
+	private int LIMIT; // current + next Tetrominos
 	private final int STARTROW = 0;
 	private final int STARTCOLUMN = 3;
 	private final int[] POINTS = { 0, 100, 300, 500, 800 };
@@ -21,7 +21,8 @@ public class Game {
 	private Tetromino oldTetro;
 	private double startTime;
 
-	public Game() {
+	public Game(int previewNumber) {
+		LIMIT = 1 + previewNumber;
 		init();
 	}
 

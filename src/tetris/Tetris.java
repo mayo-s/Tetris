@@ -1,5 +1,9 @@
 package tetris;
 
+import java.util.ArrayList;
+import java.util.List;
+import java.util.Optional;
+
 import ai.AI;
 import game.Game;
 import game.Move;
@@ -12,6 +16,7 @@ import javafx.application.Application;
 import javafx.event.ActionEvent;
 import javafx.event.EventHandler;
 import javafx.scene.Scene;
+import javafx.scene.control.ChoiceDialog;
 import javafx.scene.input.KeyCode;
 import javafx.scene.input.KeyEvent;
 import javafx.stage.Stage;
@@ -19,10 +24,10 @@ import javafx.util.Duration;
 
 public class Tetris extends Application {
 
-	private static Game game = new Game();
-	private static Gui gui = new Gui(game.getNextTetrominos().size());
-	private static Move move = new Move(game);
-	private static AI ai = new AI(move);
+	private static Game game;
+	private static Gui gui;
+	private static Move move;
+	private static AI ai;
 	private static Timeline interval;
 	private static boolean paused = false;
 	private static boolean aiOn = false;
@@ -30,15 +35,40 @@ public class Tetris extends Application {
 
 	public static void main(String[] args) {
 
-		System.out.println("AI " + aiOn);
-		if(sloMo) System.out.println("SLO MO " + sloMo);
 		launch(args);
+		System.out.println("AI " + aiOn);
+		if (sloMo)
+			System.out.println("SLO MO " + sloMo);
 		if (aiOn)
 			ai();
 	}
 
+	private static void gameSetup() {
+
+		List<Integer> choices = new ArrayList<>();
+		choices.add(0);
+		choices.add(1);
+		choices.add(2);
+		choices.add(3);
+
+		ChoiceDialog<Integer> dialog = new ChoiceDialog<>(1, choices);
+		dialog.setTitle("Game Setup");
+		dialog.setHeaderText("Set number of Tetrominos in preview");
+		dialog.setContentText("Choose a number");
+
+		Optional<Integer> previewNumber = dialog.showAndWait();
+		previewNumber.ifPresent(number -> game = new Game(number));
+		gui = new Gui(game.getNextTetrominos().size());
+		move = new Move(game);
+		ai = new AI(move);
+
+	}
+
 	@Override
 	public void start(Stage stage) throws Exception {
+
+		gameSetup();
+
 		stage.setTitle("Tetris by Mario Schuetz");
 		Scene scene = new Scene(gui.getMain());
 		stage.setScene(scene);
@@ -51,7 +81,8 @@ public class Tetris extends Application {
 		int lvl = game.getLvl();
 		double time = Math.pow((0.8 - ((lvl - 1) * 0.007)), (lvl - 1)) * 1000;
 
-		if(game.getNextTetrominos().size() > 1) gui.updatePreviewGrid(game.getNextTetrominos());
+		if (game.getNextTetrominos().size() > 1)
+			gui.updatePreviewGrid(game.getNextTetrominos());
 		interval = new Timeline(new KeyFrame(Duration.millis(time), new EventHandler<ActionEvent>() {
 
 			@Override
@@ -67,7 +98,8 @@ public class Tetris extends Application {
 					gui.updateGameGrid(field, tetro);
 					if (aiOn && game.newTetro())
 						ai();
-					if(game.getNextTetrominos().size() > 1) gui.updatePreviewGrid(game.getNextTetrominos());
+					if (game.getNextTetrominos().size() > 1)
+						gui.updatePreviewGrid(game.getNextTetrominos());
 					gui.updateScore(game.getScore());
 					gui.updateLineCount(game.getLcount());
 					gui.updateTetroCount(game.getTcount());
@@ -133,9 +165,10 @@ public class Tetris extends Application {
 	}
 
 	private static void ai() {
-//		double startTime = System.currentTimeMillis();
+		// double startTime = System.currentTimeMillis();
 		int[] aiCommands = ai.start(game.getField(), game.getNextTetrominos());
-//		System.out.println("Evaluation Time: " + (System.currentTimeMillis() - startTime) + "ms");
+		// System.out.println("Evaluation Time: " + (System.currentTimeMillis() -
+		// startTime) + "ms");
 		gui.updateGameGrid(game.getField(), game.getNextTetrominos().get(0));
 		autoMoveToPosition(aiCommands[0], aiCommands[1], aiCommands[2]);
 	}
