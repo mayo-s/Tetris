@@ -191,8 +191,10 @@ public class Tetris extends Application {
 			}
 		}
 
-		for (int i = tetro.getRow(); i < fRow; i++) {
-			move.down(field.getMatrix(), tetro.getMatrix(), tetro.getRow(), tetro.getColumn(), true);
+		if (!sloMo) {
+			for (int i = tetro.getRow(); i < fRow; i++) {
+				move.down(field.getMatrix(), tetro.getMatrix(), tetro.getRow(), tetro.getColumn(), true);
+			}
 		}
 	}
 }

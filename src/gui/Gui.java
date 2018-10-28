@@ -80,7 +80,7 @@ public class Gui extends HBox {
 		Label lcLabel = new Label("0");
 		lineCountBox.getChildren().addAll(lcLabelText, lcLabel);
 
-		Label controlsLabel = new Label("\n^ - Rotate\n< - move left\n> - move right\nv - move down\n\nP - Play/Pause\nA - AI on/off");
+		Label controlsLabel = new Label("\n^ - Rotate\n< - move left\n> - move right\nv - move down\n\nP - Play/Pause\nA - AI on/off\nS - Slow Motion on/off");
 		infoBox.getChildren().addAll(playerLabel, lvlBox, scoreBox, tetroCountBox, lineCountBox, controlsLabel);
 
 		main.getChildren().addAll(sp, infoBox);
